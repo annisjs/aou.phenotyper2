@@ -1,0 +1,18 @@
+Package: aou.phenotyper2
+Type: Package
+Title: Phenotyping system for All of Us dataset.
+Version: 0.1.0
+Author: Jeffrey Annis
+Maintainer: Jeffrey Annis <jeffrey.s.annis@vumc.org>
+Description: Various functions for pulling data from All of Us EHR.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports:
+  bigrquery,
+  data.table,
+  stringr
+Remotes:
+  annisjs/aou.reader
+LazyData: true
+RoxygenNote: 7.2.3
