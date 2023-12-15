@@ -13,6 +13,6 @@ first_light_sleep <- function(output_folder,anchor_date_table=NULL,before=NULL,a
   sleep_terms <- "level = 'light' AND is_main_sleep = 'true'"
   result <- aou.reader::sleep_level_query(sleep_terms,anchor_date_table,before,after)
   colnames(result) <- c("person_id","first_light_sleep_date","first_light_sleep_datetime",
-             "first_light_sleep_duration","first_light_sleep_is_main_sleep")]
+             "first_light_sleep_duration","first_light_sleep_is_main_sleep")
   .write_to_bucket(result,output_folder,"first_light_sleep")
 }

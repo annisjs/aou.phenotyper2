@@ -18,7 +18,7 @@ acei_arb_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after
     meds <- c("fosinopril", "fosinopril sodium","monopril", "ramipril", "altace", "captopril", "capoten", "moexipril", "univasc", "lisinopril", "zestril", "prinivil", "enalapril", "vasotec", "epaned", "quinapril", "accupril", "trandolapril", "mavik", "gopten", "odrik", "benazepril", "lotensin", "perindopril", "aceon")
     #arb
     meds <- c(meds,"eprosartan", "teveten", "azilsartan", "medoxomil", "edarbi", "olmesartan", "benicar", "valsartan", "diovan", "telmisartan", "micardis", "losartan", "cozaar", "candesartan", "atacand", "irbesartan", "avapro")
-    result <- aou.reader::aou.reader::med_query(meds,anchor_date_table,before,after)
+    result <- aou.reader::med_query(meds,anchor_date_table,before,after)
     result <- result[,.(acei_arb_meds_entry_date = min(drug_exposure_start_date)),.(person_id)]
     .write_to_bucket(result,output_folder,"acei_arb_meds")
 }

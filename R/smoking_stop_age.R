@@ -11,6 +11,6 @@
 smoking_stop_age <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::survey_query("1585870",anchor_date_table,before,after)
-  colnames(result) <- ,c("person_id","smoking_stop_age_value","smoking_stop_age_entry_date")
+  colnames(result) <- c("person_id","smoking_stop_age_value","smoking_stop_age_entry_date")
   .write_to_bucket(result,output_folder,"smoking_stop_age")
 }

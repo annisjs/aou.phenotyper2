@@ -15,8 +15,8 @@ actinic_keratosis <- function(output_folder,anchor_date_table=NULL,before=NULL,a
 {
     icd9_codes <- c("702.0")
     icd10_codes <- c("L57.0")
-    result_icd9 <- aou.reader::aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
-    result_icd10 <- aou.reader::aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
+    result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
+    result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
     result_all <- result_all[,.(actinic_keratosis_entry_date = min(condition_start_date),
                                         actinic_keratosis_status = length(condition_start_date) > 0),

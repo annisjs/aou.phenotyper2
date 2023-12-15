@@ -23,5 +23,5 @@ all_ldl <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                         "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Electrophoresis"),
                                         anchor_date_table,before,after)
     colnames(result_all) <- c("person_id","all_ldl_entry_date","all_ldl_value")
-    .write_to_bucket(result_all,output_folder,"all_ldl")`
+    .write_to_bucket(result_all,output_folder,"all_ldl")
 }
