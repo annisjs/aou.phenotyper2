@@ -13,7 +13,6 @@ closest_height <- function(output_folder,anchor_date_table=NULL,before=NULL,afte
     stop("closest_height is not a primary variable and requires an anchor date table.")
     }
     result_all <- aou.reader::height_query(anchor_date_table,before,after)
-    result_all <- as.data.table(read_bucket(str_glue("{output_folder}/aou_phenotyper/height_*.csv")))
     result_all <- as.data.table(merge(result_all,anchor_date_table,by="person_id"))
     result_all[,diff := abs(as.numeric(as.Date(measurement_date) - as.Date(anchor_date)))]
     result_all <- result_all[order(diff)]
