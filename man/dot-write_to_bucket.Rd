@@ -6,6 +6,13 @@
 \usage{
 .write_to_bucket(dat, output_folder, name)
 }
+\arguments{
+\item{dat}{the data to write}
+
+\item{output_folder}{the folder to write to}
+
+\item{name}{the name of the file to write (without extension)}
+}
 \description{
 Internal function used to write dataset to workspace bucket and local file system
 }
