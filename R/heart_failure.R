@@ -42,5 +42,5 @@ heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after
     # Save data to bucket
     hf_counts <- hf_counts[,c("person_id","heart_failure_entry_date","heart_failure_status")]
     hf_counts <- hf_counts[heart_failure_status == TRUE]
-    write_to_bucket(hf_counts,output_folder,"heart_failure")
+    .write_to_bucket(hf_counts,output_folder,"heart_failure")
 }
