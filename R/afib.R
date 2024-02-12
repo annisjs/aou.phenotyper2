@@ -16,7 +16,7 @@ afib <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     icd9_codes <- c("427.3","427.31","427.32")
     icd10_codes <- c("I48","I48.0","I48.1","I48.2","I48.3","I48.4","I48.9","I48.91","I48.92")
     result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
-    result_icd10 <- aou.reader::icd10_query(dataset,icd10_codes)
+    result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
     result_all <- result_all[,.(afib_entry_date = min(condition_start_date),
                                 fib_status = length(condition_start_date) > 0),
