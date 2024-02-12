@@ -19,7 +19,7 @@ afib <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
     result_all <- result_all[,.(afib_entry_date = min(condition_start_date),
-                                fib_status = length(condition_start_date) > 0),
+                                afib_status = length(condition_start_date) > 0),
                             .(person_id)]
     .write_to_bucket(result_all,output_folder,"afib")
 }
