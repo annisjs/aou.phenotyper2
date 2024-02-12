@@ -24,6 +24,15 @@
 #' @export
 dyslipidemia_2 <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
+    recode_sex_fm <- function(sex)
+    {
+    ifelse(sex == "Not male, not female, prefer not to answer, or skipped" |
+            sex == "No matching concept",
+            NA,
+            ifelse(sex == "Male",
+                    "Male",
+                    "Female"))
+    }
     hdl <- aou.reader::lab_query("Cholesterol in HDL [Mass/volume] in Serum or Plasma",
                                         anchor_date_table,before,after)
     colnames(hdl) <- c("person_id","hdl_date","hdl_value")
