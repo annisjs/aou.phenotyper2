@@ -16,7 +16,7 @@
 sleep_level_unknown <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     sleep_terms <- "level = 'unknown'"
-    result <- sleep_level_query(sleep_terms,"all",anchor_date_table,before,after)
+    result <- aou.reader::sleep_level_query(sleep_terms,"all",anchor_date_table,before,after)
     colnames(result) <- c('person_id',
                         'sleep_level_unknown_date',
                         'sleep_level_unknown_start_datetime',
