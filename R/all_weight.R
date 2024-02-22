@@ -10,6 +10,6 @@
 all_weight <-  function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     result_weight <- aou.reader::weight_query(anchor_date_table,before,after)
-    colnames(result_weight) <- c("person_id","all_weight_entry_date","all_weight_value")
+    colnames(result_weight) <- c("person_id","all_weight_entry_date","all_weight_value","all_weight_unit")
     .write_to_bucket(result_weight,output_folder,"all_weight")
 }

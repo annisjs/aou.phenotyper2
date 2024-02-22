@@ -10,6 +10,6 @@
 all_height <-  function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     result_height <- aou.reader::height_query(anchor_date_table,before,after)
-    colnames(result_height) <- c("person_id","all_height_entry_date","all_height_value")
+    colnames(result_height) <- c("person_id","all_height_entry_date","all_height_value","all_height_unit")
     .write_to_bucket(result_height,output_folder,"all_height")
 }
