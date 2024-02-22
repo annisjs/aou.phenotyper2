@@ -12,6 +12,6 @@
 #' @export
 bout_cadence <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- bout_cadence_query(anchor_date_table,before,after)
+  result <- aou.reader::bout_cadence_query(anchor_date_table,before,after)
   .write_to_bucket(result,output_folder,"bout_cadence")
 }
