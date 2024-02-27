@@ -5,8 +5,7 @@
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @return output_folder/dyslipidemia.csv
-#' @details Warning! This algorithm will write diabetes.csv, statins.csv to the local disk and may overwrite an existing file.
-#' It will not overwrite files on the workspace bucket.
+#' @details 
 #' Definition:
 #' Meets at least one condition:
 #'

@@ -27,8 +27,6 @@ output_folder/dyslipidemia.csv
 Dyslipidemia
 }
 \details{
-Warning! This algorithm will write diabetes.csv, statins.csv to the local disk and may overwrite an existing file.
-It will not overwrite files on the workspace bucket.
 Definition:
 Meets at least one condition:
 
