@@ -16,6 +16,6 @@
 #' @export
 cadence_pattern <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::cadence_pattern(anchor_date_table,before,after)
+  result <- aou.reader::cadence_pattern_query(anchor_date_table,before,after)
   .write_to_bucket(result,output_folder,"cadence_pattern")
 }
