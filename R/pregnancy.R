@@ -5,7 +5,7 @@
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @return output_folder/pregnancy.csv
-#' @details At least 1 ICD code
+#' @details At least 1 CPT code
 #'
 #' CPT:"59400","59409"
 #'
