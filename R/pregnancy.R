@@ -7,17 +7,13 @@
 #' @return output_folder/pregnancy.csv
 #' @details At least 1 ICD code
 #'
-#' ICD9: "V22.%","V23.%"
+#' CPT:"59400","59409"
 #'
-#' ICD10: "Z33.%"
 #' @export
 pregnancy <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    icd9_codes <- c("V22","V22.%","V23","V23.%")
-    icd10_codes <- c("Z33","Z33.%")
-    result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
-    result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
-    result_all <- rbind(result_icd9,result_icd10)
+    cpt_codes <- c("59400","59409")
+    result_all <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
     result_all <- result_all[,.(pregnancy_status = length(condition_start_date) > 0,
                                 pregnancy_entry_date = min(condition_start_date)),
                             .(person_id)]
