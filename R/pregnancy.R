@@ -14,8 +14,8 @@ pregnancy <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NUL
 {
     cpt_codes <- c("59400","59409")
     result_all <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
-    result_all <- result_all[,.(pregnancy_status = length(condition_start_date) > 0,
-                                pregnancy_entry_date = min(condition_start_date)),
+    result_all <- result_all[,.(pregnancy_status = length(entry_date) > 0,
+                                pregnancy_entry_date = min(entry_date)),
                             .(person_id)]
     .write_to_bucket(result_all,output_folder,"pregnancy")
 }
