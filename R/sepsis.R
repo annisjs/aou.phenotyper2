@@ -1,0 +1,198 @@
+#' Sepsis
+#'
+#' @param output_folder the folder to write the output
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @return output_folder/sepsis.csv
+#' @details 
+#' Definition:
+#' 
+#' Identifying Sepsis with ICD-9 Codes 
+#' Two potential approaches can be used simultaneously to maximize sensitivity in identifying cases of sepsis using ICD-9 codes
+#' 
+#' Approach 1: Sepsis is present if one of the following codes is associated with hospitalization:
+#' •	995.91 (Sepsis)
+#' •	995.92 (Severe Sepsis)
+#' •	785.52 (Septic Shock)
+#' 
+#' Approach 2: Identification of Severe Sepsis by Angus Criteria
+#' A severe sepsis case using ICD-9 codes, as outlined by Angus et al. (PMID: 11445675), is defined as the presence of an infection (step 1) AND acute organ dysfunction (step 2). 
+#' 
+#' Step 1: Identify presence of bacterial or fungal infection using ICD-9 codes below
+#' 
+#' •	001, Cholera
+#' •	002, Typhoid/paratyphoid fever
+#' •	003, Other salmonella infection
+#' •	004, Shigellosis
+#' •	005, Other food poisoning
+#' •	008, Intestinal infection not otherwise classified
+#' •	009, Ill-defined intestinal infection
+#' •	010, Primary tuberculosis infection
+#' •	011, Pulmonary tuberculosis
+#' •	012, Other respiratory tuberculosis
+#' •	013, Central nervous system tuberculosis
+#' •	014, Intestinal tuberculosis
+#' •	015, Tuberculosis of bone and joint
+#' •	016, Genitourinary tuberculosis
+#' •	017, Tuberculosis not otherwise classified
+#' •	018, Miliary tuberculosis
+#' •	020, Plague
+#' •	021, Tularemia
+#' •	022, Anthrax
+#' •	023, Brucellosis
+#' •	024, Glanders
+#' •	025, Melioidosis
+#' •	026, Rat-bite fever
+#' •	027, Other bacterial zoonoses
+#' •	030, Leprosy
+#' •	031, Other mycobacterial disease
+#' •	032, Diphtheria
+#' •	033, Whooping cough
+#' •	034, Streptococcal throat/scarlet fever
+#' •	035, Erysipelas
+#' •	036, Meningococcal infection
+#' •	037, Tetanus; 038, Septicemia
+#' •	039, Actinomycotic infections
+#' •	040, Other bacterial diseases
+#' •	041, Bacterial infection in other diseases not otherwise specified
+#' •	090, Congenital syphilis
+#' •	091, Early symptomatic syphilis
+#' •	092, Early syphilis latent
+#' •	093, Cardiovascular syphilis
+#' •	094, Neurosyphilis
+#' •	095, Other late symptomatic syphilis
+#' •	096, Late syphilis latent
+#' •	097, Other and unspecified syphilis
+#' •	098, Gonococcal infections
+#' •	100, Leptospirosis
+#' •	101, Vincent’s angina
+#' •	102, Yaws
+#' •	103, Pinta
+#' •	104, Other spirochetal infection
+#' •	110, Dermatophytosis
+#' •	111, Dermatomycosis not otherwise classified or specified
+#' •	112, Candidiasis
+#' •	114, Coccidioidomycosis
+#' •	115, Histoplasmosis
+#' •	116, Blastomycotic infection
+#' •	117, Other mycoses
+#' •	118, Opportunistic mycoses
+#' •	320, Bacterial meningitis
+#' •	322, Meningitis, unspecified
+#' •	324, Central nervous system abscess
+#' •	325, Phlebitis of intracranial sinus
+#' •	420, Acute pericarditis
+#' •	421, Acute or subacute endocarditis
+#' •	451, Thrombophlebitis
+#' •	461, Acute sinusitis
+#' •	462, Acute pharyngitis
+#' •	463, Acute tonsillitis
+#' •	464, Acute laryngitis/tracheitis
+#' •	465, Acute upper respiratory infection of multiple sites/not otherwise specified
+#' •	481, Pneumococcal pneumonia
+#' •	482, Other bacterial pneumonia
+#' •	485, Bronchopneumonia with organism not otherwise specified
+#' •	486, Pneumonia, organism not otherwise specified
+#' • 491.21, Acute exacerbation of obstructive chronic bronchitis
+#' •	494, Bronchiectasis
+#' •	510, Empyema
+#' •	513, Lung/mediastinum abscess
+#' •	540, Acute appendicitis
+#' •	541, Appendicitis not otherwise specified
+#' •	542, Other appendicitis
+#' • 562.01, Diverticulitis of small intestine without hemorrhage
+#' • 562.03, Diverticulitis of small intestine with hemorrhage
+#' • 562.11, Diverticulitis of colon without hemorrhage
+#' • 562.13, Diverticulitis of colon with hemorrhage
+#' •	566, Anal and rectal abscess
+#' •	567, Peritonitis
+#' •  569.5, Intestinal abscess
+#' • 569.83, Perforation of intestine
+#' •  572.0, Abscess of liver
+#' •  572.1, Portal pyemia
+#' •  575.0, Acute cholecystitis
+#' •	590, Kidney infection
+#' •	597, Urethritis/urethral syndrome
+#' •  599.0, Urinary tract infection not otherwise specified
+#' •	601, Prostatic inflammation
+#' •	614, Female pelvic inflammation disease
+#' •	615, Uterine inflammatory disease
+#' •	616, Other female genital inflammation
+#' •	681, Cellulitis, finger/toe
+#' •	682, Other cellulitis or abscess
+#' •	683, Acute lymphadenitis
+#' •	686, Other local skin infection
+#' •  711.0, Pyogenic arthritis
+#' •	730, Osteomyelitis
+#' •  790.7, Bacteremia
+#' •  996.6, Infection or inflammation of device/graft
+#' •  998.5, Postoperative infection
+#' •  999.3, Infectious complication of medical care not otherwise classified.
+#' 
+#' Step 2: If ICD-9 code for bacterial or fungal infection is present, then identify cases also with ICD-9 code for acute organ dysfunction
+#' 785.5, 458, 96.7, 348.3, 293, 348.3, 293, 348.1, 287.4, 287.5, 286.9, 286.6, 570, 573.4, 584
+#' 
+#' Identifying Sepsis with ICD10 Codes
+#' The Centers for Medicare and Medicaid Services (CMS) published a manual of diagnosis definitions using ICD-10 codes. 
+#' The recommended diagnosis codes for identifying sepsis/severe sepsis via ICD-10 codes are below. 
+#' 
+#' •	A021	Salmonella sepsis
+#' •	A207	Septicemic plague
+#' •	A227	Anthrax sepsis
+#' •	A267	Erysipelothrix sepsis
+#' •	A327	Listerial sepsis
+#' •	A391	Waterhouse-Friderichsen syndrome
+#' •	A392	Acute meningococcemia
+#' •	A393	Chronic meningococcemia
+#' •	A394	Meningococcemia, unspecified
+#' •	A3989	Other meningococcal infections
+#' •	A399	Meningococcal infection, unspecified
+#' •	A400	Sepsis due to streptococcus, group A
+#' •	A401	Sepsis due to streptococcus, group B
+#' •	A403	Sepsis due to Streptococcus pneumoniae
+#' •	A408	Other streptococcal sepsis
+#' •	A409	Streptococcal sepsis, unspecified
+#' •	A4101	Sepsis due to Methicillin susceptible Staphylococcus aureus
+#' •	A4102	Sepsis due to Methicillin resistant Staphylococcus aureus
+#' •	A411	Sepsis due to other specified staphylococcus
+#' •	A412	Sepsis due to unspecified staphylococcus
+#' •	A413	Sepsis due to Hemophilus influenzae
+#' •	A414	Sepsis due to anaerobes
+#' •	A4150	Gram-negative sepsis, unspecified
+#' •	A4151	Sepsis due to Escherichia coli [E. coli]
+#' •	A4152	Sepsis due to Pseudomonas
+#' •	A4153	Sepsis due to Serratia
+#' •	A4159	Other Gram-negative sepsis
+#' •	A4181	Sepsis due to Enterococcus
+#' •	A4189	Other specified sepsis
+#' •	A419	Sepsis, unspecified organism
+#' •	A427	Actinomycotic sepsis
+#' •	A5486	Gonococcal sepsis
+#' •	B007	Disseminated herpesviral disease
+#' •	B377	Candidal sepsis
+#' •	R571	Hypovolemic shock
+#' •	R578	Other shock
+#' •	R6510	Systemic inflammatory response syndrome (SIRS) of non-infectious origin without acute organ dysfunction
+#' •	R6511	Systemic inflammatory response syndrome (SIRS) of non-infectious origin with acute organ dysfunction
+#' •	R6520	Severe sepsis without septic shock
+#' •	R6521	Severe sepsis with septic shock
+#' •	R7881	Bacteremia
+#' 
+#' @export
+sepsis <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+{
+    hosp <- aou.reader::hospitalization_query(c("995.91", "995.92", "785.52"))
+    icd10 <- aou.reader::icd10_query(c("A021","A021.%","A207","A207.%","A227","A227.%","A267","A267.%","A327","A327.%","A391","A391.%","A392","A392.%","A393","A393.%","A394","A394.%","A3989","A3989.%","A399","A399.%","A400","A400.%","A401","A401.%","A403","A403.%","A408","A408.%","A409","A409.%","A4101","A4101.%","A4102","A4102.%","A411","A411.%","A412","A412.%","A413","A413.%","A414","A414.%","A4150","A4150.%","A4151","A4151.%","A4152","A4152.%","A4153","A4153.%","A4159","A4159.%","A4181","A4181.%","A4189","A4189.%","A419","A419.%","A427","A427.%","A5486","A5486.%","B007","B007.%","B377","B377.%","R571","R571.%","R578","R578.%","R6510","R6510.%","R6511","R6511.%","R6520","R6520.%","R6521","R6521.%","R7881","R7881.%"))
+    icd9_1 <- aou.reader::icd9_query(c("001","001.%","002","002.%","003","003.%","004","004.%","005","005.%","008","008.%","009","009.%","010","010.%","011","011.%","012","012.%","013","013.%","014","014.%","015","015.%","016","016.%","017","017.%","018","018.%","020","020.%","021","021.%","022","022.%","023","023.%","024","024.%","025","025.%","026","026.%","027","027.%","030","030.%","031","031.%","032","032.%","033","033.%","034","034.%","035","035.%","036","036.%","037","037.%","039","039.%","040","040.%","041","041.%","090","090.%","091","091.%","092","092.%","093","093.%","094","094.%","095","095.%","096","096.%","097","097.%","098","098.%","100","100.%","101","101.%","102","102.%","103","103.%","104","104.%","110","110.%","111","111.%","112","112.%","114","114.%","115","115.%","116","116.%","117","117.%","118","118.%","320","320.%","322","322.%","324","324.%","325","325.%","420","420.%","421","421.%","451","451.%","461","461.%","462","462.%","463","463.%","464","464.%","465","465.%","481","481.%","482","482.%","485","485.%","486","486.%","494","494.%","510","510.%","513","513.%","540","540.%","541","541.%","542","542.%","566","566.%","567","567.%","590","590.%","597","597.%","601","601.%","614","614.%","615","615.%","616","616.%","681","681.%","682","682.%","683","683.%","686","686.%","730","730.%","491.21","562.01","562.03","562.11","562.13","569.5","569.83","572.0","572.1","575.0","599.0","711.0","790.7","996.6","998.5","999.3"))
+    icd9_2 <- aou.reader::icd9_query(c("785.5", "458", "458.%", "96.7", "348.3", "293", "293.%", "348.1", "287.4", "287.5", "286.9", "286.6", "570", "570.%", "573.4", "584", "584.%"))
+    icd9_2 <- icd9_2[person_id %in% unique(icd9_1$person_id)]
+    colnames(hosp) <- c("person_id","condition_start_date","condition_source_value")
+    result_all <- rbind(icd9_1,icd9_2,icd10,hosp)
+    result_all <- result_all[order(condition_start_date)]
+    result_all[, sepsis_status := TRUE]
+    result_all <- result_all[,.(sepsis_entry_date = condition_start_date[1],
+                                sepsis_status = sepsis_status[1]),
+                            .(person_id)]
+    .write_to_bucket(result_all,output_folder,"sepsis")
+}
