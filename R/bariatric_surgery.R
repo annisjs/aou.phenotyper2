@@ -15,9 +15,9 @@ bariatric_surgery <- function(output_folder,anchor_date_table=NULL,before=NULL,a
 {
     cpt_codes <- c("43644","43645","43775","43845","43846","43847")
     cpt_df <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
-    cpt_df <- cpt_df[order(condition_start_date)]
-    cpt_df <- cpt_df[,.(bariatric_surgery_status = length(condition_start_date) > 0,
-                        bariatric_surgery_entry_date = condition_start_date[1]),
+    cpt_df <- cpt_df[order(entry_date)]
+    cpt_df <- cpt_df[,.(bariatric_surgery_status = TRUE,
+                        bariatric_surgery_entry_date = entry_date[1]),
                       .(person_id)]
     .write_to_bucket(cpt_df,output_folder,"bariatric_surgery")
 }
