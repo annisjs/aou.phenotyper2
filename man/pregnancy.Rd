@@ -22,9 +22,7 @@ output_folder/pregnancy.csv
 Pregnancy
 }
 \details{
-At least 1 ICD code
+At least 1 CPT code
 
-ICD9: "V22.\%","V23.\%"
-
-ICD10: "Z33.\%"
+CPT:"59400","59409"
 }
