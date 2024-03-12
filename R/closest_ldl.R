@@ -22,6 +22,7 @@ closest_ldl <- function(output_folder,anchor_date_table=NULL,before=NULL,after=N
                     "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
                     "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Electrophoresis")
     result_all <- aou.reader::lab_query(lab_terms,anchor_date_table,before,after)
+    result_all <- as.data.table(merge(result_all,anchor_date_table,by="person_id"))
     result_all[,diff := abs(as.numeric(as.Date(measurement_date) - as.Date(anchor_date)))]
     result_all <- result_all[order(diff)]
     result_all <- result_all[,.(closest_ldl_entry_date = measurement_date[1],
