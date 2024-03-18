@@ -21,7 +21,7 @@ newborn_delivery <- function(output_folder,anchor_date_table=NULL,before=NULL,af
     result_cesarean[, newborn_delivery_type := "cesarean_delivery"]
     result_all <- rbind(result_vaginal,result_cesarean)
     result_all <- result_all[order(entry_date)]
-    result_all <- result_all[,.(newborn_delivery_entry_date = entry_date[1]
+    result_all <- result_all[,.(newborn_delivery_entry_date = entry_date[1],
                                 newborn_delivery_status = TRUE,
                                 newborn_delivery_type = newborn_delivery_type[1]),
                             .(person_id)]
