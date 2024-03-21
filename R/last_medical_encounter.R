@@ -10,6 +10,6 @@
 last_medical_encounter <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     result <- aou.reader::medical_encounter_query("last",anchor_date_table,before,after)
-    colnames(result) <- c("person_id","last_medical_encounter")
+    colnames(result) <- c("person_id","last_medical_encounter_entry_date")
     .write_to_bucket(result,output_folder,"last_medical_encounter")
 }
