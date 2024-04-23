@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+aou.phenotyper2.Rproj
+
+/renv
+.Rprofile
+renv.lock
