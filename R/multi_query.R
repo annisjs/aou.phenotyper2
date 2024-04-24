@@ -24,10 +24,12 @@ multi_query <- function(query_list, output_folder, load_queries = FALSE, overrid
   }else{
     for(func_to_run in funcs_to_run){
       if(override){
+        cat(paste0("Running ", func_to_run, "\n"))
         match.fun(func_to_run)(output_folder, anchor_date_table=NULL,before=NULL,after=NULL) 
       }else if(paste0(func_to_run, ".csv") %in% lapply(str_split(ls_bucket("datasets"), "/"), function(x) x[[length(x)]])){
         cat(paste0(func_to_run, " query is cached. Skipping...\n"))
       }else{
+        cat(paste0("Running ", func_to_run, "\n"))
         match.fun(func_to_run)(output_folder, anchor_date_table=NULL,before=NULL,after=NULL) 
       }
     }
