@@ -1,16 +1,16 @@
-#' All Multiple Queries
+#' Multiple Queries
 #'
 #' @param query_list a list of names of query functions to run
 #' @param output_folder the folder to write the output
-#' @param either to load results of the queries into the enviroment. If set true function will read each resulting query csv file and save it to a named list where the names are the same as query_list
-#' @param either to override previous results
+#' @param load_queries either to load results of the queries into the environment. If set true function will read each resulting query csv file and return the result. the names in list are the same as query_list
+#' @param override either to override previous results
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @details Runs multiple queries given by a list of function names. Name in the function needs to be exactly same with query functions in phenotyper2 package.
+#' @details Runs multiple queries given by a list of function names. Name in the function needs to be exactly same with query functions in aou.phenotyper2 package.
 #'
 #' 
-#' @return query results saved as output_folder/query_list\[\[i\]\].csv. If load_queries is set to true each query result is loaded to a named list
+#' @return query results saved as output_folder/query_list[[i]].csv. If load_queries is set to true a named list with each query result is returned
 #' @export
 multi_query <- function(query_list, output_folder, load_queries = FALSE, override = FALSE, anchor_date_table=NULL,before=NULL,after=NULL)
 {
