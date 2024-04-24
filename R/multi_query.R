@@ -14,7 +14,7 @@
 #' @export
 multi_query <- function(query_list, output_folder, load_queries = FALSE, override = FALSE, anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  missing_functions = query_list[!query_list %in% ls("package:phenotyper2")]
+  missing_functions = query_list[!query_list %in% ls("package:aou.phenotyper2")]
   for (missing_function in missing_functions){
     cat(paste0("The function name ", missing_function, " cannot be found in aou.phenotyper2 queries. Please check the entries.\n"))
   }
