@@ -18,7 +18,7 @@ multi_query <- function(query_list, output_folder, load_queries = FALSE, overrid
   for (missing_function in missing_functions){
     cat(paste0("The function name ", missing_function, " cannot be found in aou.phenotyper2 queries. Please check the entries.\n"))
   }
-  funcs_to_run = query_list[query_list %in% ls("package:phenotyper2")]
+  funcs_to_run = query_list[query_list %in% ls("package:aou.phenotyper2")]
   if(length(funcs_to_run) == 0){
     cat("No valid function can be found in the list. No queries applied!")
   }else{
