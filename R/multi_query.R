@@ -36,7 +36,7 @@ multi_query <- function(query_list, output_folder, load_queries = FALSE, overrid
     if(load_queries){
       query_results = list()
       for(func_to_run in funcs_to_run){
-        query_results[[func_to_run]] = read_bucket(paste0(output_folder,x,".csv"))
+        query_results[[func_to_run]] = read_bucket(paste0(output_folder,"/",func_to_run,".csv"))
       }
       return(query_results)
     }
