@@ -50,7 +50,7 @@ multi_query <- function(query_list, output_folder, load_queries = FALSE, overrid
           cat("Some of the queries doesn't have the columns to merge on. Returning query list instead.")
           return(query_results)
         }else{
-          return(Reduce(function(x,y) merge(x,y,by="person_id", all.x=T, all.y=T), query_results))
+          return(Reduce(function(x,y) merge(x,y,by=merge_on, all.x=T, all.y=T), query_results))
         }
       }
     }
