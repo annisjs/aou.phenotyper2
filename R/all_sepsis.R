@@ -180,7 +180,7 @@
 #' •	R7881	Bacteremia
 #' 
 #' @export
-sepsis <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+all_sepsis <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     hosp <- aou.reader::inpatient_icd_query(c("995.91", "995.92", "785.52"))
     icd10 <- aou.reader::inpatient_icd_query(c("A02.1","A20.7","A22.7","A26.7","A32.7","A39.1","A39.2","A39.3","A39.4","A39.89","A39.9","A40.0","A40.1","A40.3","A40.8","A40.9","A41.01","A41.02","A41.1","A41.2","A41.3","A41.4","A41.50","A41.51","A41.52","A41.53","A41.59","A41.81","A41.89","A41.9","A42.7","A54.86","B00.7","B37.7","R57.1","R57.8","R65.10","R65.11","R65.20","R65.21","R78.81"))
