@@ -2,13 +2,15 @@
 % Please edit documentation in R/multi_query.R
 \name{multi_query}
 \alias{multi_query}
-\title{All Multiple Queries}
+\title{Multiple Queries}
 \usage{
 multi_query(
   query_list,
   output_folder,
   load_queries = FALSE,
   override = FALSE,
+  merge_queries = FALSE,
+  merge_on = "person_id",
   anchor_date_table = NULL,
   before = NULL,
   after = NULL
@@ -19,20 +21,29 @@ multi_query(
 
 \item{output_folder}{the folder to write the output}
 
+\item{load_queries}{either to load results of the queries into the environment. If set true function will read each resulting query csv file and return the result. the names in list are the same as query_list}
+
+\item{override}{either to override previous results}
+
+\item{merge_queries}{either to merge queries. This uses a full merge to maintain all query information therefore might cause a cartesian product. If load_queries is set to false this parameter is ignored.}
+
+\item{merge_on}{a column name to merge queries on. If load_queries or merge_queries is set to false this parameter is ignored.}
+
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
 
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
 
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
-
-\item{either}{to override previous results}
 }
 \value{
-query results saved as output_folder/query_list[[i]].csv. If load_queries is set to true each query result is loaded to a named list
+query results saved as output_folder/query_list[\link{i}].csv.
+If load_queries is set to true and merge_queries is false a named list with each query result is returned
+If merge_queries is not TRUE the query results are merged on the given column name and the resulting data table is returned.
 }
 \description{
-All Multiple Queries
+Multiple Queries
 }
 \details{
-Runs multiple queries given by a list of function names. Name in the function needs to be exactly same with query functions in phenotyper2 package.
+Runs multiple queries given by a list of function names.
+Name in the function needs to be exactly same with query functions in aou.phenotyper2 package.
 }
