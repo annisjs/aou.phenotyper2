@@ -196,5 +196,6 @@ all_sepsis <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     hosp[, condition_start_date := as.Date(condition_start_date)]
     result_all <- rbind(icd9,icd10,hosp)
     result_all <- result_all[!duplicated(result_all)]
+    colnames(result_all) <- c("person_id","all_sepsis_date")
     .write_to_bucket(result_all,output_folder,"all_sepsis")
 }

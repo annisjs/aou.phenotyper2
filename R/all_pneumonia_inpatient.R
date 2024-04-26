@@ -19,6 +19,8 @@ all_pneumonia_inpatient <- function(output_folder,anchor_date_table=NULL,before=
                    "J12.81", "J12.89", "J12.9", "J13", "J13.%", "J14", "J14.%", "J15.3", "J15.4", "J15.7", "J15.9", "J16.0", "J16.8", "J18.0", "J18.1", "J18.8", "J18.9")
   icd_codes <- c(icd9_codes,icd10_codes)
   result_all <- aou.reader::inpatient_icd_query(icd_codes,anchor_date_table,before,after)
+  result_all <- result_all[,c("person_id","condition_start_date")]
   result_all <- result_all[!duplicated(result_all)]
+  colnames(result_all) <- c("person_id","all_pneumonia_inpatient_date")
   .write_to_bucket(result_all,output_folder,"all_pneumonia_inpatient")
 }
