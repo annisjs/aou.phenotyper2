@@ -28,7 +28,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_icd10s <- c("I42.0")
   subtype_icd10s <- c("I42.6","I42.7","O90.3")
   #lvsd_icd10s <- c("I50.2","I50.42")
-  icd10_codes = cbind(dcm_icd10s, subtype_icd10s)
+  icd10_codes = c(dcm_icd10s, subtype_icd10s)
 
   #icd9s
   subtype_icd9s <- c("674.5","425.5")
@@ -39,7 +39,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_snomeds <- c("52029003","471890009","195021004","53043001","766883006")
   #lvsd_snomeds <- c("153941000119100","417996009","703275009","703272007","703274008","443254009","153931000119109","443253003","441481004","120871000119108","120861000119102","120851000119104","1064941000000100")
   subtype_snomeds <- c("204981000119101","30496006","74249003","111285003","1149109001","16253001","72972005","880042006","1234750000","12563008","62377009","16253001")
-  snomed_codes = cbind(dcm_snomeds, subtype_snomeds)
+  snomed_codes = c(dcm_snomeds, subtype_snomeds)
   
   result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
