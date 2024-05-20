@@ -37,8 +37,8 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
   result_snomed <- aou.reader::snomed_query(snomed_codes,anchor_date_table,before,after)
   result_all <- rbindlist(list(result_icd9,result_icd10,result_snomed))
-  result_all <- setDT(result_all)[,.(mi_status = length(condition_start_date) > 0,
-                                     mi_entry_date = min(condition_start_date)),
+  result_all <- setDT(result_all)[,.(dcm_status = length(condition_start_date) > 0,
+                                     dcm_entry_date = min(condition_start_date)),
                                   .(person_id)]
   .write_to_bucket(result_all,output_folder,"dcm")
 }
