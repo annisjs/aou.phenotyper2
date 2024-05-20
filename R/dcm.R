@@ -22,17 +22,25 @@
 #' @export
 dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  icd9_codes <- c("674.5","425.5","428.2","428.4")
+  #commented out codes will likely be used in future update
 
-  icd10_codes <- c("I42.0","I42.6","I42.7","O90.3","I50.2","I50.42")
+  #icd10s
+  dcm_icd10s <- c("I42.0")
+  subtype_icd10s <- c("I42.6","I42.7","O90.3")
+  #lvsd_icd10s <- c("I50.2","I50.42")
+  icd10_codes = cbind(dcm_icd10s, subtype_icd10s)
 
-  snomed_codes <- c("85898001","52029003","471890009","195021004","53043001",
-              "204981000119101","30496006","74249003","111285003","1149109001","16253001",
-              "72972005","713523008","880042006","1234750000","12563008","766883006",
-              "471841009","62377009","16253001","153941000119100","417996009","703275009",
-              "703272007","703274008","443254009","153931000119109","443253003","441481004",
-              "120871000119108","120861000119102","120851000119104","1064941000000100")
+  #icd9s
+  subtype_icd9s <- c("674.5","425.5")
+  #lvsd_icd9s <- c("428.2","428.4")
+  icd9_codes = subtype_icd9s
 
+  #snomeds
+  dcm_snomeds <- c("52029003","471890009","195021004","53043001","766883006")
+  #lvsd_snomeds <- c("153941000119100","417996009","703275009","703272007","703274008","443254009","153931000119109","443253003","441481004","120871000119108","120861000119102","120851000119104","1064941000000100")
+  subtype_snomeds <- c("204981000119101","30496006","74249003","111285003","1149109001","16253001","72972005","880042006","1234750000","12563008","62377009","16253001")
+  snomed_codes = cbind(dcm_snomeds, subtype_snomeds)
+  
   result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
   result_snomed <- aou.reader::snomed_query(snomed_codes,anchor_date_table,before,after)
