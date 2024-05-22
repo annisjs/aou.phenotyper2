@@ -18,7 +18,7 @@ copd_inpatient <- function(output_folder,anchor_date_table=NULL,before=NULL,afte
     icd9_codes <- c("491","491.0","491.1","491.2","491.20","491.21","491.22","491.8","491.9","492","492.0","492.8","496","496.0","493.21","493.22")
     icd10_codes <- c("J44.%","J43.%","J42","J41.%")
     icd_codes <- c(icd9_codes,icd10_codes)
-    result_all <- aou.reader::icd_inpatient_query(icd_codes,anchor_date_table,before,after)
+    result_all <- aou.reader::inpatient_icd_query(icd_codes,anchor_date_table,before,after)
     result_all <- result_all[order(condition_start_date)]
     result_all <- result_all[,.(copd_inpatient_status = TRUE,
                                 copd_inpatient_entry_date = condition_start_date[1]),
