@@ -16,8 +16,8 @@ heart_failure_primary_inpatient <- function(output_folder,anchor_date_table=NULL
     codes <- c("425","425.%","428","428.%","I42","I42.%","I50","I50.%")
     result_all <- aou.reader::hospitalization_query(codes,anchor_date_table,before,after)
     result_all <- result_all[order(hospitalization_entry_date)]
-    result_all <- result_all[,.(heart_failure_inpatient_entry_date = hospitalization_entry_date[1],
-                                heart_failure_inpatient_status = TRUE),
+    result_all <- result_all[,.(heart_failure_primary_inpatient_entry_date = hospitalization_entry_date[1],
+                                heart_failure_primary_inpatient_status = TRUE),
                               .(person_id)]
     .write_to_bucket(result_all,output_folder,"heart_failure_primary_inpatient")
 }
