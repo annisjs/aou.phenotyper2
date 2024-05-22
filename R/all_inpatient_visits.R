@@ -8,7 +8,7 @@
 #' @export
 all_inpatient_visits <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    result_all <- aou.reader::inpatient_visit_query(output_folder,anchor_date_table,before,after)
+    result_all <- aou.reader::inpatient_visit_query(anchor_date_table,before,after)
     colnames(result_all) <- c("person_id","all_inpatient_visits_entry_date")
     .write_to_bucket(result_all,output_folder,"all_inpatient_visits")
 }
