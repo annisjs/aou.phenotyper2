@@ -7,6 +7,7 @@
 multi_query(
   query_list,
   output_folder,
+  bucket = NULL,
   load_queries = FALSE,
   override = FALSE,
   merge_queries = FALSE,
@@ -20,6 +21,8 @@ multi_query(
 \item{query_list}{a list of names of query functions to run}
 
 \item{output_folder}{the folder to write the output}
+
+\item{bucket}{the bucket to check for cached query}
 
 \item{load_queries}{either to load results of the queries into the environment. If set true function will read each resulting query csv file and return the result. the names in list are the same as query_list}
 
