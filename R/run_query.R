@@ -1,0 +1,41 @@
+#' Run Query
+#'
+#' @param query_name a string of query name to run
+#' @param output_folder the folder to write the output and check for the cache
+#' @param bucket the bucket to check for cached query
+#' @param load_query either to load the result
+#' @param override either to override previous results
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @details Runs a query after checking the cache in the output_folder. 
+#' Name in the function needs to be exactly same with query functions in aou.phenotyper2 package.
+#'
+#' 
+#' @return query result saved as output_folder/query_name.csv. If load_query is set to TRUE, query result is also returned.
+#' @export
+run_query <- function(query_name, output_folder, bucket = NULL, load_query = FALSE, override = FALSE, anchor_date_table=NULL,before=NULL,after=NULL)
+{
+  if(!query_name %in% ls("package:aou.phenotyper2")){
+    stop("The function name ", query_name, " cannot be found in aou.phenotyper2 queries. Please check the entries.\n")
+  }
+  if(is.null(bucket)){
+    bucket <- Sys.getenv("WORKSPACE_BUCKET")
+  }
+  if(override || (system(str_glue("gsutil ls {bucket}/{output_folder}/{query_name}.csv"))==1)){
+    cat(paste0("Running ", query_name, "\n"))
+    match.fun(query_name)(output_folder, anchor_date_table=NULL,before=NULL,after=NULL)
+    if(Sys.getenv("WORKSPACE_BUCKET") != bucket){
+      system(str_glue('gsutil cp {Sys.getenv("WORKSPACE_BUCKET")}/{output_folder}/{query_name}.csv {bucket}/{output_folder}/{query_name}.csv'))
+    }
+  }else{
+    if(bucket == Sys.getenv("WORKSPACE_BUCKET")){
+      cat(paste0(query_name, " query is cached. Skipping...\n"))
+    }else{
+      cat(str_glue("The {query_name} is cached from {bucket}. Skipping...\n"))
+    }
+  }
+  if(load_query){
+    return(read_bucket(paste0(bucket,"/",output_folder,"/",query_name, ".csv")))
+  }
+}
