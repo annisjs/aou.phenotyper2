@@ -19,7 +19,7 @@ sleep_level_deep <- function(output_folder,anchor_date_table=NULL,before=NULL,af
     colnames(result) <- c('person_id',
                         'sleep_level_deep_date',
                         'sleep_level_deep_start_datetime',
-                        'sleep_level_deep_is_main_sleep',
-                        'sleep_level_deep_duration_in_min')
+                        'sleep_level_deep_duration_in_min',
+                        'sleep_level_deep_is_main_sleep')
   .write_to_bucket(result,output_folder,"sleep_level_deep")
 }

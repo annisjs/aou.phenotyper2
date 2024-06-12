@@ -19,7 +19,7 @@ sleep_level_awake <- function(output_folder,anchor_date_table=NULL,before=NULL,a
     colnames(result) <- c('person_id',
                         'sleep_level_awake_date',
                         'sleep_level_awake_start_datetime',
-                        'sleep_level_awake_is_main_sleep',
-                        'sleep_level_awake_duration_in_min')
+                        'sleep_level_awake_duration_in_min',
+                        'sleep_level_awake_is_main_sleep')
   .write_to_bucket(result,output_folder,"sleep_level_awake")
 }
