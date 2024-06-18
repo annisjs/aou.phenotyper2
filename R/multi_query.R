@@ -18,7 +18,7 @@
 #' If load_queries is set to true and merge_queries is false a named list with each query result is returned
 #' If merge_queries is not TRUE the query results are merged on the given column name and the resulting data table is returned.
 #' @export
-multi_query <- function(query_list, output_folder, bucket=NULL, load_queries = FALSE, override = FALSE, merge_queries=FALSE, merge_on = "person_id", anchor_date_table=NULL,before=NULL,after=NULL)
+multi_query <- function(query_list, output_folder, bucket=NULL, load_queries = FALSE, override = FALSE, merge_queries=FALSE, merge_on = "person_id", ...)
 {
   missing_functions <- query_list[!query_list %in% ls("package:aou.phenotyper2")]
   for (missing_function in missing_functions){
@@ -28,7 +28,7 @@ multi_query <- function(query_list, output_folder, bucket=NULL, load_queries = F
   if(length(funcs_to_run) == 0){
     cat("No valid function can be found in the list. No queries applied!")
   }else{
-    query_results <- lapply(funcs_to_run, run_query, output_folder=output_folder, bucket=bucket, load_query=load_queries, override=override, anchor_date_table=NULL,before=NULL,after=NULL)
+    query_results <- lapply(funcs_to_run, run_query, output_folder=output_folder, bucket=bucket, load_query=load_queries, override=override, ...)
     names(query_results) <- funcs_to_run
     if(load_queries && !merge_queries){
       return(query_results)

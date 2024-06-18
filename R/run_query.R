@@ -14,7 +14,7 @@
 #' 
 #' @return query result saved as output_folder/query_name.csv. If load_query is set to TRUE, query result is also returned.
 #' @export
-run_query <- function(query_name, output_folder, bucket = NULL, load_query = FALSE, override = FALSE, anchor_date_table=NULL,before=NULL,after=NULL)
+run_query <- function(query_name, output_folder, bucket = NULL, load_query = FALSE, override = FALSE, ...)
 {
   if(!query_name %in% ls("package:aou.phenotyper2")){
     stop("The function name ", query_name, " cannot be found in aou.phenotyper2 queries. Please check the entries.\n")
@@ -24,7 +24,7 @@ run_query <- function(query_name, output_folder, bucket = NULL, load_query = FAL
   }
   if(override || (system(str_glue("gsutil ls {bucket}/{output_folder}/{query_name}.csv"))==1)){
     cat(paste0("Running ", query_name, "\n"))
-    match.fun(query_name)(output_folder, anchor_date_table=NULL,before=NULL,after=NULL)
+    match.fun(query_name)(output_folder, ...)
     if(Sys.getenv("WORKSPACE_BUCKET") != bucket){
       system(str_glue('gsutil cp {Sys.getenv("WORKSPACE_BUCKET")}/{output_folder}/{query_name}.csv {bucket}/{output_folder}/{query_name}.csv'))
     }
