@@ -4,7 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @return CSV saved to output_folder/glp1.meds
+#' @return CSV saved to output_folder/glp1_meds.csv
 #' @details Meds: "lixisenatide","adlyxin","albiglutide","tanzeum","exenatide","bydureon bcise","bydureon","byetta","liraglutide","saxenda","victoza",
 #'    "dulaglutide","trulicity","semaglutide","ozempic","rybelsus","tirzepatide","mounjaro","zepbound"
 #' @export

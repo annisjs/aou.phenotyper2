@@ -16,7 +16,7 @@ glp1_meds(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
-CSV saved to output_folder/glp1.meds
+CSV saved to output_folder/glp1_meds.csv
 }
 \description{
 GLP1 Meds
