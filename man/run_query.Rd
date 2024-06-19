@@ -6,13 +6,11 @@
 \usage{
 run_query(
   query_name,
-  output_folder,
+  output_folder = "datasets",
   bucket = NULL,
   load_query = FALSE,
   override = FALSE,
-  anchor_date_table = NULL,
-  before = NULL,
-  after = NULL
+  ...
 )
 }
 \arguments{
@@ -26,11 +24,7 @@ run_query(
 
 \item{override}{either to override previous results}
 
-\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
-
-\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
-
-\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+\item{...}{optional parameter to be passed to the query}
 }
 \value{
 query result saved as output_folder/query_name.csv. If load_query is set to TRUE, query result is also returned.

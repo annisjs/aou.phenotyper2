@@ -6,15 +6,13 @@
 \usage{
 multi_query(
   query_list,
-  output_folder,
+  output_folder = "datasets",
   bucket = NULL,
   load_queries = FALSE,
   override = FALSE,
   merge_queries = FALSE,
   merge_on = "person_id",
-  anchor_date_table = NULL,
-  before = NULL,
-  after = NULL
+  ...
 )
 }
 \arguments{
@@ -32,11 +30,7 @@ multi_query(
 
 \item{merge_on}{a column name to merge queries on. If load_queries or merge_queries is set to false this parameter is ignored.}
 
-\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
-
-\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
-
-\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+\item{...}{optional parameter to be passed to the query. If a query gets an unexpected parameter this may raise an error.}
 }
 \value{
 query results saved as output_folder/query_list[\link{i}].csv.
