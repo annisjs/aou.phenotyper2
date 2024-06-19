@@ -6,6 +6,7 @@
 \usage{
 hourly_steps_count(
   output_folder,
+  cohort = NULL,
   anchor_date_table = NULL,
   before = NULL,
   after = NULL
@@ -13,6 +14,8 @@ hourly_steps_count(
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
+
+\item{cohort}{a vector of ids to limit the query}
 
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
 
