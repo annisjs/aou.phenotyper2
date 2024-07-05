@@ -37,5 +37,5 @@ afib_strict <- function(output_folder,anchor_date_table=NULL,before=NULL,after=N
     result_all <- result_all[,.(afib_strict_entry_date = min(condition_start_date),
                                         afib_strict_status = length(unique(condition_start_date)) >= 2),
                                     .(person_id)]
-    .write_to_bucket(result,output_folder,"afib_strict")
+    .write_to_bucket(result_all,output_folder,"afib_strict")
 }
