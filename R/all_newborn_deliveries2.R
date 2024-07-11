@@ -21,6 +21,6 @@ all_newborn_deliveries2 <- function(output_folder,anchor_date_table=NULL,before=
                             "all_newborn_deliveries2_entry_date",
                             "all_newborn_deliveries2_type",
                             "all_newborn_deliveries2_concept_name",
-                            "all_newborn_deliveries2_concept_id",)
+                            "all_newborn_deliveries2_concept_id")
     .write_to_bucket(result_all,output_folder,"all_newborn_deliveries2")
 }
