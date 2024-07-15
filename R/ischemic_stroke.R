@@ -18,8 +18,8 @@ ischemic_stroke <- function(output_folder,anchor_date_table=NULL,before=NULL,aft
   result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
   result_all <- rbind(result_icd9,result_icd10)
-  result_all <- setDT(result_all)[,.(stroke_entry_date = min(condition_start_date),
-                                     stroke_status = length(condition_start_date) > 0),
+  result_all <- setDT(result_all)[,.(ischemic_stroke_entry_date = min(condition_start_date),
+                                     ischemic_stroke_status = length(condition_start_date) > 0),
                                   .(person_id)]
   .write_to_bucket(result_all,output_folder,"ischemic_stroke")
 }
