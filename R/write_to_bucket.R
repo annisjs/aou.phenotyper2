@@ -4,6 +4,7 @@
 #' @param name the name of the file to write (without extension)
 .write_to_bucket <- function(dat,output_folder,name)
 {
+    dat <- dat[!duplicated(dat)]
     if (missing(output_folder))
     {
         return(dat)
