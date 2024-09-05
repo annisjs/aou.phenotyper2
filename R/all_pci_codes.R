@@ -14,6 +14,6 @@ all_pci_codes <- function(output_folder,anchor_date_table=NULL,before=NULL,after
                     "37246","1029697","1021168","1021167","1021166","1021165","1021164","1021163","0715T","0659T"
     )
     result_cpt <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
-    colnames(result_cpt) <- c("person_id","all_pci_codes_entry_date","all_pci_codes_value")
+    colnames(result_cpt) <- c("person_id","all_pci_codes_value","all_pci_codes_entry_date")
     .write_to_bucket(result_cpt,output_folder,"all_pci_codes")
 }

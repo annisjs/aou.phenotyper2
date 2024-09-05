@@ -11,6 +11,6 @@ all_thrombolysis_codes <- function(output_folder,anchor_date_table=NULL,before=N
 {
     cpt_codes <- c("92977","92975","1012986")
     result_cpt <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
-    colnames(result_cpt) <- c("person_id","all_thrombolysis_codes_entry_date","all_thrombolysis_codes_value")
+    colnames(result_cpt) <- c("person_id","all_thrombolysis_codes_value","all_thrombolysis_codes_entry_date")
     .write_to_bucket(result_cpt,output_folder,"all_thrombolysis_codes")
 }

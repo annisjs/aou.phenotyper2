@@ -14,6 +14,6 @@ all_cabg_codes <- function(output_folder,anchor_date_table=NULL,before=NULL,afte
     "33521","33519","33518","33517"
     )
     result_cpt <- aou.reader::cpt_query(cpt_codes,anchor_date_table,before,after)
-    colnames(result_cpt) <- c("person_id","all_cabg_codes_entry_date","all_cabg_codes_value")
+    colnames(result_cpt) <- c("person_id","all_cabg_codes_value","all_cabg_codes_entry_date")
     .write_to_bucket(result_cpt,output_folder,"all_cabg_codes")
 }
