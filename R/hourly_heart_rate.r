@@ -10,8 +10,8 @@
 #' @return output_folder/hourly_heart_rate.csv
 #' @import data.table stringr aou.reader bigrquery
 #' @export
-hourly_heart_rate <- function(output_folder, cohort=NULL,anchor_date_table=NULL, before=NULL, after=NULL)
+hourly_heart_rate <- function(output_folder, anchor_date_table=NULL, before=NULL, after=NULL, cohort=NULL)
 {
-  result <- aou.reader::hourly_heart_rate(anchor_date_table=anchor_date_table, before=before, after=after, cohort=cohort)
+  result <- aou.reader::hourly_heart_rate_query(anchor_date_table=anchor_date_table, before=before, after=after, cohort=cohort)
   .write_to_bucket(result,output_folder,"hourly_heart_rate")
 }
