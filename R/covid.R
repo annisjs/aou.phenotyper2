@@ -21,8 +21,10 @@ covid <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   
   covid_test_results <- aou.reader::lab_concept_query(lab_concepts=covid_test_concept_ids,anchor_date_table=anchor_date_table,before=before,after=after)
   covid_test_results <- covid_test_results[value_as_concept_id %in% positive_test_concept_ids]
-  result_all <- rbind(covid_conditions, covid_test_results)
+  covid_test_results = covid_test_results[,.(covid_entry_date = min(measurement_date),
+                      covid_status = length(measurement_date) > 0), .(person_id)]
   
+  result_all <- rbind(covid_conditions, covid_test_results)
   results_all <- result_all[,.(covid_entry_date = min(covid_entry_date),
                                                 covid_status = length(covid_entry_date) > 0), .(person_id)]
   .write_to_bucket(result_all,output_folder,"covid")
