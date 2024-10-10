@@ -2,6 +2,7 @@
 #' @param dat the data to write
 #' @param output_folder the folder to write to
 #' @param name the name of the file to write (without extension)
+#' @import stringr
 .write_to_bucket <- function(dat,output_folder,name)
 {
     dat <- dat[!duplicated(dat)]
@@ -11,6 +12,6 @@
     } else {
         file <- paste0(name,".csv")
         data.table::fwrite(dat,file)
-        aou.bucket::cp_to_bucket(file, str_glue("{output_folder}/{file}"))
+        aou.bucket::cp_to_bucket(file, stringr::str_glue("{output_folder}/{file}"))
     }
 }
