@@ -421,6 +421,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   conghd_icd9s <- aou.reader::icd9_query(conghd_icd9_list,anchor_date_table,before,after)
   conghd_snomeds <- aou.reader::snomed_query(conghd_snomeds_list,anchor_date_table,before,after)
   conghd_cpts <- aou.reader::cpt_query(conghd_cpts_list,anchor_date_table,before,after)
+  #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
+  conghd_cpts <- conghd_cpts %>% 
+          rename(
+            condition_start_date = entry_date,
+            condition_source_value = cpt_code
+            )
   conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts))
   conghd$conghd_status <- TRUE
 
