@@ -426,10 +426,10 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   #first mi/revasc
   first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci))
-  first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_source_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
+  first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = person_id) #should group by person id and order by code date asc then keep uniques(first)
   first_mi_revasc_code <- first_mi_revasc_code %>% 
           rename(
-            first_mi_revasc_code_date = condition_source_date,
+            first_mi_revasc_code_date = condition_start_date,
             first_mi_revasc_code_value = condition_source_value
             )
 
@@ -437,18 +437,18 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_assw <- left_join(dcm_assw,first_mi_revasc_code,by="person_id")
 
   dcm <- dcm %>%
-          filter((is.null(first_mi_revasc_code_date)) | (condition_source_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+          filter((is.null(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
   dcm_assw <- dcm_assw %>%
-          filter((is.null(first_mi_revasc_code_date)) | (condition_source_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+          filter((is.null(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
   dcm <- dcm %>% 
           rename(
-            dcm_entry_date = condition_source_date
+            dcm_entry_date = condition_start_date
             )
   dcm_assw <- dcm_assw %>% 
           rename(
-            dcm_assw_entry_date = condition_source_date
+            dcm_assw_entry_date = condition_start_date
             )
   #might need to make these DFs unique?
   dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
@@ -475,6 +475,28 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data <- left_join(data,throm,by="person_id")
   data <- left_join(data,rcm,by="person_id")
   data <- left_join(data,hcm,by="person_id")
+
+  #fill NA
+  data <- data %>%
+    mutate(dcm_status = if_else(is.na(dcm_status), FALSE, dcm_status))
+  data <- data %>%
+    mutate(dcm_assw_status = if_else(is.na(dcm_assw_status), FALSE, dcm_assw_status))
+  data <- data %>%
+    mutate(mi_status = if_else(is.na(mi_status), FALSE, mi_status))
+  data <- data %>%
+    mutate(pci_status = if_else(is.na(pci_status), FALSE, pci_status))
+  data <- data %>%
+    mutate(lvsd_status = if_else(is.na(lvsd_status), FALSE, lvsd_status))
+  data <- data %>%
+    mutate(cabg_status = if_else(is.na(cabg_status), FALSE, cabg_status))
+  data <- data %>%
+    mutate(conghd_status = if_else(is.na(conghd_status), FALSE, conghd_status))
+  data <- data %>%
+    mutate(throm_status = if_else(is.na(throm_status), FALSE, throm_status))
+  data <- data %>%
+    mutate(rcm_status = if_else(is.na(rcm_status), FALSE, rcm_status))
+  data <- data %>%
+    mutate(hcm_status = if_else(is.na(hcm_status), FALSE, hcm_status))
 
   #sort into cases/controls/exclusions/exclusions for dcm
   data$exclude_for_dcm <- with(data, ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE))
