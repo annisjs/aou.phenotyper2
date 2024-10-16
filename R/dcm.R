@@ -129,6 +129,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                       '586381000000108','68466008','24080003','175069008','586361000000104','785071000000101',
                                                       '609152003','750781000000101','752481000000106','1064701000000100','737085003')
   pci_cpts <- aou.reader::cpt_query(pci_cpt_list,anchor_date_table,before,after)
+  #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
+  pci_cpts <- pci_cpts %>% 
+          rename(
+            condition_start_date = entry_date,
+            condition_source_value = cpt_code
+            )
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
   pci <- rbindlist(list(pci_cpts,pci_snomeds))
   pci$pci_status <- TRUE
@@ -138,6 +144,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   throm_snomeds_list <- c('384694007','61953007','75761004','80762004','91338001','384693001',
                      '432093004','232731009','175071008','6026008','24080003')
   throm_cpts <- aou.reader::cpt_query(throm_cpt_list,anchor_date_table,before,after)
+  #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
+  throm_cpts <- throm_cpts %>% 
+          rename(
+            condition_start_date = entry_date,
+            condition_source_value = cpt_code
+            )
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
   throm <- rbindlist(list(throm_cpts,throm_snomeds))
   throm$throm_status <- TRUE
@@ -181,6 +193,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                         '175011002','175007008','175009006','175008003','270480004','691621000000102',
                                                         '175056009','563331000000101','175057000','591171000000103','175049003')
   cabg_cpts <- aou.reader::cpt_query(cabg_cpt_list,anchor_date_table,before,after)
+  #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
+  cabg_cpts <- cabg_cpts %>% 
+          rename(
+            condition_start_date = entry_date,
+            condition_source_value = cpt_code
+            )
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
   cabg <- rbindlist(list(cabg_cpts,cabg_snomeds))
   cabg$cabg_status <- TRUE
