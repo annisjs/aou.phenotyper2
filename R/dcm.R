@@ -450,7 +450,8 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   #first mi/revasc
   first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
-  first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = person_id) #should group by person id and order by code date asc then keep uniques(first)
+  head(first_mi_revasc_code_all)
+  first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = 'person_id') #should group by person id and order by code date asc then keep uniques(first)
   first_mi_revasc_code <- first_mi_revasc_code %>% 
           rename(
             first_mi_revasc_code_date = condition_start_date,
