@@ -38,7 +38,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                        '90202001','2024009','29201009','1954004','233874005')
   dcm_icd10s <- aou.reader::icd10_query(dcm_icd10_list,anchor_date_table,before,after)
   dcm_snomeds <- aou.reader::snomed_query(dcm_snomeds_list,anchor_date_table,before,after)
-  dcm <- rbindlist(list(dcm_icd10s,dcm_snomeds),use.names=TRUE)
+  dcm <- rbindlist(list(dcm_icd10s,dcm_snomeds),use.names=TRUE,fill=TRUE)
   dcm$dcm_status <- TRUE
 
   #DCM assw / NICM
@@ -62,7 +62,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_assw_icd10s <- aou.reader::icd10_query(dcm_assw_icd10_list,anchor_date_table,before,after)
   dcm_assw_icd9s <- aou.reader::icd9_query(dcm_assw_icd9_list,anchor_date_table,before,after)
   dcm_assw_snomeds <- aou.reader::snomed_query(dcm_assw_snomeds_list,anchor_date_table,before,after)
-  dcm_assw <- rbindlist(list(dcm_assw_icd10s,dcm_assw_icd9s,dcm_assw_snomeds),use.names=TRUE)
+  dcm_assw <- rbindlist(list(dcm_assw_icd10s,dcm_assw_icd9s,dcm_assw_snomeds),use.names=TRUE,fill=TRUE)
   dcm_assw$dcm_assw_status <- TRUE
 
   #MI
@@ -110,7 +110,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   mi_icd10s <- aou.reader::icd10_query(mi_icd10_list,anchor_date_table,before,after)
   mi_icd9s <- aou.reader::icd9_query(mi_icd9_list,anchor_date_table,before,after)
   mi_snomeds <- aou.reader::snomed_query(mi_snomeds_list,anchor_date_table,before,after)
-  mi <- rbindlist(list(mi_icd10s,mi_icd9s,mi_snomeds),use.names=TRUE)
+  mi <- rbindlist(list(mi_icd10s,mi_icd9s,mi_snomeds),use.names=TRUE,fill=TRUE)
   mi$mi_status <- TRUE
 
   #PCI
@@ -136,7 +136,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
             condition_source_value = cpt_code
             )
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
-  pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE)
+  pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
 
   #THROM
@@ -151,7 +151,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
             condition_source_value = cpt_code
             )
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
-  throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE)
+  throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
 
   #CABG
@@ -200,7 +200,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
             condition_source_value = cpt_code
             )
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
-  cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE)
+  cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE,fill=TRUE)
   cabg$cabg_status <- TRUE
 
   #HCM
@@ -216,7 +216,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   hcm_icd9s <- aou.reader::icd9_query(hcm_icd9_list,anchor_date_table,before,after)
   hcm_icd10s <- aou.reader::icd10_query(hcm_icd10_list,anchor_date_table,before,after)
   hcm_snomeds <- aou.reader::snomed_query(hcm_snomeds_list,anchor_date_table,before,after)
-  hcm <- rbindlist(list(hcm_icd9s,hcm_icd10s,hcm_snomeds),use.names=TRUE)
+  hcm <- rbindlist(list(hcm_icd9s,hcm_icd10s,hcm_snomeds),use.names=TRUE,fill=TRUE)
   hcm$hcm_status <- TRUE
 
   #RCM
@@ -229,7 +229,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                         '389996009','93456007','123264005','92521004','111507009')
   rcm_icd10s <- aou.reader::icd10_query(rcm_icd10_list,anchor_date_table,before,after)
   rcm_snomeds <- aou.reader::snomed_query(rcm_snomeds_list,anchor_date_table,before,after)
-  rcm <- rbindlist(list(rcm_icd10s,rcm_snomeds),use.names=TRUE)
+  rcm <- rbindlist(list(rcm_icd10s,rcm_snomeds),use.names=TRUE,fill=TRUE)
   rcm$rcm_status <- TRUE
 
   #LVSD
@@ -244,7 +244,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   lvsd_icd10s <- aou.reader::icd10_query(lvsd_icd10_list,anchor_date_table,before,after)
   lvsd_icd9s <- aou.reader::icd9_query(lvsd_icd9_list,anchor_date_table,before,after)
   lvsd_snomeds <- aou.reader::snomed_query(lvsd_snomeds_list,anchor_date_table,before,after)
-  lvsd <- rbindlist(list(lvsd_icd10s,lvsd_icd9s,lvsd_snomeds),use.names=TRUE)
+  lvsd <- rbindlist(list(lvsd_icd10s,lvsd_icd9s,lvsd_snomeds),use.names=TRUE,fill=TRUE)
   lvsd$lvsd_status <- TRUE
 
   #CongHD
@@ -445,11 +445,11 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
             condition_start_date = entry_date,
             condition_source_value = cpt_code
             )
-  conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE)
+  conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE,fill=TRUE)
   conghd$conghd_status <- TRUE
 
   #first mi/revasc
-  first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE)
+  first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
   first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = person_id) #should group by person id and order by code date asc then keep uniques(first)
   first_mi_revasc_code <- first_mi_revasc_code %>% 
           rename(
