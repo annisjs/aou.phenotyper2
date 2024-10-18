@@ -452,7 +452,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
   #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
 
-  #alternate ordering for testing
+  #sort and filter
   first_mi_revasc_code <- first_mi_revasc_code_all %>% 
                             group_by(person_id) %>%
                             filter(condition_start_date == min(condition_start_date))
