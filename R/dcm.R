@@ -35,7 +35,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                        '413994008','12563008','16253001','195021004','52029003','53043001',
                                                        '471890009','20529002','165468981000119000','723993005','719835006',
                                                        '72972005','880042006','1234750000','83521008','2180001','34342000',
-                                                       '90202001','2024009','29201009','1954004','233874005')
+                                                       '90202001','2024009','29201009','1954004','233874005','399020009','74368002','389995008')
   dcm_icd10s <- aou.reader::icd10_query(dcm_icd10_list,anchor_date_table,before,after)
   dcm_snomeds <- aou.reader::snomed_query(dcm_snomeds_list,anchor_date_table,before,after)
   dcm <- rbindlist(list(dcm_icd10s,dcm_snomeds),use.names=TRUE,fill=TRUE)
