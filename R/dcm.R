@@ -534,8 +534,9 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data$nicm_case <- with(data, ifelse((dcm_assw_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE))
   data$exclude <- with(data, ifelse(((dcm_case == FALSE) & (nicm_case == FALSE)) & ((mi_status == TRUE) | (conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE) | (cabg_status == TRUE) | (pci_status == TRUE) | (throm_status == TRUE)), TRUE, FALSE))
   data$dcm_control <- with(data, ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE))
+  data$dcm_no_exclusions_case <- with(data, ifelse((dcm_status == TRUE), TRUE, FALSE))
 
-  final <- select(data,person_id,dcm_case,nicm_case,dcm_control,exclude)
+  final <- select(data,person_id,dcm_case,nicm_case,dcm_control,exclude,dcm_no_exclusions_case)
 
   .write_to_bucket(final,output_folder,"dcm")
 
