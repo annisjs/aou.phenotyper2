@@ -466,11 +466,13 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm <- left_join(dcm,first_mi_revasc_code,by="person_id")
   dcm_assw <- left_join(dcm_assw,first_mi_revasc_code,by="person_id")
 
+  dcm_test <- dcm
+
   dcm <- dcm %>%
-          filter((is.null(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
   dcm_assw <- dcm_assw %>%
-          filter((is.null(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
   dcm <- dcm %>% 
           rename(
