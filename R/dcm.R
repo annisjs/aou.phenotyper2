@@ -481,16 +481,16 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
             dcm_assw_entry_date = condition_start_date
             )
   #might need to make these DFs unique?
-  dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
-  dcm_assw <- unique(select(dcm_assw,person_id,dcm_assw_status,dcm_assw_entry_date))
-  mi <- unique(select(mi,person_id,mi_status))
-  pci <- unique(select(pci,person_id,pci_status))
-  lvsd <- unique(select(lvsd,person_id,lvsd_status))
-  cabg <- unique(select(cabg,person_id,cabg_status))
-  conghd <- unique(select(conghd,person_id,conghd_status))
-  throm <- unique(select(throm,person_id,throm_status))
-  rcm <- unique(select(rcm,person_id,rcm_status))
-  hcm <- unique(select(hcm,person_id,hcm_status))
+  #dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
+  #dcm_assw <- unique(select(dcm_assw,person_id,dcm_assw_status,dcm_assw_entry_date))
+  #mi <- unique(select(mi,person_id,mi_status))
+  #pci <- unique(select(pci,person_id,pci_status))
+  #lvsd <- unique(select(lvsd,person_id,lvsd_status))
+  #cabg <- unique(select(cabg,person_id,cabg_status))
+  #conghd <- unique(select(conghd,person_id,conghd_status))
+  #throm <- unique(select(throm,person_id,throm_status))
+  #rcm <- unique(select(rcm,person_id,rcm_status))
+  #hcm <- unique(select(hcm,person_id,hcm_status))
 
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
