@@ -35,6 +35,7 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     med_status_cols <- paste0("status_", med_classes)
     dt_cast[, sleep_meds_any_entry_date := apply(.SD, 1, min, na.rm = T), .SDcols = med_date_cols]
     dt_cast[, sleep_meds_any_status := TRUE]
+    for (c in med_status_cols) dt_cast[, (c) := ifelse(is.na(get(c)), FALSE, c)]
     setnames(dt_cast, med_date_cols, paste0("sleep_meds_", med_classes, "_entry_date"))
     setnames(dt_cast, med_status_cols, paste0("sleep_meds_", med_classes, "_status"))
 	.write_to_bucket(dt_cast, output_folder, "sleep_meds")
