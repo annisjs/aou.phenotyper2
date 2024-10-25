@@ -81,8 +81,8 @@ antihypertensives_breakout <- function(output_folder,anchor_date_table=NULL,befo
     dt_cast <- dcast(dt, person_id ~ med_class, value.var = c("drug_exposure_start_date","status"))
     med_date_cols <- paste0("drug_exposure_start_date_", med_classes)
     med_status_cols <- paste0("status_", med_classes)
-    dt_cast[, sleep_meds_any_entry_date := apply(.SD, 1, min, na.rm = T), .SDcols = med_date_cols]
-    dt_cast[, sleep_meds_any_status := TRUE]
+    dt_cast[, antihypertensives_breakout_any_entry_date := apply(.SD, 1, min, na.rm = T), .SDcols = med_date_cols]
+    dt_cast[, antihypertensives_breakout_any_status := TRUE]
     for (c in med_status_cols) dt_cast[, (c) := ifelse(is.na(get(c)), FALSE, get(c))]
     setnames(dt_cast, med_date_cols, paste0("antihypertensives_breakout_", med_classes, "_entry_date"))
     setnames(dt_cast, med_status_cols, paste0("antihypertensives_breakout_", med_classes, "_status"))
