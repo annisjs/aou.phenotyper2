@@ -28,7 +28,7 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     dt <- dt[order(drug_exposure_start_date)]
     dt <- dt[, row_num := 1:.N, .(person_id, med_class)]
     dt <- dt[rown_num == 1]
-    dt[, row_num := FALSE]
+    dt[, row_num := NULL]
     dt[, status := TRUE]
     dt_cast <- dcast(dt, person_id ~ med_class, value.var = c("drug_exposure_start_date","status"))
     med_date_cols <- paste0("drug_exposure_start_date_", med_classes)
