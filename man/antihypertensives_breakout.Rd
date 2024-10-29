@@ -47,7 +47,7 @@ cleviprex, isoptin, plendil, lacidipine, caldine, lacimen, lacipil, midotens, mo
 lercadip, zanadip, dynacirc, adalat, nifediac, nifedical, nimodipine, nimotop, prestalia, teczem,
 lexxel, carmen ace, coripren, tarka, azor, tribenzor, twynsta, exforge, exforge hct
 angiotenstive_ii_receptor_antagonists:
-c(candesartan, atacand, eprosartan, teveten, irbesartan, avapro, losartan, cozaar,
+candesartan, atacand, eprosartan, teveten, irbesartan, avapro, losartan, cozaar,
 olmesartan, benicar, telmisartan, micardis, valsartan, diovan, hyzaar, diovanhct,
 diovan-hct, diovan hct, entresto, sacubatril-valsartan, azilsartan, edarbi, avalide,
 azor, tribenzor, twynsta, exforge, exforge hct
