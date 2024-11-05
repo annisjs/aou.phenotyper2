@@ -128,7 +128,7 @@ outpatient_antihypertensives_breakout <- function(output_folder,anchor_date_tabl
     dt <- dt[row_num == 1]
     dt[, row_num := NULL]
     dt[, status := TRUE]
-    dt_cast <- dcast(dt, person_id + drug_type ~ med_class, value.var = c("drug_exposure_start_date","status"))
+    dt_cast <- dcast(dt, person_id + record_source ~ med_class, value.var = c("drug_exposure_start_date","status"))
     med_date_cols <- paste0("drug_exposure_start_date_", med_classes)
     med_status_cols <- paste0("status_", med_classes)
     dt_cast[, antihypertensives_breakout_any_entry_date := apply(.SD, 1, min, na.rm = T), .SDcols = med_date_cols]
@@ -136,6 +136,6 @@ outpatient_antihypertensives_breakout <- function(output_folder,anchor_date_tabl
     for (c in med_status_cols) dt_cast[, (c) := ifelse(is.na(get(c)), FALSE, get(c))]
     setnames(dt_cast, med_date_cols, paste0("outpatient_antihypertensives_breakout_", med_classes, "_entry_date"))
     setnames(dt_cast, med_status_cols, paste0("outpatient_antihypertensives_breakout_", med_classes, "_status"))
-    setnames(dt_cast, "drug_type", "outpatient_antihypertensives_breakout_drug_type")
+    setnames(dt_cast, "record_source", "outpatient_antihypertensives_breakout_record_source")
 	.write_to_bucket(dt_cast, output_folder, "outpatient_antihypertensives_breakout")
 }
