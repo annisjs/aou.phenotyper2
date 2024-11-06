@@ -20,8 +20,8 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
                     "antidepressants_off_label" = c("trazodone", "desyrel", "doxepin", "silenor"),
                     "antihistamines" = c("diphenhydramine", "benadryl", "nytol", "doxylamine", "unisom"),
                     "melatonin" = c("melatonin"),
-                    "eszopiclone" = c("lunesta"),
-                    "zolpidem" = c("ambien"))
+                    "eszopiclone" = c("lunesta","eszopiclone"),
+                    "zolpidem" = c("ambien","zolpidem"))
     med_classes <- names(med_list)
 	dt_list <- lapply(med_list, aou.reader::med_with_record_source_query, anchor_date_table, before, after)
     dt_list <- Map(cbind, dt_list, med_class = med_classes)
