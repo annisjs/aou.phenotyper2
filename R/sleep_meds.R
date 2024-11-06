@@ -19,9 +19,11 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
                     "melatonin_receptor_agonists" = c("suvorexant", "belsomra", "lemborexant", "dayvigo"),
                     "antidepressants_off_label" = c("trazodone", "desyrel", "doxepin", "silenor"),
                     "antihistamines" = c("diphenhydramine", "benadryl", "nytol", "doxylamine", "unisom"),
-                    "melatonin" = c("melatonin"))
+                    "melatonin" = c("melatonin"),
+                    "eszopiclone" = c("lunesta"),
+                    "zolpidem" = c("ambien"))
     med_classes <- names(med_list)
-	dt_list <- lapply(med_list, aou.reader::med_query, anchor_date_table, before, after)
+	dt_list <- lapply(med_list, aou.reader::med_with_record_source_query, anchor_date_table, before, after)
     dt_list <- Map(cbind, dt_list, med_class = med_classes)
     dt_list <- lapply(dt_list, function(x) x[, drug_exposure_start_date := as.Date(drug_exposure_start_date)])
     dt <- rbindlist(dt_list)
@@ -30,7 +32,7 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     dt <- dt[row_num == 1]
     dt[, row_num := NULL]
     dt[, status := TRUE]
-    dt_cast <- dcast(dt, person_id ~ med_class, value.var = c("drug_exposure_start_date","status"))
+    dt_cast <- dcast(dt, person_id + record_source  ~ med_class, value.var = c("drug_exposure_start_date","status"))
     med_date_cols <- paste0("drug_exposure_start_date_", med_classes)
     med_status_cols <- paste0("status_", med_classes)
     dt_cast[, sleep_meds_any_entry_date := apply(.SD, 1, min, na.rm = T), .SDcols = med_date_cols]
@@ -38,5 +40,6 @@ sleep_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     for (c in med_status_cols) dt_cast[, (c) := ifelse(is.na(get(c)), FALSE, get(c))]
     setnames(dt_cast, med_date_cols, paste0("sleep_meds_", med_classes, "_entry_date"))
     setnames(dt_cast, med_status_cols, paste0("sleep_meds_", med_classes, "_status"))
+    setnames(dt_cast, "record_source", "sleep_meds_record_source")
 	.write_to_bucket(dt_cast, output_folder, "sleep_meds")
 }
