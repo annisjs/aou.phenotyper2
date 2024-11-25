@@ -51,7 +51,7 @@ hermes_three <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
   hf_icd10s <- aou.reader::icd10_query(hf_icd10_list,anchor_date_table,before,after)
   hf_icd9s <- aou.reader::icd9_query(hf_icd9_list,anchor_date_table,before,after)
   hf_snomeds <- aou.reader::snomed_query(hf_snomeds_list,anchor_date_table,before,after)
-  hf <- rbindlist(list(hf_icd10s,dcm_snomeds,hf_icd9s),use.names=TRUE,fill=TRUE)
+  hf <- rbindlist(list(hf_icd10s,hf_snomeds,hf_icd9s),use.names=TRUE,fill=TRUE)
   hf$hf_status <- TRUE
 
   #ICM
