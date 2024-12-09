@@ -18,6 +18,7 @@ resting_heart_rate <- function(output_folder,anchor_date_table=NULL,before=NULL,
             by.x = c("person_id", "first_asleep_date"),
             by.y = c("person_id", "last_asleep_date")) 
   sleep_dat[, last_asleep_datetime := last_asleep_date_copy + lubridate::seconds(60*last_asleep_duration)]
+  sleep_dat <- sleep_dat[first_asleep_datetime < last_asleep_datetime]
   hourly_min_hr_dat[, datetime := lubridate::ymd_h(paste(date, hour))]
   hourly_min_hr_dat[, datetime2 := datetime]
   data.table::setkey(hourly_min_hr_dat, person_id, datetime, datetime2)
