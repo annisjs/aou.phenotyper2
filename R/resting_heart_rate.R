@@ -11,7 +11,7 @@ resting_heart_rate <- function(output_folder,anchor_date_table=NULL,before=NULL,
 {
   first_asleep_dat <- first_asleep(anchor_date_table=anchor_date_table, before=before, after=after)
   last_asleep_dat <- last_asleep(anchor_date_table=anchor_date_table, before=before, after=after)
-  hourly_min_hr_dat <- hourly_min_heart_rate(anchor_date_table=anchor_date_table, before=before, after=after)
+  hourly_min_hr_dat <- hourly_min_heart_rate(anchor_date_table=anchor_date_table, before=before, after=after, cohort=cohort)
   sleep_dat <- merge(first_asleep_dat, 
             last_asleep_dat, 
             by.x = c("person_id", "first_asleep_date"),
