@@ -24,5 +24,5 @@ resting_heart_rate <- function(output_folder,anchor_date_table=NULL,before=NULL,
   idx <- data.table::foverlaps(hourly_min_hr_dat, sleep_dat, type = "within", nomatch = NULL, which = TRUE)
   resting_hr <- hourly_min_hr_dat[idx$xid]
   resting_hr_agg <- resting_hr[, .(resting_heart_rate = min(min_heart_rate)), .(person_id, date)]
-  return(resting_hr_agg)
+  .write_to_bucket(resting_hr_agg,output_folder,"resting_heart_rate")
 }
