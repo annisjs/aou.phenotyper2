@@ -507,16 +507,16 @@ dcm_original <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
   #combine
-  data <- left_join(subjects,dcm,by="person_id")
-  data <- left_join(data,dcm_assw,by="person_id")
-  data <- left_join(data,mi,by="person_id")
-  data <- left_join(data,pci,by="person_id")
-  data <- left_join(data,lvsd,by="person_id")
-  data <- left_join(data,cabg,by="person_id")
-  data <- left_join(data,conghd,by="person_id")
-  data <- left_join(data,throm,by="person_id")
-  data <- left_join(data,rcm,by="person_id")
-  data <- left_join(data,hcm,by="person_id")
+  data <- left_join(subjects,dcm[, c("person_id", "dcm_status")],by="person_id")
+  data <- left_join(data,dcm_assw[, c("person_id", "dcm_assw_status")],by="person_id")
+  data <- left_join(data,mi[, c("person_id", "mi_status")],by="person_id")
+  data <- left_join(data,pci[, c("person_id", "pci_status")],by="person_id")
+  data <- left_join(data,lvsd[, c("person_id", "lvsd_status")],by="person_id")
+  data <- left_join(data,cabg[, c("person_id", "cabg_status")],by="person_id")
+  data <- left_join(data,conghd[, c("person_id", "conghd_status")],by="person_id")
+  data <- left_join(data,throm[, c("person_id", "throm_status")],by="person_id")
+  data <- left_join(data,rcm[, c("person_id", "rcm_status")],by="person_id")
+  data <- left_join(data,hcm[, c("person_id", "hcm_status")],by="person_id")
 
   #fill NA
   data <- data %>%
