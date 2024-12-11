@@ -136,6 +136,8 @@ dcm_original <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
             condition_source_value = cpt_code
             )
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
+  print(head(pci_cpts))
+  print(head(pci_snomeds))
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
 
