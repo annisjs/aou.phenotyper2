@@ -478,16 +478,16 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
   #combine 
-  data <- merge(subjects,dcm,by="person_id", all.x = T)
-  data <- merge(data,dcm_assw,by="person_id", all.x = T)
-  data <- merge(data,mi,by="person_id", all.x = T)
-  data <- merge(data,pci,by="person_id", all.x = T)
-  data <- merge(data,lvsd,by="person_id", all.x = T)
-  data <- merge(data,cabg,by="person_id", all.x = T)
-  data <- merge(data,conghd,by="person_id", all.x = T)
-  data <- merge(data,throm,by="person_id", all.x = T)
-  data <- merge(data,rcm,by="person_id", all.x = T)
-  data <- merge(data,hcm,by="person_id", all.x = T)
+  data <- merge(subjects,dcm,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,dcm_assw,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,mi,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,pci,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,lvsd,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,cabg,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,conghd,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,throm,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,rcm,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,hcm,by="person_id", all.x = T, allow.cartesian = T)
 
   #fill NA
   data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
