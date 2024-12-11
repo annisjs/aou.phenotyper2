@@ -482,14 +482,14 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   #fill NA
   data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
   data[, dcm_assw_status := ifelse(is.na(dcm_assw_status), FALSE, dcm_assw_status)]
-  data[, mi_status := if_else(is.na(mi_status), FALSE, mi_status)]
-  data[, pci_status := if_else(is.na(pci_status), FALSE, pci_status)]
-  data[, lvsd_status := if_else(is.na(lvsd_status), FALSE, lvsd_status)]
-  data[, cabg_status := if_else(is.na(cabg_status), FALSE, cabg_status)]
-  data[, conghd_status := if_else(is.na(conghd_status), FALSE, conghd_status)]
-  data[, throm_status := if_else(is.na(throm_status), FALSE, throm_status)]
-  data[, rcm_status := if_else(is.na(rcm_status), FALSE, rcm_status)]
-  data[, hcm_status := if_else(is.na(hcm_status), FALSE, hcm_status)]
+  data[, mi_status := ifelse(is.na(mi_status), FALSE, mi_status)]
+  data[, pci_status := ifelse(is.na(pci_status), FALSE, pci_status)]
+  data[, lvsd_status := ifelse(is.na(lvsd_status), FALSE, lvsd_status)]
+  data[, cabg_status := ifelse(is.na(cabg_status), FALSE, cabg_status)]
+  data[, conghd_status := ifelse(is.na(conghd_status), FALSE, conghd_status)]
+  data[, throm_status := ifelse(is.na(throm_status), FALSE, throm_status)]
+  data[, rcm_status := ifelse(is.na(rcm_status), FALSE, rcm_status)]
+  data[, hcm_status := ifelse(is.na(hcm_status), FALSE, hcm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
   data$exclude_for_dcm <- with(data, ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE))
