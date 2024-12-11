@@ -446,7 +446,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   dcm_test <- copy(dcm)
 
-  dcm <- dcm[is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
+  dcm <- dcm[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
   dcm_assw <- dcm_assw[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
