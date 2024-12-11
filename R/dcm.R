@@ -18,7 +18,7 @@
 #'              "703272007","703274008","443254009","153931000119109","443253003","441481004",
 #'              "120871000119108","120861000119102","120851000119104","1064941000000100" 
 #'
-#' @import data.table stringr dplyr aou.reader
+#' @import data.table stringr aou.reader
 #' @export
 dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
