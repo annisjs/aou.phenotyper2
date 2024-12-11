@@ -146,7 +146,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   setnames(throm_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
   throm_snomeds[, condition_start_date := as.Date(condition_start_date)]
-  trhom_cpts[, condition_start_date := as.Date(condition_start_date)]
+  throm_cpts[, condition_start_date := as.Date(condition_start_date)]
   throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
 
