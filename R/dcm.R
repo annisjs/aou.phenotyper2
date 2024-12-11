@@ -478,16 +478,16 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
   #combine 
-  data <- merge(subjects,dcm,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,dcm_assw,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,mi,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,pci,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,lvsd,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,cabg,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,conghd,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,throm,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,rcm,by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,hcm,by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(subjects,dcm[, c("person_id", "dcm_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,dcm_assw[, c("person_id", "dcm_assw_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,mi[, c("person_id", "mi_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,pci[, c("person_id", "pci_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,lvsd[, c("person_id", "lvsd_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,cabg[, c("person_id", "cabg_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,conghd[, c("person_id", "conghd_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,throm[, c("person_id", "throm_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,rcm[, c("person_id", "rcm_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,hcm[, c("person_id", "hcm_status")],by="person_id", all.x = T, allow.cartesian = T)
 
   #fill NA
   data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
@@ -502,12 +502,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data[, hcm_status := ifelse(is.na(hcm_status), FALSE, hcm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
-  data$exclude_for_dcm <- with(data, ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE))
-  data$dcm_case <- with(data, ifelse((dcm_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE))
-  data$nicm_case <- with(data, ifelse((dcm_assw_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE))
-  data$exclude <- with(data, ifelse(((dcm_case == FALSE) & (nicm_case == FALSE)) & ((mi_status == TRUE) | (conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE) | (cabg_status == TRUE) | (pci_status == TRUE) | (throm_status == TRUE)), TRUE, FALSE))
-  data$dcm_control <- with(data, ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE))
-  data$dcm_no_exclusions_case <- with(data, ifelse((dcm_status == TRUE), TRUE, FALSE))
+  data[, exclude_for_dcm := ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE)]
+  data[, dcm_case := ifelse((dcm_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE)]
+  data[, nicm_case := ifelse((dcm_assw_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE)]
+  data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE)) & ((mi_status == TRUE) | (conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE) | (cabg_status == TRUE) | (pci_status == TRUE) | (throm_status == TRUE)), TRUE, FALSE)]
+  data[dcm_control := ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE)]
+  data[dcm_no_exclusions_case := ifelse((dcm_status == TRUE), TRUE, FALSE)]
 
   final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude","dcm_no_exclusions_case")]
 
