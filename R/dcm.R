@@ -130,11 +130,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                       '609152003','750781000000101','752481000000106','1064701000000100','737085003')
   pci_cpts <- aou.reader::cpt_query(pci_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  pci_cpts <- pci_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
@@ -145,11 +141,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                      '432093004','232731009','175071008','6026008','24080003')
   throm_cpts <- aou.reader::cpt_query(throm_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  throm_cpts <- throm_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(throm_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
   throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
@@ -194,11 +186,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                                                         '175056009','563331000000101','175057000','591171000000103','175049003')
   cabg_cpts <- aou.reader::cpt_query(cabg_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  cabg_cpts <- cabg_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(cabg_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
   cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE,fill=TRUE)
   cabg$cabg_status <- TRUE
@@ -440,11 +428,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   conghd_snomeds <- aou.reader::snomed_query(conghd_snomeds_list,anchor_date_table,before,after)
   conghd_cpts <- aou.reader::cpt_query(conghd_cpts_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  conghd_cpts <- conghd_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(conghd_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE,fill=TRUE)
   conghd$conghd_status <- TRUE
 
@@ -453,35 +437,22 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
 
   #sort and filter
-  first_mi_revasc_code <- first_mi_revasc_code_all %>% 
-                            group_by(person_id) %>%
-                            filter(condition_start_date == min(condition_start_date))
+  first_mi_revasc_code_all[, min_date := min(condition_start_date), .(person_id)]
+  first_mi_revasc_code <- first_mi_revasc_code_all[condition_start_date == min_date]
+  setnames(first_mi_revasc_code, c("condition_start_date", "condition_source_value"), c("first_mi_revasc_code_date","first_mi_revasc_code_value"))
 
-  first_mi_revasc_code <- first_mi_revasc_code %>% 
-          rename(
-            first_mi_revasc_code_date = condition_start_date,
-            first_mi_revasc_code_value = condition_source_value
-            )
+  dcm <- merge(dcm, first_mi_revasc_code, all.x = T, by = "person_id")
+  dcm_assw <- merge(dcm_assw, first_mi_revasc_code, all.x = T, by = "person_id")
 
-  dcm <- left_join(dcm,first_mi_revasc_code,by="person_id")
-  dcm_assw <- left_join(dcm_assw,first_mi_revasc_code,by="person_id")
+  dcm_test <- copy(dcm)
 
-  dcm_test <- dcm
+  dcm <- dcm[is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
-  dcm <- dcm %>%
-          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+  dcm_assw <- dcm_assw[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
-  dcm_assw <- dcm_assw %>%
-          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+  setnames(dcm, "condition_start_date", "dcm_entry_date")
+  setnames(dcm_assw, "condition_start_date", "dcm_assw_entry_date")
 
-  dcm <- dcm %>% 
-          rename(
-            dcm_entry_date = condition_start_date
-            )
-  dcm_assw <- dcm_assw %>% 
-          rename(
-            dcm_assw_entry_date = condition_start_date
-            )
   #might need to make these DFs unique?
   #dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
   #dcm_assw <- unique(select(dcm_assw,person_id,dcm_assw_status,dcm_assw_entry_date))
@@ -496,39 +467,29 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
-  #combine
-  data <- left_join(subjects,dcm,by="person_id")
-  data <- left_join(data,dcm_assw,by="person_id")
-  data <- left_join(data,mi,by="person_id")
-  data <- left_join(data,pci,by="person_id")
-  data <- left_join(data,lvsd,by="person_id")
-  data <- left_join(data,cabg,by="person_id")
-  data <- left_join(data,conghd,by="person_id")
-  data <- left_join(data,throm,by="person_id")
-  data <- left_join(data,rcm,by="person_id")
-  data <- left_join(data,hcm,by="person_id")
+  #combine 
+  data <- merge(subjects,dcm,by="person_id", all.x = T)
+  data <- merge(data,dcm_assw,by="person_id", all.x = T)
+  data <- merge(data,mi,by="person_id", all.x = T)
+  data <- merge(data,pci,by="person_id", all.x = T)
+  data <- merge(data,lvsd,by="person_id", all.x = T)
+  data <- merge(data,cabg,by="person_id", all.x = T)
+  data <- merge(data,conghd,by="person_id", all.x = T)
+  data <- merge(data,throm,by="person_id", all.x = T)
+  data <- merge(data,rcm,by="person_id", all.x = T)
+  data <- merge(data,hcm,by="person_id", all.x = T)
 
   #fill NA
-  data <- data %>%
-    mutate(dcm_status = if_else(is.na(dcm_status), FALSE, dcm_status))
-  data <- data %>%
-    mutate(dcm_assw_status = if_else(is.na(dcm_assw_status), FALSE, dcm_assw_status))
-  data <- data %>%
-    mutate(mi_status = if_else(is.na(mi_status), FALSE, mi_status))
-  data <- data %>%
-    mutate(pci_status = if_else(is.na(pci_status), FALSE, pci_status))
-  data <- data %>%
-    mutate(lvsd_status = if_else(is.na(lvsd_status), FALSE, lvsd_status))
-  data <- data %>%
-    mutate(cabg_status = if_else(is.na(cabg_status), FALSE, cabg_status))
-  data <- data %>%
-    mutate(conghd_status = if_else(is.na(conghd_status), FALSE, conghd_status))
-  data <- data %>%
-    mutate(throm_status = if_else(is.na(throm_status), FALSE, throm_status))
-  data <- data %>%
-    mutate(rcm_status = if_else(is.na(rcm_status), FALSE, rcm_status))
-  data <- data %>%
-    mutate(hcm_status = if_else(is.na(hcm_status), FALSE, hcm_status))
+  data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
+  data[, dcm_assw_status := ifelse(is.na(dcm_assw_status), FALSE, dcm_assw_status)]
+  data[, mi_status := if_else(is.na(mi_status), FALSE, mi_status)]
+  data[, pci_status := if_else(is.na(pci_status), FALSE, pci_status)]
+  data[, lvsd_status := if_else(is.na(lvsd_status), FALSE, lvsd_status)]
+  data[, cabg_status := if_else(is.na(cabg_status), FALSE, cabg_status)]
+  data[, conghd_status := if_else(is.na(conghd_status), FALSE, conghd_status)]
+  data[, throm_status := if_else(is.na(throm_status), FALSE, throm_status)]
+  data[, rcm_status := if_else(is.na(rcm_status), FALSE, rcm_status)]
+  data[, hcm_status := if_else(is.na(hcm_status), FALSE, hcm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
   data$exclude_for_dcm <- with(data, ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE))
@@ -538,7 +499,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data$dcm_control <- with(data, ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE))
   data$dcm_no_exclusions_case <- with(data, ifelse((dcm_status == TRUE), TRUE, FALSE))
 
-  final <- select(data,person_id,dcm_case,nicm_case,dcm_control,exclude,dcm_no_exclusions_case)
+  final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude","dcm_no_exclusions_case")]
 
   .write_to_bucket(final,output_folder,"dcm")
 
