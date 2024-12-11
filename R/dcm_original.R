@@ -153,6 +153,8 @@ dcm_original <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
             condition_source_value = cpt_code
             )
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
+  throm_cpts$condition_start_date <- as.Date(throm_cpts$condition_start_date)
+  throm_snomeds$condition_start_date <- as.Date(throm_snomeds$condition_start_date)
   throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
 
@@ -202,6 +204,8 @@ dcm_original <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
             condition_source_value = cpt_code
             )
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
+  cabg_cpts$condition_start_date <- as.Date(cabg_cpts$condition_start_date)
+  cabg_snomeds$condition_start_date <- as.Date(cabg_snomeds$condition_start_date)
   cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE,fill=TRUE)
   cabg$cabg_status <- TRUE
 
