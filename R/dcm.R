@@ -438,6 +438,10 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE,fill=TRUE)
   conghd$conghd_status <- TRUE
 
+  mi[, condition_start_date := as.Date(condition_start_date)]
+  cabg[, condition_start_date := as.Date(condition_start_date)]
+  throm[, condition_start_date := as.Date(condition_start_date)]
+  pci[, condition_start_date := as.Date(condition_start_date)]
   #first mi/revasc
   first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
   #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
