@@ -12,7 +12,7 @@ last_asleep <- function(output_folder,anchor_date_table=NULL,before=NULL,after=N
     sleep_terms <- "is_main_sleep = 'true' AND level != 'wake' AND level != 'awake'"
     time <- "last"
     result <- aou.reader::sleep_level_query(sleep_terms,time,anchor_date_table,before,after)
-    colnames(result) <- c("person_id","last_asleep_datetime","last_asleep_date","last_asleep_duration",
+    colnames(result) <- c("person_id","last_asleep_date","last_asleep_datetime","last_asleep_duration",
                           "last_asleep_is_main_sleep")
     .write_to_bucket(result,output_folder,"last_asleep")
 }
