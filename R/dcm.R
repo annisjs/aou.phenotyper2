@@ -467,8 +467,11 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   dcm_assw <- dcm_assw[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
+  lvsd <- lvsd[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
+
   setnames(dcm, "condition_start_date", "dcm_entry_date")
   setnames(dcm_assw, "condition_start_date", "dcm_assw_entry_date")
+  setnames(lvsd, "condition_start_date", "lvsd_entry_date")
 
   #might need to make these DFs unique?
   #dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
