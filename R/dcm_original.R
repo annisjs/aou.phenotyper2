@@ -550,6 +550,6 @@ dcm_original <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
 
   final <- select(data,person_id,dcm_case,nicm_case,dcm_control,exclude,dcm_no_exclusions_case)
 
-  .write_to_bucket(final,output_folder,"dcm")
+  .write_to_bucket(final,output_folder,"dcm_original")
 
 }
