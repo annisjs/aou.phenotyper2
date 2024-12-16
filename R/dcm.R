@@ -460,6 +460,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   dcm <- merge(dcm, first_mi_revasc_code, all.x = T, by = "person_id")
   dcm_assw <- merge(dcm_assw, first_mi_revasc_code, all.x = T, by = "person_id")
+  lvsd <- merge(lvsd, first_mi_revasc_code, all.x = T, by = "person_id")
 
   #dcm_test <- copy(dcm)
 
