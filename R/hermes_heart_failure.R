@@ -1,4 +1,4 @@
-#' HERMES 3
+#' HERMES HEART FAILURE
 #'
 #' @param output_folder the folder to write the output
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
@@ -20,7 +20,7 @@
 #'
 #' @import data.table stringr dplyr aou.reader
 #' @export
-hermes_three <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
 
   #HF
@@ -514,6 +514,6 @@ hermes_three <- function(output_folder,anchor_date_table=NULL,before=NULL,after=
 
   final <- select(data,person_id,hf_pheno_one,ihf_pheno_two,nihf_pheno_three,control,exclude)
 
-  .write_to_bucket(final,output_folder,"hermes_three")
+  .write_to_bucket(final,output_folder,"hermes_heart_failure")
 
 }

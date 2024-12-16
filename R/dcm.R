@@ -226,6 +226,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   rcm <- rbindlist(list(rcm_icd10s,rcm_snomeds),use.names=TRUE,fill=TRUE)
   rcm$rcm_status <- TRUE
 
+  #ICM
+  icm_snomeds_list <- c("15629591000119100","15629541000119100","194849004","426856002","472100003","39693003","86194008","15629641000119100","15629741000119100")
+  icm_snomeds <- aou.reader::snomed_query(icm_snomeds_list,anchor_date_table,before,after)
+  icm <- icm_snomeds 
+  icm$icm_status <- TRUE
+
   #LVSD
   lvsd_icd9_list <- c('428.21','428.22','428.23','428.40','428.41','428.42','428.43','428.20')
   lvsd_icd10_list <- c('I50.1','I50.2','I50.20','I50.21','I50.22','I50.23','I50.4','I50.40','I50.41','I50.42','I50.43')
@@ -442,8 +448,9 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   cabg[, condition_start_date := as.Date(condition_start_date)]
   throm[, condition_start_date := as.Date(condition_start_date)]
   pci[, condition_start_date := as.Date(condition_start_date)]
+  icm[, condition_start_date := as.Date(condition_start_date)]
   #first mi/revasc
-  first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
+  first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci,icm),use.names=TRUE,fill=TRUE)
   #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
 
   #sort and filter
@@ -454,7 +461,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm <- merge(dcm, first_mi_revasc_code, all.x = T, by = "person_id")
   dcm_assw <- merge(dcm_assw, first_mi_revasc_code, all.x = T, by = "person_id")
 
-  dcm_test <- copy(dcm)
+  #dcm_test <- copy(dcm)
 
   dcm <- dcm[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
@@ -488,6 +495,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data <- merge(data,throm[, c("person_id", "throm_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,rcm[, c("person_id", "rcm_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,hcm[, c("person_id", "hcm_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,icm[, c("person_id", "icm_status")],by="person_id", all.x = T, allow.cartesian = T)
 
   #fill NA
   data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
@@ -500,16 +508,20 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data[, throm_status := ifelse(is.na(throm_status), FALSE, throm_status)]
   data[, rcm_status := ifelse(is.na(rcm_status), FALSE, rcm_status)]
   data[, hcm_status := ifelse(is.na(hcm_status), FALSE, hcm_status)]
+  data[, icm_status := ifelse(is.na(icm_status), FALSE, hcm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
-  data[, exclude_for_dcm := ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE)]
-  data[, dcm_case := ifelse((dcm_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE)]
-  data[, nicm_case := ifelse((dcm_assw_status == TRUE) & (exclude_for_dcm == FALSE), TRUE, FALSE)]
-  data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE)) & ((mi_status == TRUE) | (conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE) | (cabg_status == TRUE) | (pci_status == TRUE) | (throm_status == TRUE)), TRUE, FALSE)]
-  data[, dcm_control := ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE)]
-  data[, dcm_no_exclusions_case := ifelse((dcm_status == TRUE), TRUE, FALSE)]
+  #data[, exclude_for_dcm := ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE)]
+  data[, dcm_case := ifelse((dcm_status == TRUE) & (conghd_status == FALSE) & (hcm_status == FALSE) & (rcm_status == FALSE), TRUE, FALSE)]
+  data[, nicm_case := ifelse(((dcm_assw_status == TRUE) | (lvsd_status == TRUE) | (dcm_case == TRUE)) & ((conghd_status == FALSE) & (hcm_status == FALSE) & (rcm_status == FALSE)), TRUE, FALSE)]
+  data[, dcm_control := ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (mi_status == FALSE) & (conghd_status == FALSE) &
+        (hcm_status == FALSE) & (rcm_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == FALSE) &
+        (lvsd_status == FALSE) & (icm_status == FALSE), TRUE, FALSE)]
+  data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE) & (dcm_control == FALSE)), TRUE, FALSE)]
 
-  final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude","dcm_no_exclusions_case")]
+  #data[, dcm_no_exclusions_case := ifelse((dcm_status == TRUE), TRUE, FALSE)]
+
+  final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude")]
 
   .write_to_bucket(final,output_folder,"dcm")
 
