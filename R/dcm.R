@@ -65,6 +65,21 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_assw <- rbindlist(list(dcm_assw_icd10s,dcm_assw_icd9s,dcm_assw_snomeds),use.names=TRUE,fill=TRUE)
   dcm_assw$dcm_assw_status <- TRUE
 
+  #LVSD
+  lvsd_icd9_list <- c('428.21','428.22','428.23','428.40','428.41','428.42','428.43','428.20')
+  lvsd_icd10_list <- c('I50.1','I50.2','I50.20','I50.21','I50.22','I50.23','I50.4','I50.40','I50.41','I50.42','I50.43')
+  lvsd_snomeds_list <- c('443254009','153931000119109','153951000119103','443253003','441481004',
+                                                        '153941000119100','442304009','426263006','407596008',
+                                                        '134401001','698592004','430396006','366829001','366910008',
+                                                        '697925001','120851000119104','15629741000119100','120861000119102',
+                                                        '417996009','1064941000000100','703274008','703276005',
+                                                        '703273002','703275009','703272007','788950000')
+  lvsd_icd10s <- aou.reader::icd10_query(lvsd_icd10_list,anchor_date_table,before,after)
+  lvsd_icd9s <- aou.reader::icd9_query(lvsd_icd9_list,anchor_date_table,before,after)
+  lvsd_snomeds <- aou.reader::snomed_query(lvsd_snomeds_list,anchor_date_table,before,after)
+  lvsd <- rbindlist(list(lvsd_icd10s,lvsd_icd9s,lvsd_snomeds),use.names=TRUE,fill=TRUE)
+  lvsd$lvsd_status <- TRUE
+
   #MI
   mi_icd10_list <- c("I21","I21.0","I21.01","I21.02","I21.09","I21.1","I21.11","I21.19","I21.2","I21.21",
                      "I21.29","I21.3","I21.4","I21.9","I21.A","I21.A1","I21.A9","I21.B","I22","I22.0","I22.1",
@@ -232,20 +247,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   icm <- icm_snomeds 
   icm$icm_status <- TRUE
 
-  #LVSD
-  lvsd_icd9_list <- c('428.21','428.22','428.23','428.40','428.41','428.42','428.43','428.20')
-  lvsd_icd10_list <- c('I50.1','I50.2','I50.20','I50.21','I50.22','I50.23','I50.4','I50.40','I50.41','I50.42','I50.43')
-  lvsd_snomeds_list <- c('443254009','153931000119109','153951000119103','443253003','441481004',
-                                                        '153941000119100','442304009','426263006','407596008',
-                                                        '134401001','698592004','430396006','366829001','366910008',
-                                                        '697925001','120851000119104','15629741000119100','120861000119102',
-                                                        '417996009','1064941000000100','703274008','703276005',
-                                                        '703273002','703275009','703272007','788950000')
-  lvsd_icd10s <- aou.reader::icd10_query(lvsd_icd10_list,anchor_date_table,before,after)
-  lvsd_icd9s <- aou.reader::icd9_query(lvsd_icd9_list,anchor_date_table,before,after)
-  lvsd_snomeds <- aou.reader::snomed_query(lvsd_snomeds_list,anchor_date_table,before,after)
-  lvsd <- rbindlist(list(lvsd_icd10s,lvsd_icd9s,lvsd_snomeds),use.names=TRUE,fill=TRUE)
-  lvsd$lvsd_status <- TRUE
+
 
   #CongHD
   conghd_icd9_list <- c('V136.5','746.9','746.89','746.86','746.82','746.4',
@@ -457,6 +459,15 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   first_mi_revasc_code_all[, min_date := min(condition_start_date), .(person_id)]
   first_mi_revasc_code <- first_mi_revasc_code_all[condition_start_date == min_date]
   setnames(first_mi_revasc_code, c("condition_start_date", "condition_source_value"), c("first_mi_revasc_code_date","first_mi_revasc_code_value"))
+
+  lvsd[, min_date := min(condition_start_date), .(person_id)]
+  lvsd <- lvsd[condition_start_date == min_date]
+
+  dcm[, min_date := min(condition_start_date), .(person_id)]
+  dcm <- dcm[condition_start_date == min_date]
+
+  dcm_assw[, min_date := min(condition_start_date), .(person_id)]
+  dcm_assw <- dcm_assw[condition_start_date == min_date]
 
   dcm <- merge(dcm, first_mi_revasc_code, all.x = T, by = "person_id")
   dcm_assw <- merge(dcm_assw, first_mi_revasc_code, all.x = T, by = "person_id")
