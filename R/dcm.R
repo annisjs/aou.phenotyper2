@@ -522,7 +522,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data[, throm_status := ifelse(is.na(throm_status), FALSE, throm_status)]
   data[, rcm_status := ifelse(is.na(rcm_status), FALSE, rcm_status)]
   data[, hcm_status := ifelse(is.na(hcm_status), FALSE, hcm_status)]
-  data[, icm_status := ifelse(is.na(icm_status), FALSE, hcm_status)]
+  data[, icm_status := ifelse(is.na(icm_status), FALSE, icm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
   #data[, exclude_for_dcm := ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE)]

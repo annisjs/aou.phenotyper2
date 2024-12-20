@@ -127,12 +127,10 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
                                                       '609152003','750781000000101','752481000000106','1064701000000100','737085003')
   pci_cpts <- aou.reader::cpt_query(pci_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  pci_cpts <- pci_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
+  setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
+  #pci_snomeds[, condition_start_date := as.Date(condition_start_date)]
+  #pci_cpts[, condition_start_date := as.Date(condition_start_date)]
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
 
@@ -142,11 +140,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
                      '432093004','232731009','175071008','6026008','24080003')
   throm_cpts <- aou.reader::cpt_query(throm_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  throm_cpts <- throm_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(throm_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
   throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
@@ -191,11 +185,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
                                                         '175056009','563331000000101','175057000','591171000000103','175049003')
   cabg_cpts <- aou.reader::cpt_query(cabg_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  cabg_cpts <- cabg_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(cabg_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
   cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE,fill=TRUE)
   cabg$cabg_status <- TRUE
@@ -393,39 +383,35 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   conghd_snomeds <- aou.reader::snomed_query(conghd_snomeds_list,anchor_date_table,before,after)
   conghd_cpts <- aou.reader::cpt_query(conghd_cpts_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
-  conghd_cpts <- conghd_cpts %>% 
-          rename(
-            condition_start_date = entry_date,
-            condition_source_value = cpt_code
-            )
+  setnames(conghd_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE,fill=TRUE)
   conghd$conghd_status <- TRUE
 
   #first mi/revasc
-  #first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
-  #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
+  #atecedent_exclusion_codes_all <- rbindlist(list(mi,cabg,throm,pci),use.names=TRUE,fill=TRUE)
+  #atecedent_exclusion_codes <- unique(setorder(setDT(atecedent_exclusion_codes_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
 
   #sort and filter
-#  first_mi_revasc_code <- first_mi_revasc_code_all %>% 
+#  atecedent_exclusion_codes <- atecedent_exclusion_codes_all %>% 
 #                            group_by(person_id) %>%
 #                            filter(condition_start_date == min(condition_start_date))
 
-#  first_mi_revasc_code <- first_mi_revasc_code %>% 
+#  atecedent_exclusion_codes <- atecedent_exclusion_codes %>% 
 #          rename(
-#            first_mi_revasc_code_date = condition_start_date,
-#            first_mi_revasc_code_value = condition_source_value
+#            atecedent_exclusion_codes_date = condition_start_date,
+#            atecedent_exclusion_codes_value = condition_source_value
 #            )
 
-#  dcm <- left_join(dcm,first_mi_revasc_code,by="person_id")
-#  dcm_assw <- left_join(dcm_assw,first_mi_revasc_code,by="person_id")
+#  dcm <- left_join(dcm,atecedent_exclusion_codes,by="person_id")
+#  dcm_assw <- left_join(dcm_assw,atecedent_exclusion_codes,by="person_id")
 
 #  dcm_test <- dcm
 
 #  dcm <- dcm %>%
-#          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+#          filter((is.na(atecedent_exclusion_codes_date)) | (condition_start_date < atecedent_exclusion_codes_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
 #  dcm_assw <- dcm_assw %>%
-#          filter((is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
+#          filter((is.na(atecedent_exclusion_codes_date)) | (condition_start_date < atecedent_exclusion_codes_date)) #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
 #  dcm <- dcm %>% 
 #          rename(
@@ -447,32 +433,64 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   #rcm <- unique(select(rcm,person_id,rcm_status))
   #hcm <- unique(select(hcm,person_id,hcm_status))
 
-  subjects <- aou.reader::demographics_query() #get every person id in AOU
 
-  #combine
-  data <- left_join(subjects,hf,by="person_id")
-  data <- left_join(data,icm,by="person_id")
-  data <- left_join(data,mi,by="person_id")
-  data <- left_join(data,pci,by="person_id")
-  data <- left_join(data,cabg,by="person_id")
-  data <- left_join(data,conghd,by="person_id")
-  data <- left_join(data,throm,by="person_id")
+  ###########################################
+
+  
+
+  mi[, condition_start_date := as.Date(condition_start_date)]
+  cabg[, condition_start_date := as.Date(condition_start_date)]
+  throm[, condition_start_date := as.Date(condition_start_date)]
+  pci[, condition_start_date := as.Date(condition_start_date)]
+  icm[, condition_start_date := as.Date(condition_start_date)]
+
+  hf[, condition_start_date := as.Date(condition_start_date)]
+  conghd[, condition_start_date := as.Date(condition_start_date)]
+
+    #first mi/revasc
+  atecedent_exclusion_codes_all <- rbindlist(list(mi,cabg,throm,pci,icm),use.names=TRUE,fill=TRUE)
+  #atecedent_exclusion_codes <- unique(setorder(setDT(atecedent_exclusion_codes_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
+
+  #sort and filter
+  atecedent_exclusion_codes_all[, min_date := min(condition_start_date), .(person_id)]
+  atecedent_exclusion_codes <- atecedent_exclusion_codes_all[condition_start_date == min_date]
+  setnames(atecedent_exclusion_codes, c("condition_start_date", "condition_source_value"), c("atecedent_exclusion_codes_date","atecedent_exclusion_codes_value"))
+
+  hf_for_ihf <- hf
+
+  hf_for_ihf[, min_date := min(condition_start_date), .(person_id)]
+  hf_for_ihf <- hf_ihf[condition_start_date == min_date]
+
+  hf_for_ihf <- merge(hf_for_ihf, atecedent_exclusion_codes, all.x = T, by = "person_id")
+
+  #dcm_test <- copy(dcm)
+
+  hf_for_ihf <- hf_for_ihf[(condition_start_date > atecedent_exclusion_codes_date)] #keep only hf that happens after one of these antecedent codes
+  setnames(hf_for_ihf, c("hf_status"), c("hf_for_ihf_status"))
+  setnames(hf_for_ihf, "condition_start_date", "hf_for_ihf_entry_date")
+
+  ########################################
+  subjects <- aou.reader::demographics_query() #get every person id in AOU
+  #combine 
+  data <- merge(subjects,hf_for_ihf[, c("person_id", "hf_for_ihf_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,hf[, c("person_id", "hf_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,mi[, c("person_id", "mi_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,pci[, c("person_id", "pci_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,cabg[, c("person_id", "cabg_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,conghd[, c("person_id", "conghd_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,throm[, c("person_id", "throm_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,icm[, c("person_id", "icm_status")],by="person_id", all.x = T, allow.cartesian = T)
 
   #fill NA
-  data <- data %>%
-    mutate(icm_status = if_else(is.na(icm_status), FALSE, icm_status))
-  data <- data %>%
-    mutate(hf_status = if_else(is.na(hf_status), FALSE, hf_status))
-  data <- data %>%
-    mutate(mi_status = if_else(is.na(mi_status), FALSE, mi_status))
-  data <- data %>%
-    mutate(pci_status = if_else(is.na(pci_status), FALSE, pci_status))
-  data <- data %>%
-    mutate(cabg_status = if_else(is.na(cabg_status), FALSE, cabg_status))
-  data <- data %>%
-    mutate(conghd_status = if_else(is.na(conghd_status), FALSE, conghd_status))
-  data <- data %>%
-    mutate(throm_status = if_else(is.na(throm_status), FALSE, throm_status))
+  data[, hf_for_ihf_status := ifelse(is.na(hf_for_ihf_status), FALSE, hf_for_ihf_status)]
+  data[, hf_status := ifelse(is.na(hf_status), FALSE, hf_status)]
+  data[, mi_status := ifelse(is.na(mi_status), FALSE, mi_status)]
+  data[, pci_status := ifelse(is.na(pci_status), FALSE, pci_status)]
+  data[, cabg_status := ifelse(is.na(cabg_status), FALSE, cabg_status)]
+  data[, conghd_status := ifelse(is.na(conghd_status), FALSE, conghd_status)]
+  data[, throm_status := ifelse(is.na(throm_status), FALSE, throm_status)]
+  data[, icm_status := ifelse(is.na(icm_status), FALSE, icm_status)]
+
 
   #sort into cases/controls/exclusions/exclusions for dcm
   #data$exclude_for_dcm <- with(data, ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE))
@@ -482,37 +500,31 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   #data$dcm_control <- with(data, ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (exclude == FALSE), TRUE, FALSE))
   #data$dcm_no_exclusions_case <- with(data, ifelse((dcm_status == TRUE), TRUE, FALSE))
 
-  #exclusions build
-  data$exclude_one <- with(data, ifelse((conghd_status == TRUE), TRUE, FALSE))
-  data$exclude_two <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == TRUE), TRUE, FALSE))
-  data$exclude_three <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == TRUE), TRUE, FALSE))
-  data$exclude_four <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == TRUE), TRUE, FALSE))
-  data$exclude_five <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == TRUE), TRUE, FALSE))
-  data$exclude_six <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == FALSE) & (icm_status == TRUE), TRUE, FALSE))
+  #cases
+  data[, ihf_pheno_2_case := ifelse((conghd_status == FALSE) & (hf_for_ihf_status == TRUE), TRUE, FALSE)]
 
-  data$exclude <- with(data, ifelse((exclude_one == TRUE) | (exclude_two == TRUE) | (exclude_three == TRUE) | (exclude_four == TRUE) | (exclude_five == TRUE) | (exclude_six == TRUE), TRUE, FALSE))
+  data[, nihf_pheno_3_case := ifelse((conghd_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) &
+        (pci_status == FALSE) & (throm_status == FALSE) & (icm_status == FALSE) & (hf_status == TRUE), TRUE, FALSE)]
 
-  #pheno 2 ischemic HF
-  data$ihf_one <- with(data, ifelse((conghd_status == FALSE) & (hf_status == TRUE) & (mi_status == TRUE), TRUE, FALSE))
-  data$ihf_two <- with(data, ifelse((conghd_status == FALSE) & (hf_status == TRUE) & (mi_status == FALSE) & (cabg_status == TRUE), TRUE, FALSE))
-  data$ihf_three <- with(data, ifelse((conghd_status == FALSE) & (hf_status == TRUE) & (mi_status == TRUE) & (cabg_status == FALSE) &
-  (pci_status == TRUE), TRUE, FALSE))
-  data$ihf_four <- with(data, ifelse((conghd_status == FALSE) & (hf_status == TRUE) & (mi_status == TRUE) & (cabg_status == FALSE) &
-  (pci_status == FALSE) & (icm_status == TRUE), TRUE, FALSE))
+  data[, all_hf_pheno_1_case := ifelse((ihf_pheno_2_case == TRUE) | (nihf_pheno_3_case == TRUE), TRUE, FALSE)] 
 
-  data$ihf_pheno_two <- with(data, ifelse(((ihf_one == TRUE) | (ihf_two == TRUE) | (ihf_three == TRUE) | (ihf_four == TRUE)) & (exclude == FALSE), TRUE, FALSE))
-
-  #pheno 3 nihf
-  data$nihf_pheno_three <- with(data, ifelse((conghd_status == FALSE) & (hf_status == TRUE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == FALSE) & (icm_status == FALSE) & (exclude == FALSE), TRUE, FALSE))
-
-  #pheno 1 hf
-  data$hf_pheno_one <- with(data, ifelse(((ihf_pheno_two == TRUE) | (nihf_pheno_three == TRUE)), TRUE, FALSE))
+  #exclusions for controls
+  data[, exclusions_1 := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == TRUE), TRUE, FALSE)] 
+  data[, exclusions_2 := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == TRUE), TRUE, FALSE)] 
+  data[, exclusions_3 := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == TRUE), TRUE, FALSE)] 
+  data[, exclusions_4 := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) &
+        (throm_status == TRUE), TRUE, FALSE)] 
+  data[, exclusions_5 := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) &
+        (throm_status == FALSE) & (icm_status == TRUE), TRUE, FALSE)] 
+  data[, exclusions := ifelse((exclusions_1 == TRUE) | (exclusions_2 == TRUE) | (exclusions_3 == TRUE) | (exclusions_4 == TRUE) | (exclusions_5 == TRUE), TRUE, FALSE)] 
 
   #controls
-  data$control <- with(data, ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == FALSE) & (icm_status == FALSE) & (exclude == FALSE), TRUE, FALSE))
+  data[, controls_for_hf := ifelse((conghd_status == FALSE) & (hf_status == FALSE) & (mi_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) &
+        (throm_status == FALSE) & (icm_status == FALSE) & (exclusions == FALSE), TRUE, FALSE)]
 
 
   final <- select(data,person_id,hf_pheno_one,ihf_pheno_two,nihf_pheno_three,control,exclude)
+  final <- data[, c("person_id","all_hf_pheno_1_case","ihf_pheno_2_case","nihf_pheno_3_case","controls_for_hf","exclusions")]
 
   .write_to_bucket(final,output_folder,"hermes_heart_failure")
 
