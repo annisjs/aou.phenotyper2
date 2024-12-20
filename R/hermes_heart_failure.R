@@ -523,7 +523,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
         (throm_status == FALSE) & (icm_status == FALSE) & (exclusions == FALSE), TRUE, FALSE)]
 
 
-  final <- select(data,person_id,hf_pheno_one,ihf_pheno_two,nihf_pheno_three,control,exclude)
+  #final <- select(data,person_id,hf_pheno_one,ihf_pheno_two,nihf_pheno_three,control,exclude)
   final <- data[, c("person_id","all_hf_pheno_1_case","ihf_pheno_2_case","nihf_pheno_3_case","controls_for_hf","exclusions")]
 
   .write_to_bucket(final,output_folder,"hermes_heart_failure")
