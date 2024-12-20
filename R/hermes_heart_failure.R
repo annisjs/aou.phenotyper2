@@ -459,7 +459,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   hf_for_ihf <- hf
 
   hf_for_ihf[, min_date := min(condition_start_date), .(person_id)]
-  hf_for_ihf <- hf_ihf[condition_start_date == min_date]
+  hf_for_ihf <- hf_for_ihf[condition_start_date == min_date]
 
   hf_for_ihf <- merge(hf_for_ihf, atecedent_exclusion_codes, all.x = T, by = "person_id")
 
