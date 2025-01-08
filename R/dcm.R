@@ -452,7 +452,6 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   icm[, condition_start_date := as.Date(condition_start_date)]
   #first mi/revasc
   first_mi_revasc_code_all <- rbindlist(list(mi,cabg,throm,pci,icm),use.names=TRUE,fill=TRUE)
-  #first_mi_revasc_code <- unique(setorder(setDT(first_mi_revasc_code_all), condition_start_date), by = "person_id") #should group by person id and order by code date asc then keep uniques(first)
 
   #sort and filter
   first_mi_revasc_code_all[, min_date := min(condition_start_date), .(person_id)]
@@ -472,7 +471,6 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   dcm_assw <- merge(dcm_assw, first_mi_revasc_code, all.x = T, by = "person_id")
   lvsd <- merge(lvsd, first_mi_revasc_code, all.x = T, by = "person_id")
 
-  #dcm_test <- copy(dcm)
 
   dcm <- dcm[(is.na(first_mi_revasc_code_date)) | (condition_start_date < first_mi_revasc_code_date)] #keep only those rows with dcm before their first mi revasc code or no mi revasc
 
@@ -483,18 +481,6 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   setnames(dcm, "condition_start_date", "dcm_entry_date")
   setnames(dcm_assw, "condition_start_date", "dcm_assw_entry_date")
   setnames(lvsd, "condition_start_date", "lvsd_entry_date")
-
-  #might need to make these DFs unique?
-  #dcm <- unique(select(dcm,person_id,dcm_status,dcm_entry_date))
-  #dcm_assw <- unique(select(dcm_assw,person_id,dcm_assw_status,dcm_assw_entry_date))
-  #mi <- unique(select(mi,person_id,mi_status))
-  #pci <- unique(select(pci,person_id,pci_status))
-  #lvsd <- unique(select(lvsd,person_id,lvsd_status))
-  #cabg <- unique(select(cabg,person_id,cabg_status))
-  #conghd <- unique(select(conghd,person_id,conghd_status))
-  #throm <- unique(select(throm,person_id,throm_status))
-  #rcm <- unique(select(rcm,person_id,rcm_status))
-  #hcm <- unique(select(hcm,person_id,hcm_status))
 
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
@@ -525,15 +511,12 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data[, icm_status := ifelse(is.na(icm_status), FALSE, icm_status)]
 
   #sort into cases/controls/exclusions/exclusions for dcm
-  #data[, exclude_for_dcm := ifelse((conghd_status == TRUE) | (hcm_status == TRUE) | (rcm_status == TRUE), TRUE, FALSE)]
   data[, dcm_case := ifelse((dcm_status == TRUE) & (conghd_status == FALSE) & (hcm_status == FALSE) & (rcm_status == FALSE), TRUE, FALSE)]
   data[, nicm_case := ifelse(((dcm_assw_status == TRUE) | (lvsd_status == TRUE) | (dcm_case == TRUE)) & ((conghd_status == FALSE) & (hcm_status == FALSE) & (rcm_status == FALSE)), TRUE, FALSE)]
   data[, dcm_control := ifelse((dcm_case == FALSE) & (nicm_case == FALSE) & (mi_status == FALSE) & (conghd_status == FALSE) &
         (hcm_status == FALSE) & (rcm_status == FALSE) & (cabg_status == FALSE) & (pci_status == FALSE) & (throm_status == FALSE) &
         (lvsd_status == FALSE) & (icm_status == FALSE), TRUE, FALSE)]
   data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE) & (dcm_control == FALSE)), TRUE, FALSE)]
-
-  #data[, dcm_no_exclusions_case := ifelse((dcm_status == TRUE), TRUE, FALSE)]
 
   final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude")]
 
