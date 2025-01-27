@@ -20,6 +20,7 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     #hf_data <- .read_from_bucket(output_folder,"heart_failure") #read data from bucket
     loc <- str_glue("{my_bucket}/datasets/heart_failure") 
     hf_data <- read_bucket(loc) #read data from bucket
+    head(hf_data)
 
     #an.error.occured <- NULL
     #tryCatch( { result <- .read_from_bucket(output_folder,"heart_failure"); print(res) }
