@@ -14,9 +14,16 @@
 hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     #call heart failure algo
-    source("heart_failure.R")
-    heart_failure(output_folder,anchor_date_table,before,after) #this writes to bucket as it's an algo not exactly designed for this
-    hf_data <- .read_from_bucket(output_folder,"heart_failure") #read data from bucket
+    #source("heart_failure.R")
+    #heart_failure(output_folder,anchor_date_table,before,after) #this writes to bucket as it's an algo not exactly designed for this
+    #hf_data <- .read_from_bucket(output_folder,"heart_failure") #read data from bucket
+
+    an.error.occured <- NULL
+    tryCatch( { result <- .read_from_bucket(output_folder,"heart_failure"); print(res) }
+          , error = function(e) {an.error.occured <<- "Please run the heart_failure algorithm before the hfpef algorithm."})
+    print(an.error.occured)
+
+    hf_data <- result
 
     #EF
     result_ef <- aou.reader::ef_query(anchor_date_table,before,after)
