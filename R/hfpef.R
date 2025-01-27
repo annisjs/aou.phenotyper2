@@ -17,7 +17,9 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     #call heart failure algo
     #source("heart_failure.R")
     #heart_failure(output_folder,anchor_date_table,before,after) #this writes to bucket as it's an algo not exactly designed for this
-    hf_data <- .read_from_bucket(output_folder,"heart_failure") #read data from bucket
+    #hf_data <- .read_from_bucket(output_folder,"heart_failure") #read data from bucket
+    loc <- str_glue("{my_bucket}/datasets/heart_failure") 
+    hf_data <- read_bucket(loc) #read data from bucket
 
     #an.error.occured <- NULL
     #tryCatch( { result <- .read_from_bucket(output_folder,"heart_failure"); print(res) }

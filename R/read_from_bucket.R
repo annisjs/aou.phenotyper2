@@ -7,7 +7,7 @@
 {
   file <- paste0(name,".csv")
   print(file)
-  print("output_folder}/{file}")
+  print("{output_folder}/{file}")
   returned_data <- aou.bucket::cp_from_bucket(file, stringr::str_glue("{output_folder}/{file}"))
   return(returned_data)
 }
