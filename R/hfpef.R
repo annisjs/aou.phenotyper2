@@ -24,6 +24,7 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     print(an.error.occured)
 
     hf_data <- result
+    print(head(hf_data))
 
     #EF
     result_ef <- aou.reader::ef_query(anchor_date_table,before,after)
