@@ -51,7 +51,7 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     colnames(result_hfpef_codes) <- c("person_id","hfpef_entry_date","hfpef_value")
 
     #combine all
-    result_all <- rbind(result_hfpef,hfpef_ef_code)
+    result_all <- rbind(result_hfpef_codes,hfpef_ef_code)
     result_all$first_entry <- with(result_all, ave(hfpef_entry_date, person_id, FUN = min)) #group by person_id & get first entry date per group
 
     result_all <- result_all[,.(hfpef_entry_date = first_entry,
