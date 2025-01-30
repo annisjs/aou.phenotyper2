@@ -128,7 +128,8 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   pci_cpts <- aou.reader::cpt_query(pci_cpt_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
-  setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
+  #setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
+  colnames(pci_cpts) <- c("person_id","condition_source_value","condition_start_date") 
 
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
