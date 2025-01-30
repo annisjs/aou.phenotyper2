@@ -18,7 +18,7 @@
 #'              "703272007","703274008","443254009","153931000119109","443253003","441481004",
 #'              "120871000119108","120861000119102","120851000119104","1064941000000100" 
 #'
-#' @import data.table stringr dplyr aou.reader
+#' @import data.table stringr aou.reader
 #' @export
 hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
@@ -130,7 +130,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
   setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
 
-  pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE,ignore.attr = TRUE)
+  pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE,ignore.attr=TRUE)
   pci$pci_status <- TRUE
 
   #THROM
