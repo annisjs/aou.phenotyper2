@@ -130,6 +130,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   pci_snomeds <- aou.reader::snomed_query(pci_snomeds_list,anchor_date_table,before,after)
   #setnames(pci_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   colnames(pci_cpts) <- c("person_id","condition_source_value","condition_start_date") 
+  pci_cpts <- pci_cpts[, c("person_id","condition_start_date","condition_source_value")]
 
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
