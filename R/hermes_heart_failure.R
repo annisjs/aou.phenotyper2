@@ -132,7 +132,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   colnames(pci_cpts) <- c("person_id","condition_source_value","condition_start_date") 
   pci_cpts <- pci_cpts[, c("person_id","condition_start_date","condition_source_value")]
   pci_cpts$condition_start_date <- as.Date(pci_cpts$condition_start_date)
-  pci_snomeds$condition_start_date <- as.Date(pci_snomeds$condition_start_date)
+  #pci_snomeds$condition_start_date <- as.Date(pci_snomeds$condition_start_date)
 
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
