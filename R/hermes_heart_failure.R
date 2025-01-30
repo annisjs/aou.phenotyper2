@@ -132,7 +132,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   colnames(pci_cpts) <- c("person_id","condition_source_value","condition_start_date") 
   pci_cpts <- pci_cpts[, c("person_id","condition_start_date","condition_source_value")]
   pci_cpts$condition_start_date <- as.Date(pci_cpts$condition_start_date)
-  #pci_snomeds$condition_start_date <- as.Date(pci_snomeds$condition_start_date)
+  pci_snomeds$condition_start_date <- as.Date(pci_snomeds$condition_start_date)
 
   pci <- rbindlist(list(pci_cpts,pci_snomeds),use.names=TRUE,fill=TRUE)
   pci$pci_status <- TRUE
@@ -145,6 +145,8 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
   setnames(throm_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   throm_snomeds <- aou.reader::snomed_query(throm_snomeds_list,anchor_date_table,before,after)
+  throm_cpts$condition_start_date <- as.Date(throm_cpts$condition_start_date)
+  throm_snomeds$condition_start_date <- as.Date(throm_snomeds$condition_start_date)
   throm <- rbindlist(list(throm_cpts,throm_snomeds),use.names=TRUE,fill=TRUE)
   throm$throm_status <- TRUE
 
@@ -190,6 +192,8 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
   setnames(cabg_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
   cabg_snomeds <- aou.reader::snomed_query(cabg_snomeds_list,anchor_date_table,before,after)
+  cabg_cpts$condition_start_date <- as.Date(cabg_cpts$condition_start_date)
+  cabg_snomeds$condition_start_date <- as.Date(cabg_snomeds$condition_start_date)
   cabg <- rbindlist(list(cabg_cpts,cabg_snomeds),use.names=TRUE,fill=TRUE)
   cabg$cabg_status <- TRUE
 
@@ -387,6 +391,10 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   conghd_cpts <- aou.reader::cpt_query(conghd_cpts_list,anchor_date_table,before,after)
   #cpt df has diff col names than others from reader--dont want to ruin other code so editing here instead of in reader
   setnames(conghd_cpts, c("entry_date", "cpt_code"), c("condition_start_date","condition_source_value"))
+  conghd_cpts$condition_start_date <- as.Date(conghd_cpts$condition_start_date)
+  conghd_snomeds$condition_start_date <- as.Date(conghd_snomeds$condition_start_date)
+  conghd_icd10s$condition_start_date <- as.Date(conghd_icd10s$condition_start_date)
+  conghd_icd9s$condition_start_date <- as.Date(conghd_icd9s$condition_start_date)
   conghd <- rbindlist(list(conghd_icd10s,conghd_icd9s,conghd_snomeds,conghd_cpts),use.names=TRUE,fill=TRUE)
   conghd$conghd_status <- TRUE
 
