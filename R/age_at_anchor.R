@@ -23,7 +23,7 @@ age_at_anchor <-  function(output_folder,anchor_date_table=NULL,before=NULL,afte
       return(age)
     }
 
-    dems <- aou.reader::demographics_query(anchor_date_table,before,after) 
+    dems <- aou.reader::demographics_query() 
     dems_dt <- as.data.table(merge(dems,anchor_date_table,by="person_id",allow.cartesian=TRUE))
 
     dems_dt[, age_at_anchor := agecalc(as.Date(date_of_birth),as.Date(anchor_date))]
