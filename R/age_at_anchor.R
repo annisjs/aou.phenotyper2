@@ -16,6 +16,10 @@ age_at_anchor <-  function(output_folder,anchor_date_table=NULL,before=NULL,afte
 
     agecalc <- function(dob,anchor_date){
       require(data.table)
+      if (is.null(anchor_date))
+      {
+        return(NULL)
+      }
       age <- year(anchor_date) - year(dob) - 1
       ii <- (month(anchor_date) > month(dob)) | (month(anchor_date) == month(dob) & 
                                                     mday(anchor_date) >= mday(dob))
@@ -26,7 +30,7 @@ age_at_anchor <-  function(output_folder,anchor_date_table=NULL,before=NULL,afte
     dems <- aou.reader::demographics_query() 
     dems_dt <- as.data.table(merge(anchor_date_table,dems,by="person_id",all.x = TRUE))
 
-    dems_dt[, age_at_anchor := agecalc(as.Date(date_of_birth),as.Date(anchor_date))]
+    dems_dt[, age_at_anchor := agecalc(date_of_birth,anchor_date)]
 
     result_dt <- dems_dt[, c("person_id","age_at_anchor")]
 
