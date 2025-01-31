@@ -426,10 +426,14 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
   setnames(hf_for_ihf, c("hf_status"), c("hf_for_ihf_status"))
   setnames(hf_for_ihf, "condition_start_date", "hf_for_ihf_entry_date")
 
+  #setnames(hf,"condition_start_date","hermes_hf_entry_date") #get HF entry date
+
+  hf[, hermes_heart_failure_entry_date := min(condition_start_date), .(person_id)] # get hf entry date
+
   subjects <- aou.reader::demographics_query() #get every person id in AOU
   #combine 
   data <- merge(subjects,hf_for_ihf[, c("person_id", "hf_for_ihf_status")],by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,hf[, c("person_id", "hf_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,hf[, c("person_id", "hf_status", "hermes_heart_failure_entry_date")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,mi[, c("person_id", "mi_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,pci[, c("person_id", "pci_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,cabg[, c("person_id", "cabg_status")],by="person_id", all.x = T, allow.cartesian = T)
@@ -471,7 +475,7 @@ hermes_heart_failure <- function(output_folder,anchor_date_table=NULL,before=NUL
         (throm_status == FALSE) & (icm_status == FALSE) & (exclusions == FALSE), TRUE, FALSE)]
 
 
-  final <- data[, c("person_id","all_hf_pheno_1_case","ihf_pheno_2_case","nihf_pheno_3_case","controls_for_hf","exclusions")]
+  final <- data[, c("person_id","all_hf_pheno_1_case","ihf_pheno_2_case","nihf_pheno_3_case","hermes_heart_failure_entry_date","controls_for_hf","exclusions")]
 
   .write_to_bucket(final,output_folder,"hermes_heart_failure")
 
