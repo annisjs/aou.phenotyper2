@@ -10,5 +10,5 @@
 approx_resting_heart_rate <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL,cohort=NULL)
 {
   result <- aou.reader::approx_resting_heart_rate_query(anchor_date_table,before,after,cohort)
-  .write_to_bucket(result,output_folder,"approx_resting_heart_rate")
+  .write_to_bucket(result,output_folder,"approx_resting_heart_rate",TRUE,"approx_resting_heart_rate_query_result.csv")
 }
