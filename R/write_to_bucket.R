@@ -19,7 +19,7 @@
             {
                 system(stringr::str_glue("gsutil rm -rf {my_bucket}/{output_folder}/{name}.csv"), intern = T)
             }
-            system(stringr::str_glue("gsutil mv {my_bucket}/{query_folder_origin}/* {output_folder}/{name}.csv"),intern=T)
+            system(stringr::str_glue("gsutil mv {my_bucket}/{query_folder_origin}/* {my_bucket}/{output_folder}/{name}.csv"),intern=T)
         } else {
             file <- paste0(name,".csv")
             data.table::fwrite(dat,file)
