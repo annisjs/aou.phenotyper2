@@ -17,7 +17,7 @@
             my_bucket <- Sys.getenv("WORKSPACE_BUCKET")
             if(stringr::str_glue("{name}.csv") %in% basename(system(stringr::str_glue("gsutil ls {my_bucket}/{output_folder}"), intern = T)))
             {
-                system(stringr::str_glue("gsutil rm -rf {output_folder}/{name}.csv"), intern = T)
+                system(stringr::str_glue("gsutil rm -rf {my_bucket}/{output_folder}/{name}.csv"), intern = T)
             }
             system(stringr::str_glue("gsutil mv {my_bucket}/{query_folder_origin}/* {output_folder}/{name}.csv"),intern=T)
         } else {
