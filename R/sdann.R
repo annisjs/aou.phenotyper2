@@ -13,5 +13,5 @@
 sdann <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::sdann_query(anchor_date_table,before,after)
-  .write_to_bucket(result,output_folder,"sdann")
+  .write_to_bucket(result,output_folder,"sdann",TRUE,"sdann_query_result.csv")
 }
