@@ -4,7 +4,13 @@
 \alias{.write_to_bucket}
 \title{Internal function used to write dataset to workspace bucket and local file system}
 \usage{
-.write_to_bucket(dat, output_folder, name)
+.write_to_bucket(
+  dat,
+  output_folder,
+  name,
+  keep_shards = FALSE,
+  query_folder_origin = NULL
+)
 }
 \arguments{
 \item{dat}{the data to write}
@@ -12,6 +18,10 @@
 \item{output_folder}{the folder to write to}
 
 \item{name}{the name of the file to write (without extension)}
+
+\item{keep_shards}{if TRUE, original shards from bigquery will be kept and moved to folder under designated name}
+
+\item{query_folder_origin}{if keep_shards is TRUE, must specify the name of the folder where the query is written to}
 }
 \description{
 Internal function used to write dataset to workspace bucket and local file system

@@ -12,5 +12,5 @@
 fitbit <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     result <- aou.reader::fitbit_query(anchor_date_table,before,after)
-    .write_to_bucket(result,output_folder,"fitbit")
+    .write_to_bucket(result,output_folder,"fitbit",TRUE,"fitbit_query.csv")
 }
