@@ -11,5 +11,5 @@
 wear_time <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::wear_time_query(anchor_date_table,before,after)
-  .write_to_bucket(result,output_folder,"wear_time")
+  .write_to_bucket(result,output_folder,"wear_time",TRUE,"wear_time_query.csv")
 }

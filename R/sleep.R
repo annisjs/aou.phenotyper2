@@ -23,5 +23,5 @@
 sleep <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::sleep_query(anchor_date_table,before,after)
-  .write_to_bucket(result,output_folder,"sleep")
+  .write_to_bucket(result,output_folder,"sleep",TRUE,"sleep_query_result.csv")
 }

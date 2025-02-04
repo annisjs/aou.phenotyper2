@@ -11,5 +11,5 @@
 top1_steps <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::top_steps_query(1,anchor_date_table,before,after)
-  .write_to_bucket(result,output_folder,"top1_steps")
+  .write_to_bucket(result,output_folder,"top1_steps",TRUE,"top_steps_query.csv")
 }
