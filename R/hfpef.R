@@ -52,8 +52,21 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     result_hfpef_codes <- rbind(result_icd9,result_icd10)
     colnames(result_hfpef_codes) <- c("person_id","hfpef_entry_date","hfpef_value")
 
+    #hfref codes
+    hfref_icd9_codes <- c("428.2","428.20","428.21","428.22","428.23","428.24","428.25","428.26","428.27","428.28","428.29",
+    "428.4","428.40","428.41","428.42","428.43","428.44","428.45","428.46","428.47","428.48","428.49")
+    hfref_icd10_codes <- c("I50.2","I50.20","I50.21","I50.22","I50.23","I50.24","I50.25","I50.26","I50.27","I50.28","I50.29",
+    "I50.4","I50.40","I50.41","I50.42","I50.43","I50.44","I50.45","I50.46","I50.47","I50.48","I50.49")
+    hfref_result_icd9 <- aou.reader::icd9_query(hfref_icd9_codes,anchor_date_table,before,after)
+    hfref_result_icd10 <- aou.reader::icd10_query(hfref_icd10_codes,anchor_date_table,before,after)
+    result_hfref_codes <- rbind(hfref_result_icd9,hfref_result_icd10)
+
+    hfpef_never_hfref_codes <- result_hfpef_codes[!result_hfpef_codes$person_id %in% result_hfref_codes$person_id, ] #hfpef subjects NEVER in hfref
+
+
+
     #combine all
-    result_all <- rbind(result_hfpef_codes,hfpef_ef_code)
+    result_all <- rbind(hfpef_never_hfref_codes,hfpef_ef_code)
     result_all$first_entry <- with(result_all, ave(hfpef_entry_date, person_id, FUN = min)) #group by person_id & get first entry date per group
 
     result_all <- result_all[,.(hfpef_entry_date = first_entry,
