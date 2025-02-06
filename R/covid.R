@@ -27,5 +27,6 @@ covid <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   result_all <- rbind(covid_conditions, covid_test_results)
   results_all <- result_all[,.(covid_entry_date = min(covid_entry_date),
                                covid_status = length(covid_entry_date) > 0), .(person_id)]
+  result_all = result_all[!duplicated(person_id)]
   .write_to_bucket(result_all,output_folder,"covid")
 }
