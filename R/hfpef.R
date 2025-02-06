@@ -42,8 +42,9 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     #pef_by_ef <- over_or_at_50[!over_or_at_50$person_id %in% under_50$person_id, ] #ef is above or at 50 and has never been below 50
 
     #switch this to inner join?
-    hfpef_ef_code <- pef_by_ef[pef_by_ef$person_id %in% hf_data$person_id] #pef, but also in the hf cohort aka hfpef
-    colnames(hfpef_ef_code) <- c("person_id","hfpef_entry_date","hfpef_value")
+    #hfpef_ef_code <- pef_by_ef[pef_by_ef$person_id %in% hf_data$person_id] #pef, but also in the hf cohort aka hfpef
+    #colnames(hfpef_ef_code) <- c("person_id","hfpef_entry_date","hfpef_value")
+    colnames(ef_over_or_at_50) <- c("person_id","hfpef_entry_date","hfpef_value")
 
     icd9_codes <- c("428.3","428.30","428.31","428.32","428.33","428.34","428.35","428.36","428.37","428.38","428.39")
     icd10_codes <- c("I50.3","I50.30","I50.31","I50.32","I50.33","I50.34","I50.35","I50.36","I50.37","I50.38","I50.39")
