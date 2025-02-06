@@ -38,8 +38,8 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     #filter for HFPEF
     #need to check if ef is at or over 50, but also has never been below 50
     under_50 <- result_ef[result_ef$all_ef_value < 50, ] #ef has ever been below 50?
-    over_or_at_50 <- result_ef[result_ef$all_ef_value >= 50, ]
-    pef_by_ef <- over_or_at_50[!over_or_at_50$person_id %in% under_50$person_id, ] #ef is above or at 50 and has never been below 50
+    ef_over_or_at_50 <- result_ef[result_ef$all_ef_value >= 50, ]
+    #pef_by_ef <- over_or_at_50[!over_or_at_50$person_id %in% under_50$person_id, ] #ef is above or at 50 and has never been below 50
 
     #switch this to inner join?
     hfpef_ef_code <- pef_by_ef[pef_by_ef$person_id %in% hf_data$person_id] #pef, but also in the hf cohort aka hfpef
@@ -61,12 +61,16 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     hfref_result_icd10 <- aou.reader::icd10_query(hfref_icd10_codes,anchor_date_table,before,after)
     result_hfref_codes <- rbind(hfref_result_icd9,hfref_result_icd10)
 
-    hfpef_never_hfref_codes <- result_hfpef_codes[!result_hfpef_codes$person_id %in% result_hfref_codes$person_id, ] #hfpef subjects NEVER in hfref
+    #hfpef_never_hfref_codes <- result_hfpef_codes[!result_hfpef_codes$person_id %in% result_hfref_codes$person_id, ] #hfpef subjects NEVER in hfref
 
 
 
     #combine all
-    result_all <- rbind(hfpef_never_hfref_codes,hfpef_ef_code)
+    result_all <- rbind(result_hfpef_codes,ef_over_or_at_50)
+    result_all <- result_all[!result_all$person_id %in% under_50$person_id, ]
+    result_all <- result_all[!result_all$person_id %in% result_hfref_codes$person_id, ]
+
+
     result_all$first_entry <- with(result_all, ave(hfpef_entry_date, person_id, FUN = min)) #group by person_id & get first entry date per group
 
     result_all <- result_all[,.(hfpef_entry_date = first_entry,
