@@ -16,5 +16,6 @@ long_covid <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
   result_all <- setDT(result_all)[,.(long_covid_entry_date = min(condition_start_date),
                                      long_covid_status = length(condition_start_date) > 0),
                                   .(person_id)]
+  result_all = result_all[!duplicated(person_id)]
   .write_to_bucket(result_all,output_folder,"long_covid")
 }
