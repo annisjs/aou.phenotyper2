@@ -11,7 +11,8 @@
 long_covid <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   source_values <- c("U09.9")
-  result_all <- aou.reader::condition_query(source_values=source_values,anchor_date_table=anchor_date_table,before=before,after=after)
+  concept_ids <- c(710706,705076)
+  result_all <- aou.reader::condition_query(concept_ids = concept_ids,source_values=source_values,anchor_date_table=anchor_date_table,before=before,after=after)
   result_all <- setDT(result_all)[,.(long_covid_entry_date = min(condition_start_date),
                                      long_covid_status = length(condition_start_date) > 0),
                                   .(person_id)]
