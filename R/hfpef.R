@@ -37,7 +37,7 @@ hfpef <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     colnames(result_ef) <- c("person_id","all_ef_entry_date","all_ef_value")
 
     #make sure these EF subjects are HF cases
-    result_ef <- result_ef[!result_ef$person_id %in% hf_data_all$person_id, ]
+    result_ef <- result_ef[result_ef$person_id %in% hf_data$person_id, ]
 
     #filter for HFPEF
     #need to check if ef is at or over 50, but also has never been below 50
