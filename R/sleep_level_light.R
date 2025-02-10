@@ -22,5 +22,5 @@ sleep_level_light <- function(output_folder,anchor_date_table=NULL,before=NULL,a
                         'sleep_level_light_start_datetime',
                         'sleep_level_light_duration_in_min',
                         'sleep_level_light_is_main_sleep')
-  .write_to_bucket(result,output_folder,"sleep_level_light")
+  .write_to_bucket(result,output_folder,"sleep_level_light",TRUE,"sleep_level_query_result.csv")
 }

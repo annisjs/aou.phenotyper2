@@ -22,5 +22,5 @@ sleep_level_rem <- function(output_folder,anchor_date_table=NULL,before=NULL,aft
                         'sleep_level_rem_start_datetime',
                         'sleep_level_rem_duration_in_min',
                         'sleep_level_rem_is_main_sleep')
-  .write_to_bucket(result,output_folder,"sleep_level_rem")
+  .write_to_bucket(result,output_folder,"sleep_level_rem",TRUE,"sleep_level_query_result.csv")
 }
