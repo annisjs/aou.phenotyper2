@@ -503,8 +503,8 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
   data <- merge(data,hcm[, c("person_id", "hcm_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,icm[, c("person_id", "icm_status")],by="person_id", all.x = T, allow.cartesian = T)
 
-  data$dcm_nicm_pheno_min_entry_date <- apply(data[,c("dcm_entry_date","dcm_assw_entry_date","lvsd_entry_date")],
-                             1, min, na.rm = TRUE)
+  #data$dcm_nicm_pheno_min_entry_date <- apply(data[,c("dcm_entry_date","dcm_assw_entry_date","lvsd_entry_date")],
+  #                           1, min, na.rm = TRUE)
 
   #fill NA
   data[, dcm_status := ifelse(is.na(dcm_status), FALSE, dcm_status)]
@@ -527,7 +527,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
         (lvsd_status == FALSE) & (icm_status == FALSE), TRUE, FALSE)]
   data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE) & (dcm_control == FALSE)), TRUE, FALSE)]
 
-  final <- data[, c("person_id","dcm_case","nicm_case","dcm_nicm_pheno_min_entry_date","dcm_control","exclude")]
+  final <- data[, c("person_id","dcm_case","nicm_case","dcm_entry_date","dcm_assw_entry_date","lvsd_entry_date","dcm_control","exclude")]
 
   .write_to_bucket(final,output_folder,"dcm")
 
