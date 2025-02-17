@@ -22,5 +22,5 @@ sleep_level_restless <- function(output_folder,anchor_date_table=NULL,before=NUL
                         'sleep_level_restless_start_datetime',
                         'sleep_level_restless_duration_in_min',
                         'sleep_level_restless_is_main_sleep')
-  .write_to_bucket(result,output_folder,"sleep_level_restless")
+  .write_to_bucket(result,output_folder,"sleep_level_restless",TRUE,"sleep_level_query_result.csv")
 }
