@@ -484,9 +484,13 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
   subjects <- aou.reader::demographics_query() #get every person id in AOU
 
+  dcm[, hermes_dcm_entry_date := min(condition_start_date), .(person_id)] # get dcm entry date
+  dcm_assw[, hermes_nicm_entry_date := min(condition_start_date), .(person_id)] # get nicm entry date
+
+
   #combine 
-  data <- merge(subjects,dcm[, c("person_id", "dcm_status")],by="person_id", all.x = T, allow.cartesian = T)
-  data <- merge(data,dcm_assw[, c("person_id", "dcm_assw_status")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(subjects,dcm[, c("person_id", "dcm_status", "hermes_dcm_entry_date")],by="person_id", all.x = T, allow.cartesian = T)
+  data <- merge(data,dcm_assw[, c("person_id", "dcm_assw_status", "hermes_nicm_entry_date")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,mi[, c("person_id", "mi_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,pci[, c("person_id", "pci_status")],by="person_id", all.x = T, allow.cartesian = T)
   data <- merge(data,lvsd[, c("person_id", "lvsd_status")],by="person_id", all.x = T, allow.cartesian = T)
@@ -518,7 +522,7 @@ dcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
         (lvsd_status == FALSE) & (icm_status == FALSE), TRUE, FALSE)]
   data[, exclude := ifelse(((dcm_case == FALSE) & (nicm_case == FALSE) & (dcm_control == FALSE)), TRUE, FALSE)]
 
-  final <- data[, c("person_id","dcm_case","nicm_case","dcm_control","exclude")]
+  final <- data[, c("person_id","dcm_case","nicm_case","hermes_dcm_entry_date","hermes_nicm_entry_date","dcm_control","exclude")]
 
   .write_to_bucket(final,output_folder,"dcm")
 
