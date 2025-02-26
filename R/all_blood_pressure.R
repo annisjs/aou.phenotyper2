@@ -11,5 +11,5 @@ all_blood_pressure <-  function(output_folder,anchor_date_table=NULL,before=NULL
 {
     result_bp <- aou.reader::bp_query(anchor_date_table,before,after)
     colnames(result_bp) <- c("person_id","all_blood_pressure_entry_date","all_blood_pressure_systolic","all_blood_pressure_diastolic")
-    .write_to_bucket(result_bp,output_folder,"all_bp")
+    .write_to_bucket(result_bp,output_folder,"all_blood_pressure")
 }
