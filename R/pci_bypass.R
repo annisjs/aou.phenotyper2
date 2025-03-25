@@ -15,8 +15,8 @@ pci_bypass <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NU
     icd_codes <- c("0210%", "0211%", "0212%", "0213%", "0270%", "0271%", "0272%", "0273%")
     result <- aou.reader::icd_procedure_query(icd_codes,anchor_date_table,before,after)
     result <- result[order(icd_procedure_date)]
-    result_all <- result_all[,.(pci_bypass_status = TRUE,
+    result <- result[,.(pci_bypass_status = TRUE,
                                 pci_bypass_entry_date = icd_procedure_date[1]),
                             .(person_id)]
-    .write_to_bucket(result_all,output_folder,"pci_bypass")
+    .write_to_bucket(result,output_folder,"pci_bypass")
 }
