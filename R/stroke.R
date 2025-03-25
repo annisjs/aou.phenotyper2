@@ -7,14 +7,14 @@
 #' @return output_folder/stroke.csv
 #' @details At lest 1 ICD code:
 #'
-#' ICD9: "433.01","433.11","433.21","433.31","433.81","433.91","434.01","434.11","434.91"
+#' ICD9: "433.01","433.11","433.21","433.31","433.81","433.91","434.01","434.11","434.91","436.%"
 #'
-#' ICD10: "I63","I63.%"
+#' ICD10: "I63.%","G46.3","G46.4"
 #' @export
 stroke <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    icd9_codes <- c("433.01","433.11","433.21","433.31","433.81","433.91","434.01","434.11","434.91")
-    icd10_codes <- c("I63","I63.%")
+    icd9_codes <- c("433.01","433.11","433.21","433.31","433.81","433.91","434.01","434.11","434.91","436.%")
+    icd10_codes <- c("I63.%","G46.3","G46.4")
     result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
     result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
