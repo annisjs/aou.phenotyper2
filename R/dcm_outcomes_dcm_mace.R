@@ -41,7 +41,7 @@ dcm_outcomes_dcm_mace <- function(output_folder,anchor_date_table=NULL,before=NU
     cpt_dat <- aou.reader::cpt_query(cpt,anchor_date_table,before,after)
     cpt_dat <- cpt_dat[,c("person_id")]
     #make cpt output date match icd output date name
-    setnames(cpt_dat, "entry_date", "condition_start_date")
+    #setnames(cpt_dat, "entry_date", "condition_start_date")
     setnames(cpt_dat, "cpt_code", "condition_source_value")
 
     final <- rbind(result_all,cpt_dat)
