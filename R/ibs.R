@@ -1,4 +1,4 @@
-#' Inflammatory bowel syndrome (IBS)
+#' Irritable bowel syndrome (IBS)
 #'
 #' @param output_folder the folder to write the output
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.

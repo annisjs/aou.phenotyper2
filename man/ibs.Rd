@@ -2,7 +2,7 @@
 % Please edit documentation in R/ibs.R
 \name{ibs}
 \alias{ibs}
-\title{Inflammatory bowel syndrome (IBS)}
+\title{Irritable bowel syndrome (IBS)}
 \usage{
 ibs(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 }
@@ -19,7 +19,7 @@ ibs(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 output_folder/ibs.csv
 }
 \description{
-Inflammatory bowel syndrome (IBS)
+Irritable bowel syndrome (IBS)
 }
 \details{
 At least 1 ICD code:
