@@ -4,10 +4,10 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @return output_folder/dcm_outcomes_icd_prevalent.csv
+#' @return output_folder/dcm_outcomes_ppm_prevalent.csv
 #' @details At least 1 ICD code:
 #' @export
-dcm_outcomes_icd_prevalent <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+dcm_outcomes_ppm_prevalent <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     icd9_codes <- c('37.70','37.71','37.72','37.73','37.74','37.75','37.76','37.77','37.78',
                       '37.79','37.80','37.81','37.82','37.83','37.85','37.86','37.87','37.89',
@@ -39,8 +39,8 @@ dcm_outcomes_icd_prevalent <- function(output_folder,anchor_date_table=NULL,befo
     setnames(cpt_dat, "cpt_code", "condition_source_value")
 
     final <- rbind(result_all,cpt_dat)
-    final <- final[,.(dcm_outcomes_icd_prevalent_status = length(condition_start_date) > 0,
-                                dcm_outcomes_icd_prevalent_entry_date = min(condition_start_date)),
+    final <- final[,.(dcm_outcomes_ppm_prevalent_status = length(condition_start_date) > 0,
+                                dcm_outcomes_ppm_prevalent_entry_date = min(condition_start_date)),
                                 .(person_id)]
-    .write_to_bucket(final,output_folder,"dcm_outcomes_icd_prevalent")
+    .write_to_bucket(final,output_folder,"dcm_outcomes_ppm_prevalent")
 }
