@@ -21,6 +21,9 @@ dcm_outcomes_icd_prevalent <- function(output_folder,anchor_date_table=NULL,befo
     result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
     result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_icd_proc <- aou.reader::icd_procedure_query(icd_proc_codes,anchor_date_table,before,after)
+    #make proc output date match icd output date name
+    setnames(result_icd_proc, "icd_procedure_date", "condition_start_date")
+    setnames(result_icd_proc, "icd_procedure_code", "condition_source_value")
     result_all <- rbind(result_icd9,result_icd_proc)
     result_all <- rbind(result_all,result_icd10)
     cpt <- c('0387T','0389T','0390T','0391T','33206','33207','33208','33210','33211','33212',
