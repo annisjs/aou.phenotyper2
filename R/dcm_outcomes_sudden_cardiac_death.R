@@ -16,7 +16,7 @@
 #' "33228","33229","33233","33234","33235","33236","33237","33238","33274","33275",
 #' "71090","93279","93280","93281","93286","93288","93293","93294","93731","93732","93733","93734","93735","93736"
 #' @export
-dcm_outcomes_suddent_cardiac_death <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+dcm_outcomes_sudden_cardiac_death <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {    
     icd9_codes <- c('427.5','798.0','798','798.1','798.2','798.9')
 
