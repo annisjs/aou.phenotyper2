@@ -39,5 +39,5 @@ dcm_outcomes_suddent_cardiac_death <- function(output_folder,anchor_date_table=N
     final_write <- final[,.(dcm_outcomes_suddent_cardiac_death_entry_date = min(condition_start_date),
                                         dcm_outcomes_suddent_cardiac_death_status = length(condition_start_date) >= 1),
                                     .(person_id)]
-    .write_to_bucket(final_write,output_folder,"dcm_outcomes_suddent_cardiac_death")
+    .write_to_bucket(final_write,output_folder,"dcm_outcomes_sudden_cardiac_death")
 }
