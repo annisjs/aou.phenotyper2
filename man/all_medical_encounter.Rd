@@ -21,7 +21,7 @@ all_medical_encounter(
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
-output_folder/all_medical_encounter.csv
+output_folder/all_medical_encounter_*.csv
 }
 \description{
 All Medical Encounters
