@@ -8,7 +8,7 @@
 #' @export
 hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {    
-    icd9_codes <- c('425.11','425.18')
+    icd9_codes <- c('425.11','425.18','425.1')
 
     icd10_codes <- c('I42.1','I42.2')
 
@@ -16,7 +16,13 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
 
-    snomed_codes <- c('15471000','389998005','445336009','53322007','93558006','41964001','389999002')
+    snomed_codes <- c('1204192000','704241002','871638006','1230303001','890119003','472326004',
+                    '890122001','472325000','890121008','871649000','890120009','472316006','771509001',
+                    '718713000','472318007','771513008','771478008','233871002','83978005','472324001',
+                    '233873004','1204194004','471885006','195020003','45227007','700065003','63183009',
+                    '719272007','389998005','445336009','53322007','93558006','41964001','389999002',
+                    '15471000','195574002','443751000000108')
+
 
     snomed_dat <- aou.reader::snomed_query(snomed_codes,anchor_date_table,before,after)
 
