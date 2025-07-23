@@ -13,7 +13,6 @@
 #' Medium walking (minutes/day) = 80-99 steps/min
 #' Brisk walking (minutes/day) = 100-119 steps/min
 #' All faster ambulation (minutes/day) = 120+ steps/min
-#' @export
 cadence_pattern <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::cadence_pattern_query(anchor_date_table,before,after)
