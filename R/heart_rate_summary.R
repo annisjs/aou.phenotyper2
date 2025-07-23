@@ -15,5 +15,5 @@
 heart_rate_summary <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::heart_rate_summary_query(anchor_date_table,before,after)
-  .write_to_bucket(result,output_folder,"heart_rate_summary",TRUE,"heart_rate_summary_query_result.csv")
+  .write_to_bucket(result,output_folder,"heart_rate_summary",TRUE,"heart_rate_summary_query.csv")
 }
