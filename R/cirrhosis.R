@@ -22,6 +22,6 @@ cirrhosis <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NUL
     result_all <- result_all[,.(cirrhosis_entry_date = condition_start_date[1],
                                 cirrhosis_status = TRUE),
                 .(person_id)]
-    .write_to_bucket(result_all,output_folder,"gerd")
+    .write_to_bucket(result_all,output_folder,"cirrhosis")
 }
 
