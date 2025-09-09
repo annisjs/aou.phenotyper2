@@ -33,9 +33,23 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     combined <- rbind(result_all,snomed_dat)
 
     #need at least 2 codes on seperate days
-    final <- combined %>%
-        group_by(person_id) %>%
-        filter(n_distinct(condition_start_date) >= 2)
+
+    #count distinct dates for each subject
+    distinct_counts <- aggregate(condition_start_date ~ person_id, data = combined,
+                            FUN = function(x) length(unique(x)))
+
+    #keep only combinations with 2+ distinct dates
+    valid_combinations <- distinct_counts[distinct_counts$condition_start_date >= 2, c("person_id")]
+
+    #filter original data frame
+    final <- merge(df, valid_combinations, by = c("person_id"))   
+
+
+
+
+    #final <- combined %>%
+     #   group_by(person_id) %>%
+     #   filter(n_distinct(condition_start_date) >= 2)
 
 
 
