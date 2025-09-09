@@ -36,7 +36,6 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     final <- combined %>%
         group_by(person_id) %>%
         filter(n_distinct(condition_start_date) >= 2)
-        ungroup()
 
 
 
