@@ -11,5 +11,5 @@
 all_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   meds <- aou.reader::med_query(meds=NULL,anchor_date_table,before,after)
-  .write_to_bucket(meds,output_folder,"all_meds_by_cohort")
+  .write_to_bucket(meds,output_folder, "all_meds", TRUE,"all_meds.csv")
 }
