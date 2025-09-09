@@ -20,9 +20,9 @@ heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after
     # Sort by date
     hf_inpt_sorted <- hf_inpt[order(condition_start_date)]
     hf_outpt_sorted <- hf_outpt[order(condition_start_date)]
-    # De-duplicate
-    hf_inpt_sorted <- hf_inpt_sorted[!duplicated(hf_inpt_sorted)]
-    hf_outpt_sorted <- hf_outpt_sorted[!duplicated(hf_outpt_sorted)]
+    # De-duplicate by date and person id
+    hf_inpt_sorted <- hf_inpt_sorted[!duplicated(hf_inpt_sorted, by=c("person_id", "condition_start_date"))]
+    hf_outpt_sorted <- hf_outpt_sorted[!duplicated(hf_outpt_sorted, by=c("person_id", "condition_start_date"))]
     # Get counts and dates (2nd date for outpatient since we need two codes)
     hf_inpt_count <- hf_inpt_sorted[,.(hf_inpt_count = length(unique(condition_start_date)),
                                         hf_inpt_date = condition_start_date[1]),.(person_id)]
