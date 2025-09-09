@@ -39,10 +39,10 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
                             FUN = function(x) length(unique(x)))
 
     #keep only combinations with 2+ distinct dates
-    valid_combinations <- distinct_counts[distinct_counts$condition_start_date >= 2, c("person_id")]
+    valid_ids <- distinct_counts[distinct_counts$condition_start_date >= 2, "person_id"]
 
     #filter original data frame
-    final <- merge(df, valid_combinations, by = c("person_id"))   
+    final <- combined[combined$person_id %in% valid_ids, ]  
 
 
 
