@@ -30,7 +30,15 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     #setnames(cpt_dat, "entry_date", "condition_start_date")
     #setnames(cpt_dat, "cpt_code", "condition_source_value")
 
-    final <- rbind(result_all,snomed_dat)
+    combined <- rbind(result_all,snomed_dat)
+
+    #need at least 2 codes on seperate days
+    final <- combined %>%
+        group_by(person_id) %>%
+        filter(n_distinct(condition_start_date) >= 2)
+        ungroup()
+
+
 
     final_write <- final[,.(hcm_entry_date = min(condition_start_date),
                                         hcm_status = length(condition_start_date) >= 1),
