@@ -72,7 +72,7 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
     filtered_dt <- dems_dt[age_at_anchor >= 15]
 
-    final_post_age <- filtered_dt[, c("person_id", "hcm_status","hcm_entry_date", "age_at_anchor")]
+    final_post_age <- filtered_dt[, c("person_id", "hcm_status","hcm_entry_date")]
 
 
 
