@@ -42,7 +42,39 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     valid_ids <- distinct_counts[distinct_counts$condition_start_date >= 2, "person_id"]
 
     #filter original data frame
-    final <- combined[combined$person_id %in% valid_ids, ]  
+    final <- combined[combined$person_id %in% valid_ids, ]
+
+    final_write <- final[,.(hcm_entry_date = min(condition_start_date),
+                                    hcm_status = length(condition_start_date) >= 1),
+                                .(person_id)]
+
+    #calc age at a given date
+    agecalc <- function(dob,anchor_date){
+      require(data.table)
+      if (is.null(anchor_date))
+      {
+        return(NULL)
+      }
+      age <- year(anchor_date) - year(dob) - 1
+      ii <- (month(anchor_date) > month(dob)) | (month(anchor_date) == month(dob) & 
+                                                    mday(anchor_date) >= mday(dob))
+      age[ii] <- age[ii] + 1
+      return(age)
+    }
+
+    #get dob
+    dems <- aou.reader::demographics_query()
+
+    #add dob to df -- inner join
+    dems_dt <- as.data.table(merge(final_write,dems,by="person_id"))
+
+    dems_dt[, age_at_anchor := agecalc(date_of_birth,hcm_entry_date)]
+
+    filtered_dt <- dems_dt[age_at_anchor >= 15]
+
+    final_post_age <- filtered_dt[, c("person_id", "hcm_status","hcm_entry_date")]
+
+
 
 
 
@@ -53,8 +85,6 @@ hcm <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 
 
 
-    final_write <- final[,.(hcm_entry_date = min(condition_start_date),
-                                        hcm_status = length(condition_start_date) >= 1),
-                                    .(person_id)]
-    .write_to_bucket(final_write,output_folder,"hcm")
+
+    .write_to_bucket(final_post_age,output_folder,"hcm")
 }
