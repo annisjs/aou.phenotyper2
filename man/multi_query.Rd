@@ -33,7 +33,7 @@ multi_query(
 \item{...}{optional parameter to be passed to the query. If a query gets an unexpected parameter this may raise an error.}
 }
 \value{
-query results saved as output_folder/query_list[\link{i}].csv.
+query results saved as output_folder/query_list\[\[i]].csv.
 If load_queries is set to true and merge_queries is false a named list with each query result is returned
 If merge_queries is not TRUE the query results are merged on the given column name and the resulting data table is returned.
 }

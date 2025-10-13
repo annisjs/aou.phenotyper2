@@ -29,5 +29,5 @@ Closest Cholesterol
 \details{
 Searches for
 
-"Cholesterol \link{Mass/volume} in Serum or Plasma"
+"Cholesterol \[Mass/volume] in Serum or Plasma"
 }

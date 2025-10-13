@@ -6,7 +6,7 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' "Hemoglobin [Mass/volume] in Blood""
+#' "Hemoglobin \\[Mass/volume] in Blood""
 #' @return output_folder/all_hemoglobin.csv
 #' @export
 all_hemoglobin <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

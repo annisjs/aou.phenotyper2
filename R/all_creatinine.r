@@ -8,7 +8,7 @@
 #'
 #' "Creatinine"
 #' "Creatinine | Serum or Plasma | Chemistry - non-challenge"
-#' "Creatinine [Mass/volume] in Serum or Plasma"
+#' "Creatinine \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/all_creatinine.csv
 #' @export
 all_creatinine <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

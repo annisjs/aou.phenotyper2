@@ -31,5 +31,5 @@ Searches for
 
 "Bilirubin"
 "Bilirubin | Serum or Plasma | Chemistry - non-challenge"
-"Bilirubin.total \link{Mass/volume} in Serum or Plasma"
+"Bilirubin.total \[Mass/volume] in Serum or Plasma"
 }

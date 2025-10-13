@@ -6,8 +6,8 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' Fasting glucose [Mass/volume] in Serum or Plasma
-#' Fasting glucose [Moles/volume] in Blood
+#' Fasting glucose \\[Mass/volume] in Serum or Plasma
+#' Fasting glucose \\[Moles/volume] in Blood
 #' @return output_folder/all_fasting_glucose.csv
 #' @export
 all_fasting_glucose <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

@@ -31,5 +31,5 @@ Searches for
 
 "Sodium"
 "Sodium | Serum or Plasma | Chemistry - non-challenge"
-"Sodium \link{Moles/volume} in Serum or Plasma"
+"Sodium \[Moles/volume] in Serum or Plasma"
 }

@@ -8,7 +8,7 @@
 #'
 #' "Aspartate aminotransferase"
 #' "Aspartate aminotransferase | Serum or Plasma | Chemistry - non-challenge"
-#' "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+#' "Aspartate aminotransferase \\[Enzymatic activity/volume] in Serum or Plasma"
 #' @return output_folder/all_asp.csv
 #' @export
 all_asp <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

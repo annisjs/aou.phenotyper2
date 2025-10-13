@@ -24,5 +24,5 @@ All BUN
 \details{
 Searches for
 
-"Urea nitrogen \link{Mass/volume} in Serum or Plasma"
+"Urea nitrogen \[Mass/volume] in Serum or Plasma"
 }

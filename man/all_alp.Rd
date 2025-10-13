@@ -25,6 +25,6 @@ All ALP
 Searches for
 
 "Alkaline phosphatase"
-"Alkaline phosphatase \link{Enzymatic activity/volume} in Serum or Plasma"
+"Alkaline phosphatase \[Enzymatic activity/volume] in Serum or Plasma"
 "Alkaline phosphatase | Serum or Plasma | Chemistry - non-challenge"
 }

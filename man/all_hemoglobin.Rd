@@ -29,5 +29,5 @@ All Hemoglobin
 \details{
 Searches for
 
-"Hemoglobin \link{Mass/volume} in Blood""
+"Hemoglobin \[Mass/volume] in Blood""
 }

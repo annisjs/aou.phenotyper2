@@ -7,7 +7,7 @@
 #' @details Searches for
 #'
 #' "Chloride"
-#' "Chloride [Moles/volume] in Serum or Plasma"
+#' "Chloride \\[Moles/volume] in Serum or Plasma"
 #' "Chloride | Serum or Plasma | Chemistry - non-challenge"
 #' @return output_folder/all_chloride.csv
 #' @export

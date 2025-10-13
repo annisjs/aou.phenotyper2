@@ -6,8 +6,8 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' Insulin [Units/volume] in Serum or Plasma --fasting
-#' Insulin [Units/volume] in Serum or Plasma --12 hours fasting
+#' Insulin \\[Units/volume] in Serum or Plasma --fasting
+#' Insulin \\[Units/volume] in Serum or Plasma --12 hours fasting
 #' @return output_folder/all_fasting_insulin.csv
 #' @export
 all_fasting_insulin <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

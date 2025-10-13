@@ -8,7 +8,7 @@
 #'
 #' "Insulin"
 #' "Insulin | Serum or Plasma | Chemistry - non-challenge"
-#' "Insulin [Units/volume] in Serum or Plasma"
+#' "Insulin \\[Units/volume] in Serum or Plasma"
 #' @return output_folder/all_insulin.csv
 #' @export
 all_insulin <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

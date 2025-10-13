@@ -28,10 +28,10 @@ Closest eGFR
 }
 \details{
 Searches for
-"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
-"Glomerular filtration rate/1.73 sq M.predicted among blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
-"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
-"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood"
-"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
-"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
+"Glomerular filtration rate/1.73 sq M.predicted \[Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted among blacks \[Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \[Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted \[Volume Rate/Area] in Serum, Plasma or Blood"
+"Glomerular filtration rate/1.73 sq M.predicted \[Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
+"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \[Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
 }

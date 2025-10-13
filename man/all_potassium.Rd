@@ -30,6 +30,6 @@ All potassium
 Searches for
 
 "Potassium"
-"Potassium \link{Moles/volume} in Serum or Plasma"
+"Potassium \[Moles/volume] in Serum or Plasma"
 "Potassium | Serum or Plasma | Chemistry - non-challenge"
 }

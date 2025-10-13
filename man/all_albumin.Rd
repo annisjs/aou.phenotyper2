@@ -31,5 +31,5 @@ Searches for
 
 "Albumin"
 "Albumin | Serum or Plasma | Chemistry - non-challenge"
-"Albumin \link{Mass/volume} in Serum or Plasma"
+"Albumin \[Mass/volume] in Serum or Plasma"
 }

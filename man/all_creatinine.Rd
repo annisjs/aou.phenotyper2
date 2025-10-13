@@ -31,5 +31,5 @@ Searches for
 
 "Creatinine"
 "Creatinine | Serum or Plasma | Chemistry - non-challenge"
-"Creatinine \link{Mass/volume} in Serum or Plasma"
+"Creatinine \[Mass/volume] in Serum or Plasma"
 }

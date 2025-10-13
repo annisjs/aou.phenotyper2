@@ -8,7 +8,7 @@
 #'
 #' "Alanine aminotransferase"
 #' "Alanine aminotransferase | Serum or Plasma | Chemistry - non-challenge"
-#' "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+#' "Alanine aminotransferase \\[Enzymatic activity/volume] in Serum or Plasma"
 #' @return output_folder/all_alt.csv
 #' @export
 all_alt <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

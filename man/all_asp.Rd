@@ -26,5 +26,5 @@ Searches for
 
 "Aspartate aminotransferase"
 "Aspartate aminotransferase | Serum or Plasma | Chemistry - non-challenge"
-"Aspartate aminotransferase \link{Enzymatic activity/volume} in Serum or Plasma"
+"Aspartate aminotransferase \[Enzymatic activity/volume] in Serum or Plasma"
 }

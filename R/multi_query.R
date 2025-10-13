@@ -12,7 +12,7 @@
 #' Name in the function needs to be exactly same with query functions in aou.phenotyper2 package.
 #'
 #' 
-#' @return query results saved as output_folder/query_list[[i]].csv. 
+#' @return query results saved as output_folder/query_list\\[\\[i]].csv. 
 #' If load_queries is set to true and merge_queries is false a named list with each query result is returned
 #' If merge_queries is not TRUE the query results are merged on the given column name and the resulting data table is returned.
 #' @export

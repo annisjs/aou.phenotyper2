@@ -8,7 +8,7 @@
 #'
 #' "Calcium"
 #' "Calcium | Serum or Plasma | Chemistry - non-challenge"
-#' "Calcium [Mass/volume] in Serum or Plasma"
+#' "Calcium \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/all_calcium.csv
 #' @export
 all_calcium <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

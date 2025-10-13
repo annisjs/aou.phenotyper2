@@ -31,5 +31,5 @@ Searches for
 
 "Carbon dioxide"
 "Carbon dioxide | Serum or Plasma | Chemistry - non-challenge"
-"Carbon dioxide, total \link{Moles/volume} in Serum or Plasma"
+"Carbon dioxide, total \[Moles/volume] in Serum or Plasma"
 }

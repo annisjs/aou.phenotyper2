@@ -31,5 +31,5 @@ Searches for
 
 "Calcium"
 "Calcium | Serum or Plasma | Chemistry - non-challenge"
-"Calcium \link{Mass/volume} in Serum or Plasma"
+"Calcium \[Mass/volume] in Serum or Plasma"
 }

@@ -8,7 +8,7 @@
 #'
 #' "Albumin"
 #' "Albumin | Serum or Plasma | Chemistry - non-challenge"
-#' "Albumin [Mass/volume] in Serum or Plasma"
+#' "Albumin \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/all_albumin.csv
 #' @export
 all_albumin <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

@@ -26,5 +26,5 @@ Searches for
 
 "Alanine aminotransferase"
 "Alanine aminotransferase | Serum or Plasma | Chemistry - non-challenge"
-"Alanine aminotransferase \link{Enzymatic activity/volume} in Serum or Plasma"
+"Alanine aminotransferase \[Enzymatic activity/volume] in Serum or Plasma"
 }

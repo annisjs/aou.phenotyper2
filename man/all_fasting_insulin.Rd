@@ -29,6 +29,6 @@ All fasting insulin
 \details{
 Searches for
 
-Insulin \link{Units/volume} in Serum or Plasma --fasting
-Insulin \link{Units/volume} in Serum or Plasma --12 hours fasting
+Insulin \[Units/volume] in Serum or Plasma --fasting
+Insulin \[Units/volume] in Serum or Plasma --12 hours fasting
 }

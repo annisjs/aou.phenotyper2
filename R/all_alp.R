@@ -7,7 +7,7 @@
 #' @details Searches for
 #'
 #' "Alkaline phosphatase"
-#' "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma"
+#' "Alkaline phosphatase \\[Enzymatic activity/volume] in Serum or Plasma"
 #' "Alkaline phosphatase | Serum or Plasma | Chemistry - non-challenge"
 #' @return output_folder/all_alp.csv
 #' @export

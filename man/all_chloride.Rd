@@ -30,6 +30,6 @@ All Chloride
 Searches for
 
 "Chloride"
-"Chloride \link{Moles/volume} in Serum or Plasma"
+"Chloride \[Moles/volume] in Serum or Plasma"
 "Chloride | Serum or Plasma | Chemistry - non-challenge"
 }

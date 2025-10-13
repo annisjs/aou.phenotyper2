@@ -8,7 +8,7 @@
 #'
 #' "Sodium"
 #' "Sodium | Serum or Plasma | Chemistry - non-challenge"
-#' "Sodium [Moles/volume] in Serum or Plasma"
+#' "Sodium \\[Moles/volume] in Serum or Plasma"
 #' @return output_folder/all_sodium.csv
 #' @export
 all_sodium <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

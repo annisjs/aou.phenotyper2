@@ -8,7 +8,7 @@
 #'
 #' "Carbon dioxide"
 #' "Carbon dioxide | Serum or Plasma | Chemistry - non-challenge"
-#' "Carbon dioxide, total [Moles/volume] in Serum or Plasma"
+#' "Carbon dioxide, total \\[Moles/volume] in Serum or Plasma"
 #' @return output_folder/all_carbon_dioxide.csv
 #' @export
 all_carbon_dioxide <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

@@ -6,7 +6,7 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' "Cholesterol [Mass/volume] in Serum or Plasma"
+#' "Cholesterol \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/closest_chol.csv
 #' @export
 closest_chol <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

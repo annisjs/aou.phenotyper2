@@ -31,5 +31,5 @@ Searches for
 
 "Insulin"
 "Insulin | Serum or Plasma | Chemistry - non-challenge"
-"Insulin \link{Units/volume} in Serum or Plasma"
+"Insulin \[Units/volume] in Serum or Plasma"
 }

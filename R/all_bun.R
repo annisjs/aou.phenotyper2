@@ -6,7 +6,7 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' "Urea nitrogen [Mass/volume] in Serum or Plasma"
+#' "Urea nitrogen \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/all_bun.csv
 #' @export
 all_bun <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

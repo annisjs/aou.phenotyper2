@@ -8,7 +8,7 @@
 #'
 #' "Bilirubin"
 #' "Bilirubin | Serum or Plasma | Chemistry - non-challenge"
-#' "Bilirubin.total [Mass/volume] in Serum or Plasma"
+#' "Bilirubin.total \\[Mass/volume] in Serum or Plasma"
 #' @return output_folder/all_bilirubin.csv
 #' @export
 all_bilirubin <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)

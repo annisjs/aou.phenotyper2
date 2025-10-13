@@ -160,7 +160,7 @@
 #' •	A413	Sepsis due to Hemophilus influenzae
 #' •	A414	Sepsis due to anaerobes
 #' •	A4150	Gram-negative sepsis, unspecified
-#' •	A4151	Sepsis due to Escherichia coli [E. coli]
+#' •	A4151	Sepsis due to Escherichia coli \\[E. coli]
 #' •	A4152	Sepsis due to Pseudomonas
 #' •	A4153	Sepsis due to Serratia
 #' •	A4159	Other Gram-negative sepsis

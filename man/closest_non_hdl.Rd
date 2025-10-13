@@ -29,5 +29,5 @@ Closest Non-HDL
 \details{
 Searches for
 
-"Cholesterol non HDL \link{Mass/volume} in Serum or Plasma"
+"Cholesterol non HDL \[Mass/volume] in Serum or Plasma"
 }

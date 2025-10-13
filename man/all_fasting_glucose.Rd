@@ -29,6 +29,6 @@ All fasting glucose
 \details{
 Searches for
 
-Fasting glucose \link{Mass/volume} in Serum or Plasma
-Fasting glucose \link{Moles/volume} in Blood
+Fasting glucose \[Mass/volume] in Serum or Plasma
+Fasting glucose \[Moles/volume] in Blood
 }

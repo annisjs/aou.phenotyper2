@@ -7,7 +7,7 @@
 #' @details Searches for
 #'
 #' "Potassium"
-#' "Potassium [Moles/volume] in Serum or Plasma"
+#' "Potassium \\[Moles/volume] in Serum or Plasma"
 #' "Potassium | Serum or Plasma | Chemistry - non-challenge"
 #' @return output_folder/all_potassium.csv
 #' @export
