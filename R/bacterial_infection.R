@@ -97,7 +97,7 @@ bacterial_infection <- function(output_folder,anchor_date_table=NULL,before=NULL
     # CNS infections
     "G00.0", "G00.1", "G00.2", "G00.3", "G00.8", "G00.9", "A39", "A40"
     )
-    result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
+    result_all <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- result_all[order(condition_start_date)]
     result_all <- result_all[,.(bacterial_infection_entry_date = condition_start_date[1],
                                 bacterial_infection_status = TRUE),
