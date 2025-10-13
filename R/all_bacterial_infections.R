@@ -102,8 +102,8 @@ all_bacterial_infections <- function(output_folder,anchor_date_table=NULL,before
     setnames(result_all, "condition_source_value", "bacterial_infection_icd_code")
     result_all[, bacterial_infection_status := TRUE]
     result_all <- result_all[, c("person_id", 
-                                 "bacterial_infection_entry_date", 
-                                 "bacterial_infection_icd_code",
-                                 "bacterial_infection_status")]
+                                 "all_bacterial_infections_entry_date", 
+                                 "all_bacterial_infections_icd_code",
+                                 "all_bacterial_infections_status")]
     .write_to_bucket(result_all,output_folder,"all_bacterial_infections")
 }
