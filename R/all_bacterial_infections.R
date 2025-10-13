@@ -98,9 +98,9 @@ all_bacterial_infections <- function(output_folder,anchor_date_table=NULL,before
     "G00.0", "G00.1", "G00.2", "G00.3", "G00.8", "G00.9", "A39", "A40"
     )
     result_all <- aou.reader::inpatient_icd_query(icd10_codes,anchor_date_table,before,after)
-    setnames(result_all, "condition_start_date", "bacterial_infection_entry_date")
-    setnames(result_all, "condition_source_value", "bacterial_infection_icd_code")
-    result_all[, bacterial_infection_status := TRUE]
+    setnames(result_all, "condition_start_date", "all_bacterial_infections_entry_date")
+    setnames(result_all, "condition_source_value", "all_bacterial_infections_icd_code")
+    result_all[, all_bacterial_infections_status := TRUE]
     result_all <- result_all[, c("person_id", 
                                  "all_bacterial_infections_entry_date", 
                                  "all_bacterial_infections_icd_code",
