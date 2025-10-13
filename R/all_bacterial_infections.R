@@ -1,11 +1,11 @@
-#' Bacterial infection
+#' All bacterial infection dates
 #'
 #' @param output_folder the folder to write the output
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @return output_folder/bacterial_infection.csv
-#' @details At least 1 ICD 10 code (ICD 9 is not included):
+#' @return output_folder/all_bacterial_infections.csv
+#' @details At least 1 ICD 10 code (ICD 9 is not included). Any matching code will be returned.
 #'
 #' Pneumonia/respiratory
 #' J18.9: Unspecified Pneumonia
@@ -74,7 +74,7 @@
 #' A40: Other bacterial meningitis
 #' 
 #' @export
-bacterial_infection <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+all_bacterial_infections <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     icd10_codes <- c(
     # Pneumonia/respiratory
@@ -98,9 +98,12 @@ bacterial_infection <- function(output_folder,anchor_date_table=NULL,before=NULL
     "G00.0", "G00.1", "G00.2", "G00.3", "G00.8", "G00.9", "A39", "A40"
     )
     result_all <- aou.reader::inpatient_icd_query(icd10_codes,anchor_date_table,before,after)
-    result_all <- result_all[order(condition_start_date)]
-    result_all <- result_all[,.(bacterial_infection_entry_date = condition_start_date[1],
-                                bacterial_infection_status = TRUE),
-                            .(person_id)]
-    .write_to_bucket(result_all,output_folder,"bacterial_infection")
+    setnames(result_all, "condition_start_date", "bacterial_infection_entry_date")
+    setnames(result_all, "condition_source_value", "bacterial_infection_icd_code")
+    result_all[, bacterial_infection_status := TRUE]
+    result_all <- result_all[, c("person_id", 
+                                 "bacterial_infection_entry_date", 
+                                 "bacterial_infection_icd_code",
+                                 "bacterial_infection_status")]
+    .write_to_bucket(result_all,output_folder,"all_bacterial_infections")
 }
