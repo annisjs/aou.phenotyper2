@@ -11,7 +11,7 @@ all_cmp_hospitalizations <- function(output_folder,anchor_date_table=NULL,before
     icd_codes <- c("425","425.%", "I42","I42.%")
     result <- aou.reader::hospitalization_query(icd_codes,anchor_date_table,before,after)
     result <- result[,c("person_id","hospitalization_entry_date")]
-    result[,all_cmp_hospitalization_entry_date := hospitalization_entry_date]
+    result[,all_cmp_hospitalizations_entry_date := hospitalization_entry_date]
     result <- result[,c("person_id","all_cmp_hospitalizations_entry_date")]
     result <- result[!duplicated(result)]
     .write_to_bucket(result,output_folder,"all_cmp_hospitalizations")
