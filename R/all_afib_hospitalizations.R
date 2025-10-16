@@ -11,7 +11,7 @@ all_afib_hospitalizations <- function(output_folder,anchor_date_table=NULL,befor
     icd_codes <- c("427.3","427.31","427.32","I48","I48.0","I48.1","I48.2","I48.3","I48.4","I48.9","I48.91","I48.92")
     result <- aou.reader::hospitalization_query(icd_codes,anchor_date_table,before,after)
     result <- result[,c("person_id","hospitalization_entry_date")]
-    result[,all_hf_hospitalization_entry_date := hospitalization_entry_date]
+    result[,all_afib_hospitalization_entry_date := hospitalization_entry_date]
     result <- result[,c("person_id","all_afib_hospitalizations_entry_date")]
     result <- result[!duplicated(result)]
     .write_to_bucket(result,output_folder,"all_afib_hospitalizations")
