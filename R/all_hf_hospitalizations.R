@@ -11,7 +11,7 @@ all_hf_hospitalizations <- function(output_folder,anchor_date_table=NULL,before=
     icd_codes <- c("425","425.%","428","428.%","I42","I42.%","I50","I50.%")
     result <- aou.reader::hospitalization_query(icd_codes,anchor_date_table,before,after)
     result <- result[,c("person_id","hospitalization_entry_date")]
-    result[,all_hf_hospitalization_entry_date := hospitalization_entry_date]
+    result[,all_hf_hospitalizations_entry_date := hospitalization_entry_date]
     result <- result[,c("person_id","all_hf_hospitalizations_entry_date")]
     result <- result[!duplicated(result)]
     .write_to_bucket(result,output_folder,"all_hf_hospitalizations")
