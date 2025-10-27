@@ -10,8 +10,8 @@
 #' Average RR = 6000 / mean(HR)
 #' Subsequently, the standard deviation of all the five-minute RR intervals is calculated, yielding the SDANN value (in ms).
 #' @export
-hourly_sdann <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+hourly_sdann <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL, cohort=NULL)
 {
-  result <- aou.reader::hourly_sdann_query(anchor_date_table,before,after)
+  result <- aou.reader::hourly_sdann_query(anchor_date_table,before,after, cohort=cohort)
   .write_to_bucket(result,output_folder,"hourly_sdann",TRUE,"hourly_sdann_query_result.csv")
 }
