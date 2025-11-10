@@ -31,6 +31,6 @@ sdoh_survey_discrimination <- function(output_folder,anchor_date_table=NULL,befo
                                  survey_response == "Less than once a year", 1,
                                  survey_response == "Never", 0,
                                  default = NA)]
-	result_agg <- result[, .(sdoh_survey_discriminatio_score = mean(item_score, na.rm = T)), .(person_id)]
+	result_agg <- result[, .(sdoh_survey_discrimination_score = mean(item_score, na.rm = T)), .(person_id)]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_discrimination")
 }
