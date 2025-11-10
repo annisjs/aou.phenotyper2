@@ -16,6 +16,6 @@ sdoh_survey_panes_crime_safety <- function(output_folder,anchor_date_table=NULL,
                                      survey_response == "Somewhat disagree", 3,
                                      survey_response == "Strongly disagree", 4,
                                      default = NA)]
-  result_agg <- result[, sdoh_survey_panes_crime_safety_score := mean(panes_item_score, na.rm = T), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_panes_crime_safety_score = mean(panes_item_score, na.rm = T)), .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_panes_crime_safety")
 }

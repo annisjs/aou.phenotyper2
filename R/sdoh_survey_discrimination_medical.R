@@ -22,6 +22,6 @@ sdoh_survey_discrimination_medical <- function(output_folder,anchor_date_table=N
                                  survey_response == "Rarely", 2,
                                  survey_response == "Never", 1,
                                  default = NA)]
-	result_agg <- result[, sdoh_survey_discrimination_medical_score := mean(item_score, na.rm = T), .(person_id)]
+	result_agg <- result[, .(sdoh_survey_discrimination_medical_score = mean(item_score, na.rm = T)), .(person_id)]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_discrimination_medical")
 }

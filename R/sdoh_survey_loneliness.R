@@ -33,6 +33,6 @@ sdoh_survey_loneliness <- function(output_folder,anchor_date_table=NULL,before=N
                                         default = NA)]
 
   lonely_dat <- rbind(lonely_dat, lonely_dat_rev)
-  lonely_agg <- lonely_dat[, sdoh_survey_loneliness_score := mean(item_score, na.rm = T), .(person_id)]
+  lonely_agg <- lonely_dat[, .(sdoh_survey_loneliness_score = mean(item_score, na.rm = T)), .(person_id)]
   .write_to_bucket(lonely_agg, output_folder, "sdoh_survey_loneliness")
 }

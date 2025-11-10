@@ -15,11 +15,11 @@ sdoh_survey_housing_instability <- function(output_folder,anchor_date_table=NULL
   result[, item_score := fcase(survey_response <= 1, 0,
                                survey_response > 1, 1,
                                default = NA)]
-  result_agg <- result[, sdoh_survey_housing_instability_score := ifelse(any(!is.na(item_score)), 
+  result_agg <- result[, .(sdoh_survey_housing_instability_score = ifelse(any(!is.na(item_score)), 
                                                                     ifelse(item_score == 1, 
                                                                         "Housing instability", 
                                                                         "Hosing stable"),
-                                                                    as.character(NA)),
+                                                                    as.character(NA))),
                       .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_housing_instability")
 }

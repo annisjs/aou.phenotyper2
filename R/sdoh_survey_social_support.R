@@ -26,6 +26,6 @@ sdoh_survey_social_support <- function(output_folder,anchor_date_table=NULL,befo
 											 survey_response == "Most of the time", 4,
 											 survey_response == "All of the time", 5,
 											 default = NA)]
-	social_support_agg <- social_support_dat[, sdoh_survey_social_support_score := mean(item_score, na.rm = T), .(person_id)]
+	social_support_agg <- social_support_dat[, .(sdoh_survey_social_support_score = mean(item_score, na.rm = T)), .(person_id)]
 	.write_to_bucket(social_support_agg, output_folder, "sdoh_survey_social_support")
 }

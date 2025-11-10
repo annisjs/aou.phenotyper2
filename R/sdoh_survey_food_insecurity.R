@@ -19,11 +19,11 @@ sdoh_survey_food_insecurity <- function(output_folder,anchor_date_table=NULL,bef
                 survey_response == "Sometimes true", 1,
                 survey_response == "Never true", 0,
                 default = NA)]
-  result_agg <- result[, sdoh_survey_food_insecurity_score := ifelse(any(!is.na(item_score)), 
+  result_agg <- result[, .(sdoh_survey_food_insecurity_score = ifelse(any(!is.na(item_score)), 
                                                                 ifelse(sum(item_score, na.rm = T) >= 1, 
                                                                      "Food Insecure", 
                                                                      "Not Food Insecure"),
-                                                                as.character(NA)),
+                                                                as.character(NA))),
                       .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_food_insecurity")
 }

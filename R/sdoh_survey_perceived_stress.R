@@ -34,6 +34,6 @@ sdoh_survey_perceived_stress <- function(output_folder,anchor_date_table=NULL,be
                                survey_response == "Never", 5,
                                default = NA)]
   result <- rbind(result, result_rev)
-  result_agg <- result[, sdoh_survey_perceived_stress_score := mean(item_score, na.rm = T), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_perceived_stress_score = mean(item_score, na.rm = T)), .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_perceived_stress")
 }

@@ -19,7 +19,7 @@ sdoh_survey_panes_walk_bike <- function(output_folder,anchor_date_table=NULL,bef
                                       survey_response == "Somewhat disagree", 2,
                                       survey_response == "Strongly disagree", 1,
                                       default = NA)]
-  result_agg <- result[, sdoh_survey_panes_walk_bike_score := mean(panes_item_score, na.rm = T), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_panes_walk_bike_score = mean(panes_item_score, na.rm = T)), .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_panes_walk_bike")
 }
 
