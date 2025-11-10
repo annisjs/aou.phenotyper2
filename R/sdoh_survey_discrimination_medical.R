@@ -16,11 +16,11 @@
 sdoh_survey_discrimination_medical <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
 	result <- aou.reader::survey_query(c(40192497, 40192425, 40192425, 40192505, 40192423, 40192383, 40192394))
-	result[, item_score := fcase(answer == "Always", 5,
-                                 answer == "Most of the time", 4,
-                                 answer == "Sometimes", 3,
-                                 answer == "Rarely", 2,
-                                 answer == "Never", 1,
+	result[, item_score := fcase(survey_response == "Always", 5,
+                                 survey_response == "Most of the time", 4,
+                                 survey_response == "Sometimes", 3,
+                                 survey_response == "Rarely", 2,
+                                 survey_response == "Never", 1,
                                  default = NA)]
 	result_agg <- result[, sdoh_survey_discrimination_medical_score := mean(item_score, na.rm = T), .(person_id)]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_discrimination_medical")
