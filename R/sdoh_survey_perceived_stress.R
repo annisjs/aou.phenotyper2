@@ -27,7 +27,7 @@ sdoh_survey_perceived_stress <- function(output_folder,anchor_date_table=NULL,be
                                survey_response == "Almost Never", 2,
                                survey_response == "Never", 1,
                                default = NA)]
-  result[, item_score := fcase(survey_response == "Very Often", 1,
+  result_rev[, item_score := fcase(survey_response == "Very Often", 1,
                                survey_response == "Fairly Often", 2,
                                survey_response == "Sometimes", 3,
                                survey_response == "Almost Never", 4,
