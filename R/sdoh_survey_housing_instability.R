@@ -8,6 +8,7 @@
 #' 
 #' 40192441: Number of moves in past 12 months
 #' Ref: https://www.aamc.org/media/25736/download
+#' @export
 sdoh_survey_housing_instability <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::survey_query(40192441)

@@ -10,7 +10,8 @@
 #' 40192517: Were you worried whether your food would run out before you got money to buy more?
 #' Refs: Erin R. Hager, Anna M. Quigg, Maureen M. Black, Sharon M. Coleman, Timothy Heeren, Ruth Rose-Jacobs, John T. Cook, Stephanie A. Ettinger de Cuba, Patrick H. Casey, Mariana Chilton, Diana B. Cutts, Alan F. Meyers, Deborah A. Frank; Development and Validity of a 2-Item Screen to Identify Families at Risk for Food Insecurity. Pediatrics July 2010; 126 (1): e26–e32. 10.1542/peds.2009-3146
 #' 
-#' Radandt NE, Corbridge T, Johnson DB, Kim AS, Scott JM, Coldwell SE. Validation of a Two-Item Food Security Screening Tool in a Dental Setting. J Dent Child (Chic). 2018 Sep 15;85(3):114-119. PMID: 30869587; PMCID: PMC6419517.#' @export
+#' Radandt NE, Corbridge T, Johnson DB, Kim AS, Scott JM, Coldwell SE. Validation of a Two-Item Food Security Screening Tool in a Dental Setting. J Dent Child (Chic). 2018 Sep 15;85(3):114-119. PMID: 30869587; PMCID: PMC6419517.#' 
+#' @export
 sdoh_survey_food_insecurity <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   result <- aou.reader::survey_query(c(40192517, 40192426))

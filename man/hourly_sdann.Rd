@@ -8,7 +8,8 @@ hourly_sdann(
   output_folder,
   anchor_date_table = NULL,
   before = NULL,
-  after = NULL
+  after = NULL,
+  cohort = NULL
 )
 }
 \arguments{
