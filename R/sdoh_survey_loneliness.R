@@ -16,7 +16,7 @@
 #' 
 #' Ref: Hays RD, DiMatteo MR. A short-form measure of loneliness. J Pers Assess. 1987 Spring;51(1):69-81. doi: 10.1207/s15327752jpa5101_6. PMID: 3572711
 #' @export
-sdoh_survey_panes_loneliness <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+sdoh_survey_loneliness <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   lonely_dat <- aou.reader::survey_query(c(40192507, 40192397, 40192398, 40192501, 40192390, 40192494))
   lonely_dat_rev <- aou.reader::survey_query(c(40192504, 40192516))
