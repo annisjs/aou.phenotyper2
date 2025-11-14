@@ -14,5 +14,11 @@
 bout_cadence <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL,min_steps=60)
 {
   result <- aou.reader::bout_cadence_query(anchor_date_table,before,after,min_steps)
-  .write_to_bucket(result,output_folder,"bout_cadence",TRUE,"bout_cadence_query_result.csv")
+  if (min_steps != 60) # if not using the default add this to the output name to prevent overwrite.
+  {
+    output_file <- stringr::str_glue("bout_cadence_{min_steps}")
+  } else {
+    output_file <- "bout_cadence"
+  }
+  .write_to_bucket(result,output_folder,output_file,TRUE,"bout_cadence_query_result.csv")
 }
