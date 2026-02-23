@@ -12,9 +12,6 @@
 #' @export
 daily_heart_rate <- function(output_folder, anchor_date_table=NULL, before=NULL, after=NULL, cohort=NULL)
 {
-  if(is.null(cohort)){
-    stop("Cohort cannot be Null due to large data process.")
-  }
   result <- aou.reader::daily_heart_rate_query(anchor_date_table=anchor_date_table, before=before, after=after, cohort=cohort)
-  .write_to_bucket(result,output_folder,"daily_heart_rate")
+  .write_to_bucket(result,output_folder,"daily_heart_rate",TRUE,"daily_heart_rate_query.csv")
 }
