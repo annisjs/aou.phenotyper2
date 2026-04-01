@@ -12,10 +12,15 @@ all_glp1_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after
 {
     meds <- c("lixisenatide","adlyxin","albiglutide","tanzeum","exenatide","bydureon bcise","bydureon","byetta","liraglutide","saxenda","victoza",
     "dulaglutide","trulicity","semaglutide","ozempic","rybelsus","tirzepatide","mounjaro","zepbound")
-    result <- aou.reader::med_query(meds,anchor_date_table,before,after)
-    result <- result[order(drug_exposure_start_date)]
+    result <- NULL
+    for (m in meds)
+    {
+        tmp <- aou.reader::med_query(m, nchor_date_table, before, after)
+        tmp[, all_glp1_meds_generic_name := m]
+        result <- rbind(tmp, result)
+    }
     data.table::setnames(result, "drug_exposure_start_date", "all_glp1_meds_entry_date")
     data.table::setnames(result, "drug_name", "all_glp1_meds_name")
-    result <- result[, c("person_id", "all_glp1_meds_entry_date", "all_glp1_meds_name")]
+    result <- result[, c("person_id", "all_glp1_meds_entry_date", "all_glp1_meds_generic_name", "all_glp1_meds_name")]
     .write_to_bucket(result,output_folder,"all_glp1_meds")
 }
