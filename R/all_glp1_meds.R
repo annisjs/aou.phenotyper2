@@ -10,12 +10,19 @@
 #' @export
 all_glp1_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    meds <- c("lixisenatide","adlyxin","albiglutide","tanzeum","exenatide","bydureon bcise","bydureon","byetta","liraglutide","saxenda","victoza",
-    "dulaglutide","trulicity","semaglutide","ozempic","rybelsus","tirzepatide","mounjaro","zepbound")
+    meds = list(
+        "lixisenatide" = c("lixisenatide","adlyxin"),
+        "albiglutide" = c("albiglutide","tanzeum","eperzan"),
+        "exenatide" = c("exenatide","bydureon","byetta"),
+        "liraglutide" = c("liraglutide","saxenda","victoza"),
+        "dulaglutide" = c("dulaglutide","trulicity"),
+        "semaglutide" = c("semaglutide","ozempic","rybelsus","wegovy"),
+        "tirzepatide" = c("tirzepatide","mounjaro","zepbound")
+    )
     result <- NULL
-    for (m in meds)
+    for (m in names(meds))
     {
-        tmp <- aou.reader::med_query(m, anchor_date_table, before, after)
+        tmp <- aou.reader::med_query(meds[[m]], anchor_date_table, before, after)
         tmp[, all_glp1_meds_generic_name := m]
         result <- rbind(tmp, result)
     }
