@@ -15,7 +15,7 @@ all_glp1_meds <- function(output_folder,anchor_date_table=NULL,before=NULL,after
     result <- NULL
     for (m in meds)
     {
-        tmp <- aou.reader::med_query(m, nchor_date_table, before, after)
+        tmp <- aou.reader::med_query(m, anchor_date_table, before, after)
         tmp[, all_glp1_meds_generic_name := m]
         result <- rbind(tmp, result)
     }
