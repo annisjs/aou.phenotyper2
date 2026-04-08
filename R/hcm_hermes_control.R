@@ -46,11 +46,11 @@ hcm_hermes_control <- function(output_folder,anchor_date_table=NULL,before=NULL,
     #add in last medical touch
     final <- merge(final, last_medical_touch, by = "person_id")
 
-    final[, age_at_last_touch := agecalc(date_of_birth,last_medical_encounter_entry_date)]
+    final[, age_at_last_touch := agecalc(date_of_birth,medical_encounter_entry_date)]
 
     filtered_final <- final[age_at_last_touch >= 15]
 
-    final_2 <- filtered_final[,.(hcm_hermes_control_date = last_medical_encounter_entry_date,
+    final_2 <- filtered_final[,.(hcm_hermes_control_date = medical_encounter_entry_date,
                                 hcm_hermes_control_status = TRUE),
                                 .(person_id)]
 
