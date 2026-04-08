@@ -33,7 +33,7 @@ aortic_valve_intervention <- function(output_folder,anchor_date_table=NULL,befor
                                 .(person_id)]
 
   
-    final <- filtered_write[, c("person_id", "aortic_valve_intervention_status","aortic_valve_intervention_date")]
+    final <- final_write[, c("person_id", "aortic_valve_intervention_status","aortic_valve_intervention_date")]
 
     .write_to_bucket(final,output_folder,"aortic_valve_intervention")
 }
