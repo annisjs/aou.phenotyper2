@@ -54,7 +54,7 @@ congenital_heart_disease <- function(output_folder,anchor_date_table=NULL,before
                                 .(person_id)]
 
   
-    final <- filtered_write[, c("person_id", "congenital_heart_disease_status","congenital_heart_disease_date")]
+    final <- final_write[, c("person_id", "congenital_heart_disease_status","congenital_heart_disease_date")]
 
     .write_to_bucket(final,output_folder,"congenital_heart_disease")
 }
