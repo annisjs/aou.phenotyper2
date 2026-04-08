@@ -50,7 +50,7 @@ hcm_hermes_case <- function(output_folder,anchor_date_table=NULL,before=NULL,aft
     #add dob to df -- inner join
     dems_dt <- as.data.table(merge(final_write,dems,by="person_id"))
 
-    dems_dt[, age_at_anchor := agecalc(date_of_birth,hcm_entry_date)]
+    dems_dt[, age_at_anchor := agecalc(date_of_birth,hcm_hermes_case_date)]
 
     filtered_dt <- dems_dt[age_at_anchor >= 15]
 
