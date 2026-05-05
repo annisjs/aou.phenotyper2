@@ -31,7 +31,7 @@ congenital_heart_disease <- function(output_folder,anchor_date_table=NULL,before
     result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
     result_all <- rbind(result_icd9,result_icd10)
 
-    cpt_codes <- c("33608", "33610", "33611", "33615", "33617", "33619", "33622", "33641",
+    cpt_codes <- c("33608", "33610", "33611", "33615", "33617", "33619", "33622",
     "33647", "33660", "33665", "33670", "33675", "33676", "33677", "33681",
     "33684", "33688", "33692", "33694", "33697", "33710", "33741", "33745",
     "33746", "33770", "33771", "33774", "33775", "33776", "33777", "33778",
