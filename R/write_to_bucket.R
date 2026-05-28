@@ -21,7 +21,8 @@
             }
             system(stringr::str_glue("gsutil mv {my_bucket}/{query_folder_origin}/* {my_bucket}/{output_folder}/{name}.csv"),intern=T)
         } else {
-            file <- paste0(name,".csv")
+            dir.create("/home/jupyter/workspace/aouphenotyper_tmp")
+            file <- paste0("/home/jupyter/workspace/aouphenotyper_tmp/",name,".csv")
             data.table::fwrite(dat,file)
             aou.bucket::cp_to_bucket(file, stringr::str_glue("{output_folder}/{file}"))
         }
