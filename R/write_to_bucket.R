@@ -22,9 +22,10 @@
             system(stringr::str_glue("gsutil mv {my_bucket}/{query_folder_origin}/* {my_bucket}/{output_folder}/{name}.csv"),intern=T)
         } else {
             dir.create("/home/jupyter/workspace/aouphenotyper_tmp")
-            file <- paste0("/home/jupyter/workspace/aouphenotyper_tmp/",name,".csv")
-            data.table::fwrite(dat,file)
-            aou.bucket::cp_to_bucket(file, stringr::str_glue("{output_folder}/{file}"))
+            file <- paste0(name,".csv")
+            full_path <- paste0("/home/jupyter/workspace/aouphenotyper_tmp/", file)
+            data.table::fwrite(dat,full_path)
+            aou.bucket::cp_to_bucket(full_path, stringr::str_glue("{output_folder}/{file}"))
         }
     }
 }
