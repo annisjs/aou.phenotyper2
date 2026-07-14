@@ -5,8 +5,9 @@ aou.phenotyper is an R package whose goal is to assist in data pulls and analysi
 # Installation
 In an R notebook on the AOU workbench:
 ```r
-devtools::install_github("annisjs/aou.phenotyper2",upgrade=F)
-devtools::install_github("annisjs/aou.bucket",upgrade=F) # Installed to use "read_bucket" function
+remotes::install_github("annisjs/aou.phenotyper2", upgrade=F)
+remotes::install_github("annisjs/aou.bucket", upgrade=F) # Installed to use "read_bucket" function
+remotes::install_github("annisjs/aou.verily", upgrade=F) # Installed to use "setup_env()" function
 ```
 
 # Example
@@ -14,6 +15,9 @@ devtools::install_github("annisjs/aou.bucket",upgrade=F) # Installed to use "rea
 library(stringr)
 library(aou.bucket)
 library(aou.phenotyper2)
+library(aou.verily)
+
+setup_env() # Sets environment variables
 
 # The location of the output in the workspace bucket
 output_folder <- "datasets"
