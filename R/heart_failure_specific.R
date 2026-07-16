@@ -36,12 +36,12 @@ heart_failure_specific <- function(output_folder,anchor_date_table=NULL,before=N
     hf_counts[,hf_outpt_status := ifelse(is.na(hf_outpt_count),FALSE,hf_outpt_count >= 2)]
     hf_counts[,heart_failure_status := hf_inpt_status | hf_outpt_status]
     # Get the heart failure entry date (min date)
-    hf_counts[,heart_failure_entry_date := pmin(hf_inpt_date,hf_outpt_date,na.rm = TRUE)]
-    hf_counts[,heart_failure_entry_date := lubridate::as_date(
-        ifelse(heart_failure_status == FALSE,NA,
-            heart_failure_entry_date))]
+    hf_counts[,heart_failure_specific_entry_date := pmin(hf_inpt_date,hf_outpt_date,na.rm = TRUE)]
+    hf_counts[,heart_failure_specific_entry_date := lubridate::as_date(
+        ifelse(heart_failure_specific_status == FALSE,NA,
+            heart_failure_specific_entry_date))]
     # Save data to bucket
-    hf_counts <- hf_counts[,c("person_id","heart_failure_entry_date","heart_failure_status")]
-    hf_counts <- hf_counts[heart_failure_status == TRUE]
-    .write_to_bucket(hf_counts,output_folder,"heart_failure")
+    hf_counts <- hf_counts[,c("person_id","heart_failure_specific_entry_date","heart_failure_specific_status")]
+    hf_counts <- hf_counts[heart_failure_specific_status == TRUE]
+    .write_to_bucket(hf_counts,output_folder,"heart_failure_specific")
 }
