@@ -23,8 +23,6 @@ Myocardial Infarction
 }
 \details{
 At least 1 ICD code:
-
-ICD9: "410","410.\%","411","411.\%"
-
-ICD10: "I21","I21.\%","I22","I22.\%","I23","I23.\%","I24","I24.\%","I25","I25.\%"
+ICD9: 410.x (excluding 410.x2)
+ICD10: I21.x, I22.x
 }

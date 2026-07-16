@@ -6,16 +6,14 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @return output_folder/mi.csv
 #' @details At least 1 ICD code:
-#'
-#' ICD9: "410","410.%","411","411.%"
-#'
-#' ICD10: "I21","I21.%","I22","I22.%","I23","I23.%","I24","I24.%","I25","I25.%"
+#' ICD9: 410.x (excluding 410.x2)
+#' ICD10: I21.x, I22.x
 #' @import data.table stringr aou.reader
 #' @export
 mi <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  icd9_codes <- c("410","410.%","411","411.%")
-  icd10_codes <- c("I21","I21.%","I22","I22.%","I23","I23.%","I24","I24.%","I25","I25.%")
+  icd9_codes <- c("410",paste0("410.", 0:9, "0"), paste0("410.", 0:9, "1"))
+  icd10_codes <- c("I21","I21.%","I22","I22.%")
   result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
   result_all <- rbind(result_icd9,result_icd10)
