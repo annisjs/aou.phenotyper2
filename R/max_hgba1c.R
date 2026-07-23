@@ -1,0 +1,48 @@
+#' Max HgbA1c
+#'
+#' @param output_folder the folder to write the output
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @details Searches for
+#'
+#' "Hemoglobin A1c/Hemoglobin.total in Blood by Electrophoresis"
+#'
+#' "Hemoglobin A1c/Hemoglobin.total in Blood by calculation"
+#'
+#' "Hemoglobin A1c/Hemoglobin.total in Blood by IFCC protocol"
+#'
+#' "Hemoglobin A1c/Hemoglobin.total in Blood"
+#'
+#' "Hemoglobin A1c/Hemoglobin.total in Blood by HPLC"
+#'
+#' @return output_folder/max_hgba1c.csv
+#' @export
+max_hgba1c <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+{
+    if (is.null(anchor_date_table))
+    {
+        stop("max_hgba1c is not a primary variable and requires an anchor date table.")
+    }
+
+    lab_terms <- c(
+        "Hemoglobin A1c/Hemoglobin.total in Blood by Electrophoresis",
+        "Hemoglobin A1c/Hemoglobin.total in Blood by calculation",
+        "Hemoglobin A1c/Hemoglobin.total in Blood by IFCC protocol",
+        "Hemoglobin A1c/Hemoglobin.total in Blood",
+        "Hemoglobin A1c/Hemoglobin.total in Blood by HPLC"
+    )
+
+    result_all <- aou.reader::lab_query(lab_terms, anchor_date_table, before, after)
+    result_all <- as.data.table(merge(result_all, anchor_date_table, by = "person_id"))
+
+    result_all <- result_all[, .(
+        max_hgba1c_value = suppressWarnings(max(value_as_number, na.rm = TRUE)),
+        total_hgba1c_n   = sum(!is.na(value_as_number))
+    ), by = .(person_id, anchor_date)]
+
+    # if a subject has only NA values, max(..., na.rm=TRUE) returns -Inf
+    result_all[is.infinite(max_hgba1c_value), max_hgba1c_value := NA_real_]
+
+    .write_to_bucket(result_all, output_folder, "max_hgba1c")
+}
