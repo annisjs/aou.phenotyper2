@@ -9,8 +9,13 @@ date_at_age_18 <- function(output_folder)
     dems <- aou.reader::demographics_query()
     dems_dt <- as.data.table(dems)
 
-    # Ensure Date type, then add 18 years
-    dems_dt[, date_at_age_18 := as.Date(date_of_birth) + data.table::years(18)]
+    # Add 18 years without lubridate; keeps month/day aligned, handles leap years via POSIXlt normalization
+    dems_dt[, date_at_age_18 := {
+        dob <- as.Date(date_of_birth)
+        x <- as.POSIXlt(dob)
+        x$year <- x$year + 18
+        as.Date(x)
+    }]
 
     result_dt <- dems_dt[, .(person_id, date_at_age_18)]
     .write_to_bucket(result_dt, output_folder, "date_at_age_18")
