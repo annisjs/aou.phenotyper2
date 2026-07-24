@@ -14,10 +14,6 @@
 #' @export
 all_bnp <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
-  if (is.null(anchor_date_table))
-  {
-    stop("all_bnp is not a primary variable and requires an anchor date table.")
-  }
 
   lab_terms <- c(
     "Natriuretic peptide B [Mass/volume] in Serum or Plasma",
