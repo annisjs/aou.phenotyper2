@@ -1,26 +1,43 @@
 #' Mean systolic blood pressure and count
 #'
 #' @param output_folder the folder to write the output
-#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date.
-#'   A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
-#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
-#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#'   If provided, results are returned per (person_id, anchor_date). If NULL/empty, results are per person_id.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
+#'   Defaults to NULL (no renaming).
 #' @return output_folder/mean_sbp.csv
 #' @export
-mean_sbp <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+mean_sbp <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
-
   result_all <- aou.reader::sbp_query(anchor_date_table, before, after)
-  result_all <- as.data.table(merge(result_all, anchor_date_table, by = "person_id"))
+  result_all <- data.table::as.data.table(result_all)
 
-  # optional: keep the same diff calculation pattern as your closest_sbp codebase
-  result_all[, diff := abs(as.numeric(as.Date(measurement_date) - as.Date(anchor_date)))]
+  has_anchor <- !is.null(anchor_date_table) &&
+    is.data.frame(anchor_date_table) &&
+    nrow(anchor_date_table) > 0 &&
+    all(c("person_id", "anchor_date") %in% names(anchor_date_table))
 
-  # per-subject summary across all SBPs returned in the window
-  result_all <- result_all[, .(
-    mean_sbp_value = mean(value_as_number, na.rm = TRUE),
-    total_sbp_n    = sum(!is.na(value_as_number))
-  ), by = .(person_id, anchor_date)]
+  if (has_anchor) {
+    result_all <- data.table::as.data.table(
+      merge(result_all, anchor_date_table[, c("person_id", "anchor_date")], by = "person_id", all.x = TRUE)
+    )
+    out <- result_all[, .(
+      mean_sbp_value = mean(value_as_number, na.rm = TRUE),
+      total_sbp_n    = sum(!is.na(value_as_number))
+    ), by = .(person_id, anchor_date)]
+  } else {
+    out <- result_all[, .(
+      mean_sbp_value = mean(value_as_number, na.rm = TRUE),
+      total_sbp_n    = sum(!is.na(value_as_number))
+    ), by = .(person_id)]
+  }
 
-  .write_to_bucket(result_all, output_folder, "mean_sbp")
+  if (!is.null(suffix) && nzchar(suffix)) {
+    cols_to_rename <- setdiff(names(out), "person_id")
+    data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+  }
+
+  .write_to_bucket(out, output_folder, "mean_sbp")
 }
