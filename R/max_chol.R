@@ -11,10 +11,6 @@
 #' @export
 max_chol <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
-    if (is.null(anchor_date_table))
-    {
-        stop("max_chol is not a primary variable and requires an anchor date table.")
-    }
 
     lab_terms <- "Cholesterol [Mass/volume] in Serum or Plasma"
     result_all <- aou.reader::lab_query(lab_terms, anchor_date_table, before, after)

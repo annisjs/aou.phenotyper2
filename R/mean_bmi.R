@@ -9,10 +9,6 @@
 #' @import data.table stringr aou.reader
 mean_bmi <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
-    if (is.null(anchor_date_table))
-    {
-        stop("mean_bmi is not a primary variable and requires an anchor date table.")
-    }
 
     result_bmi <- aou.reader::bmi_query(anchor_date_table, before, after)
     result_bmi <- as.data.table(result_bmi)

@@ -17,10 +17,6 @@
 #' @export
 max_ldl <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
-    if (is.null(anchor_date_table))
-    {
-        stop("max_ldl is not a primary variable and requires an anchor date table.")
-    }
 
     lab_terms <- c(
         "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",

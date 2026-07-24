@@ -20,10 +20,6 @@
 #' @export
 max_hgba1c <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
-    if (is.null(anchor_date_table))
-    {
-        stop("max_hgba1c is not a primary variable and requires an anchor date table.")
-    }
 
     lab_terms <- c(
         "Hemoglobin A1c/Hemoglobin.total in Blood by Electrophoresis",
