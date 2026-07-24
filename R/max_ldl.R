@@ -3,11 +3,13 @@
 #' @param output_folder the folder to write the output
 #' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
 #'   If provided, results are returned per (person_id, anchor_date). If NULL/empty, results are per person_id.
-#' @param before an integer >= 0
-#' @param after an integer >= 0
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
+#'   Defaults to NULL (no renaming).
 #' @return output_folder/max_ldl.csv
 #' @export
-max_ldl <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+max_ldl <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
   lab_terms <- c(
     "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
@@ -40,6 +42,14 @@ max_ldl <- function(output_folder, anchor_date_table = NULL, before = NULL, afte
     ), by = .(person_id)]
   }
 
+  # if a subject has only NA values, max(..., na.rm=TRUE) returns -Inf
   out[is.infinite(max_ldl_value), max_ldl_value := NA_real_]
+
+  # Append suffix to all output columns except person_id
+  if (!is.null(suffix) && nzchar(suffix)) {
+    cols_to_rename <- setdiff(names(out), "person_id")
+    data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+  }
+
   .write_to_bucket(out, output_folder, "max_ldl")
 }
