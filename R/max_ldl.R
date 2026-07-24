@@ -1,40 +1,45 @@
 #' Max LDL
 #'
 #' @param output_folder the folder to write the output
-#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
-#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
-#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @details Searches for
-#'
-#' "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation"
-#'
-#' "Cholesterol in LDL [Mass/volume] in Serum or Plasma"
-#'
-#' "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay"
-#'
-#' "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Electrophoresis"
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#'   If provided, results are returned per (person_id, anchor_date). If NULL/empty, results are per person_id.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
 #' @return output_folder/max_ldl.csv
 #' @export
 max_ldl <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 {
+  lab_terms <- c(
+    "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
+    "Cholesterol in LDL [Mass/volume] in Serum or Plasma",
+    "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+    "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Electrophoresis"
+  )
 
-    lab_terms <- c(
-        "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
-        "Cholesterol in LDL [Mass/volume] in Serum or Plasma",
-        "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
-        "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Electrophoresis"
+  result_all <- aou.reader::lab_query(lab_terms, anchor_date_table, before, after)
+  result_all <- data.table::as.data.table(result_all)
+
+  has_anchor <- !is.null(anchor_date_table) &&
+    is.data.frame(anchor_date_table) &&
+    nrow(anchor_date_table) > 0 &&
+    all(c("person_id", "anchor_date") %in% names(anchor_date_table))
+
+  if (has_anchor) {
+    result_all <- data.table::as.data.table(
+      merge(result_all, anchor_date_table[, c("person_id", "anchor_date")], by = "person_id", all.x = TRUE)
     )
 
-    result_all <- aou.reader::lab_query(lab_terms, anchor_date_table, before, after)
-    result_all <- as.data.table(merge(result_all, anchor_date_table, by = "person_id"))
-
-    result_all <- result_all[, .(
-        max_ldl_value = suppressWarnings(max(value_as_number, na.rm = TRUE)),
-        total_ldl_n   = sum(!is.na(value_as_number))
+    out <- result_all[, .(
+      max_ldl_value = suppressWarnings(max(value_as_number, na.rm = TRUE)),
+      total_ldl_n   = sum(!is.na(value_as_number))
     ), by = .(person_id, anchor_date)]
+  } else {
+    out <- result_all[, .(
+      max_ldl_value = suppressWarnings(max(value_as_number, na.rm = TRUE)),
+      total_ldl_n   = sum(!is.na(value_as_number))
+    ), by = .(person_id)]
+  }
 
-    # if a subject has only NA values, max(..., na.rm=TRUE) returns -Inf
-    result_all[is.infinite(max_ldl_value), max_ldl_value := NA_real_]
-
-    .write_to_bucket(result_all, output_folder, "max_ldl")
+  out[is.infinite(max_ldl_value), max_ldl_value := NA_real_]
+  .write_to_bucket(out, output_folder, "max_ldl")
 }
