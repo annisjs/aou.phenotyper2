@@ -4,16 +4,26 @@
 \alias{mean_bmi}
 \title{Mean BMI}
 \usage{
-mean_bmi(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+mean_bmi(
+  output_folder,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  suffix = NULL
+)
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
 
-\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
+\item{anchor_date_table}{optional data.frame containing columns: person_id, anchor_date.
+If provided, results are returned per (person_id, anchor_date). If NULL/empty, results are per person_id.}
 
-\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
+\item{before}{an integer >= 0}
 
-\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+\item{after}{an integer >= 0}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.
+Defaults to NULL (no renaming).}
 }
 \value{
 output_folder/mean_bmi.csv
