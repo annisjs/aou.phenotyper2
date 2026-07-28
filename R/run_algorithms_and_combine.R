@@ -7,6 +7,11 @@
 #' @param key join key (default "person_id")
 #' @return data.table
 #' @export
+#'
+#' @examples
+#' # dems <- read_bucket("datasets/demographics.csv")
+#' # max_ldl <- read_bucket("datasets/max_ldl.csv")
+#' # combined <- left_join_outputs(dems, max_ldl)
 left_join_outputs <- function(main_df, ..., key = "person_id")
 {
   main_dt <- data.table::as.data.table(main_df)
@@ -19,6 +24,7 @@ left_join_outputs <- function(main_df, ..., key = "person_id")
     if (nrow(dt) == 0) next
     if (!(key %in% names(dt))) stop(sprintf("join table %d missing key column: %s", i, key))
 
+    # Enforce 1 row per person_id on RHS (wide merge expectation)
     if (anyDuplicated(dt[[key]]) > 0) {
       dt <- dt[!duplicated(dt[[key]]), ]
     }
@@ -32,19 +38,70 @@ left_join_outputs <- function(main_df, ..., key = "person_id")
 
 #' Run selected algorithms, read their outputs, and combine into one table
 #'
-#' Names of `algos` MUST match the output base filename written by the algorithm
-#' (i.e., the third argument to `.write_to_bucket`), without the ".csv".
+#' ## Key idea\n
+#' You pass a named list `algos` describing WHICH algorithms to run and HOW to run them.\n
+#' The **names** of `algos` MUST match the output base filename written by each algorithm\n
+#' (i.e., the third argument to `.write_to_bucket`), without the \".csv\".\n
+#' Example: `max_ldl()` writes using `.write_to_bucket(..., \"max_ldl\")`, so the name must be \"max_ldl\".\n
+#' \n
+#' ## Two ways to specify algorithms\n
+#' ### (A) Simple algorithms (no special args)\n
+#' Provide the function directly:\n
+#' `algos <- list(demographics = demographics, max_ldl = max_ldl)`\n
+#' \n
+#' ### (B) Algorithms that need anchors / suffix / custom args\n
+#' Provide a list with `fn` and `args`:\n
+#' `algos <- list(max_ldl = list(fn = max_ldl, args = list(anchor_date_table=anchor, before=0, after=1e7, suffix=\"_after_18\")))`\n
+#' \n
+#' This exactly mirrors how you would run it manually in the notebook:\n
+#' `max_ldl(output_folder, anchor_date_table=anchor, before=0, after=1e7, suffix=\"_after_18\")`\n
 #'
-#' @param output_folder bucket folder where algorithms write outputs (e.g., "datasets")
-#' @param algos named list of algorithms to run. Each element is either a function or
-#'   list(fn = <function>, args = <list>).
-#' @param main_name which element of `algos` is the main dataset to left-join onto
-#' @param read_fun function(path) to read a CSV from the bucket. Defaults to `read_bucket`
-#'   (expected to be available in the notebook/session).
-#' @param key join key (default "person_id")
-#' @param ... shared args passed to every algorithm
-#' @return data.table
+#' @param output_folder bucket folder where algorithms write outputs (e.g., \"datasets\")\n
+#' @param algos named list of algorithms to run. Each element is either:\n
+#' - a function, OR\n
+#' - `list(fn = <function>, args = <list of arguments>)`\n
+#' \n
+#' @param main_name which element of `algos` is the main dataset to left-join onto\n
+#' @param read_fun function(path) to read a CSV from the bucket. Defaults to `read_bucket`\n
+#'   (expected to be available in the notebook/session from your other library).\n
+#' @param key join key (default \"person_id\")\n
+#' @param ... shared args passed to every algorithm (optional). Useful if many algorithms share the same\n
+#'   `anchor_date_table`, `before`, `after`, `suffix`, etc. Per-algorithm `args` override/add to these.\n
+#'
+#' @return data.table\n
 #' @export
+#'
+#' @examples
+#' # output_folder <- "datasets"
+#' # anchor <- read_bucket("datasets/anchor.csv")  # must have person_id, anchor_date
+#' #
+#' # algos_to_run <- list(
+#' #   demographics = demographics,  # writes datasets/demographics.csv
+#' #   max_ldl = list(               # writes datasets/max_ldl.csv
+#' #     fn = max_ldl,
+#' #     args = list(
+#' #       anchor_date_table = anchor_algorithm,
+#' #       before = 0,
+#' #       after = 10000000,
+#' #       suffix = "_after_age_18"
+#' #     )
+#' #   ),
+#' #   max_hgba1c = list(
+#' #     fn = max_hgba1c,
+#' #     args = list(
+#' #       anchor_date_table = anchor_algorithm,
+#' #       before = 0,
+#' #       after = 10000000,
+#' #       suffix = "_after_age_18"
+#' #     )
+#' #   )
+#' # )
+#' #
+#' # combined <- run_algorithms_and_combine(
+#' #   output_folder = output_folder,
+#' #   algos = algos_to_run,
+#' #   main_name = "demographics"
+#' # )
 run_algorithms_and_combine <- function(
   output_folder,
   algos,
@@ -82,7 +139,7 @@ run_algorithms_and_combine <- function(
     do.call(fn, c(list(output_folder = output_folder), algo_args))
   }
 
-  # 2) read outputs
+  # 2) read outputs (expects <output_folder>/<name>.csv)
   outputs <- lapply(names(algos), function(nm) {
     read_fun(file.path(output_folder, paste0(nm, ".csv")))
   })
