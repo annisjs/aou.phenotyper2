@@ -7,7 +7,7 @@
 #' @param after an integer >= 0
 #' @param suffix optional string appended to the end of every output column name except person_id.
 #'   Defaults to NULL (no renaming).
-#' @details Searches for "Cholesterol [Mass/volume] in Serum or Plasma"
+#' @details Searches for "Cholesterol \[Mass/volume] in Serum or Plasma"
 #' @return output_folder/max_chol.csv
 #' @export
 max_chol <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)

@@ -32,5 +32,5 @@ output_folder/max_chol.csv
 Max Cholesterol
 }
 \details{
-Searches for "Cholesterol \link{Mass/volume} in Serum or Plasma"
+Searches for "Cholesterol [Mass/volume] in Serum or Plasma"
 }

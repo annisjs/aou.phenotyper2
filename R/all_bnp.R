@@ -7,9 +7,9 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details Searches for
 #'
-#' "Natriuretic peptide B [Mass/volume] in Serum or Plasma"
+#' "Natriuretic peptide B \[Mass/volume] in Serum or Plasma"
 #'
-#' "Natriuretic peptide B [Mass/volume] in Blood"
+#' "Natriuretic peptide B \[Mass/volume] in Blood"
 #' @return output_folder/all_bnp.csv
 #' @export
 all_bnp <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)

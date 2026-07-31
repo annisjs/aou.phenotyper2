@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_algorithms_and_combine.R
 \name{run_algorithms_and_combine}
 \alias{run_algorithms_and_combine}
-\title{Run selected algorithms, read their outputs, and combine into one table}
+\title{Run selected algorithms with anchor-derivation support, read outputs, and combine}
 \usage{
 run_algorithms_and_combine(
   output_folder,
@@ -14,24 +14,55 @@ run_algorithms_and_combine(
 )
 }
 \arguments{
-\item{output_folder}{bucket folder where algorithms write outputs (e.g., "datasets")}
+\item{output_folder}{bucket folder where algorithms write outputs (e.g., \"datasets\")\n}
 
-\item{algos}{named list of algorithms to run. Each element is either a function or
-list(fn = \if{html}{\out{<function>}}, args = \if{html}{\out{<list>}}).}
+\item{algos}{named list of algorithms/specs\n}
 
-\item{main_name}{which element of \code{algos} is the main dataset to left-join onto}
+\item{main_name}{which element of \code{algos} is the main dataset to left-join onto\n}
 
-\item{read_fun}{function(path) to read a CSV from the bucket. Defaults to \code{read_bucket}
-(expected to be available in the notebook/session).}
+\item{read_fun}{function(path) to read a CSV from the bucket. Defaults to \code{read_bucket}\n}
 
-\item{key}{join key (default "person_id")}
+\item{key}{join key (default \"person_id\")\n}
 
-\item{...}{shared args passed to every algorithm}
+\item{...}{shared args passed to every algorithm (optional)\n}
 }
 \value{
-data.table
+data.table\n
 }
 \description{
-Names of \code{algos} MUST match the output base filename written by the algorithm
-(i.e., the third argument to \code{.write_to_bucket}), without the ".csv".
+Supports workflows where:\n
+\enumerate{
+\item An \"anchor algorithm\" is run and writes a CSV.\n
+\item You read that CSV.\n
+\item You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\").\n
+\item You derive an anchor table: (person_id, anchor_date).\n
+\item You run child algorithms using anchor_date_table = that derived anchor table.\n
+}
+}
+\details{
+\subsection{Defining algos\n}{
+
+\code{algos} is a named list; names must equal output base filenames (no .csv).\n
+
+Each element can be either:\n
+\itemize{
+\item a function (no special config), OR\n
+\item a list with fields:\n
+\itemize{
+\item \code{fn}: function\n
+\item \code{args}: list of args\n
+\item \code{anchor_from}: name of anchor algorithm whose output will be used to create anchor_date_table\n
+\item \code{anchor_col}: column name (in anchor_from output) to copy into \code{anchor_date}\n
+}
+}
+
+If \code{anchor_from} is set, this wrapper will:\n
+\itemize{
+\item run \code{anchor_from}\n
+\item read its CSV\n
+\item create \verb{anchor_date_table = df[, c(\\"person_id\\", \\"anchor_date\\")]} where\n
+\code{anchor_date := as.Date(df[[anchor_col]])}\n
+\item pass that anchor table into the child algorithm as \code{anchor_date_table}\n
+}
+}
 }

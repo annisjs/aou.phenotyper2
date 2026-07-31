@@ -25,7 +25,7 @@ All BNP
 \details{
 Searches for
 
-"Natriuretic peptide B \link{Mass/volume} in Serum or Plasma"
+"Natriuretic peptide B [Mass/volume] in Serum or Plasma"
 
-"Natriuretic peptide B \link{Mass/volume} in Blood"
+"Natriuretic peptide B [Mass/volume] in Blood"
 }

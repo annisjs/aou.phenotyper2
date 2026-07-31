@@ -16,7 +16,7 @@
 #' "33517","33518","33519","33520","33521","33522",
 #' "33523","92980","92981","92982","92984","92995","92996"
 #' @export
-cad <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+cad_alt <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     icd9_codes = c("411.%", "412.%", "413.%", "414.%")
     icd10_codes = c("I20.%", "I25.%")
