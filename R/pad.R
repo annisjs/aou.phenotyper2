@@ -6,14 +6,14 @@
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' @details At least 1 ICD code:
 #'
-#' ICD9: 440.2x, 443.9, 444.22
+#' ICD9: 440.2, 440.20, 440.21, 440.22, 440.23, 440.24, 440.29, 443.9, 444.01, 444.09, 444.1, 444.21, 444.22, 444.81, 444.89, 444.9
 #' ICD10 : I70.2xx, I73.9, I74.x
 #' 
 #' @return output_folder/pad.csv
 #' @export
 pad <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  icd9_codes <-  c("440.2%", "443.9", "444.22")
+  icd9_codes <-  c("440.2", "440.20", "440.21", "440.22", "440.23", "440.24", "440.29", "443.9", "444.01", "444.09", "444.1", "444.21", "444.22", "444.81", "444.89", "444.9")
   icd10_codes <- c("I70.2%", "I73.9", "I74", "I74.%")
   result_icd9 <- aou.reader::icd9_query(icd9_codes,anchor_date_table,before,after)
   result_icd10 <- aou.reader::icd10_query(icd10_codes,anchor_date_table,before,after)
