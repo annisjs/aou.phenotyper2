@@ -41,6 +41,13 @@ most_recent_egfr <- function(output_folder)
     }
 
     result_egfr <- result_egfr[!is.na(person_id) & !is.na(measurement_date)]
+    result_egfr[, value_as_number := suppressWarnings(as.numeric(value_as_number))]
+    result_egfr <- result_egfr[
+        !is.na(value_as_number) &
+        is.finite(value_as_number) &
+        value_as_number >= 1 &
+        value_as_number <= 200
+    ]
 
     if (nrow(result_egfr) == 0)
     {
