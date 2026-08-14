@@ -139,12 +139,21 @@ ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL
     }
     outpatient_dates <- normalize_outpatient_dates(outpatient_visits)
 
+    has_lab_visit_type <- "lab_visit_type" %in% names(creat_demos)
+
     if (nrow(outpatient_dates) > 0)
     {
+        # Match outpatient visits by person/date, then OR with lab_visit_type when available
+        # to mirror the original PySpark logic.
         creat_demos[, is_outpatient := FALSE]
         match_idx <- outpatient_dates[creat_demos, on = .(person_id, visit_date = lab_date), which = TRUE]
         creat_demos[!is.na(match_idx), is_outpatient := TRUE]
-    } else if ("lab_visit_type" %in% names(creat_demos)) {
+
+        if (has_lab_visit_type)
+        {
+            creat_demos[lab_visit_type == "Outpatient Visit", is_outpatient := TRUE]
+        }
+    } else if (has_lab_visit_type) {
         creat_demos[, is_outpatient := lab_visit_type == "Outpatient Visit"]
     } else {
         # Outpatient-only mode: when outpatient metadata are unavailable,
