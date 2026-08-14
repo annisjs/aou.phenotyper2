@@ -20,6 +20,14 @@ most_recent_bmi <- function(output_folder)
     }
 
     result_bmi <- result_bmi[!is.na(person_id) & !is.na(measurement_date)]
+    result_bmi[, bmi := suppressWarnings(as.numeric(bmi))]
+
+    # Keep plausible BMI values to remove obvious junk/outlier records.
+    result_bmi <- result_bmi[
+        is.finite(bmi) &
+        bmi >= 10 &
+        bmi <= 100
+    ]
 
     if (nrow(result_bmi) == 0)
     {

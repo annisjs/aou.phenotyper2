@@ -52,7 +52,13 @@ min_ef <- function(output_folder, anchor_date_table = NULL, before = NULL, after
 
     ef_dt[, measurement_date := as.Date(measurement_date)]
     ef_dt[, ef_value := suppressWarnings(as.numeric(ef_value))]
-    ef_dt <- ef_dt[!is.na(ef_value)]
+
+    # Keep plausible ejection fraction (%) values to remove obvious junk/outliers.
+    ef_dt <- ef_dt[
+        is.finite(ef_value) &
+        ef_value >= 5 &
+        ef_value <= 90
+    ]
 
     if (nrow(ef_dt) == 0)
     {

@@ -33,7 +33,12 @@ summary_trigs <- function(output_folder, anchor_date_table = NULL, before = NULL
 
     result_all <- result_all[!is.na(person_id)]
     result_all[, value_as_number := suppressWarnings(as.numeric(value_as_number))]
-    result_all <- result_all[!is.na(value_as_number)]
+    # Keep plausible triglyceride values (mg/dL) to remove obvious junk/outliers.
+    result_all <- result_all[
+        is.finite(value_as_number) &
+        value_as_number >= 20 &
+        value_as_number <= 3000
+    ]
 
     if (nrow(result_all) == 0)
     {
