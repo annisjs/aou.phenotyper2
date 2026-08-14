@@ -23,38 +23,38 @@ left_join_outputs <- function(main_df, ..., key = "person_id")
 
 #' Run selected algorithms with anchor-derivation support, read outputs, and combine
 #'
-#' Supports workflows where:\n
+#' Supports workflows where:
 #' 1) An \"anchor algorithm\" is run and writes a CSV
 #' 2) You read that CSV
 #' 3) You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\")
 #' 4) You derive an anchor table: (person_id, anchor_date)
 #' 5) You run child algorithms using anchor_date_table = that derived anchor table
 #'
-#' ## Defining algos\n
+#' ## Defining algos
 #' `algos` is a named list; names must equal output base filenames (no .csv)
 #'
-#' Each element can be either:\n
-#' - a function (no special config), OR\n
-#' - a list with fields:\n
-#'   - `fn`: function\n
-#'   - `args`: list of args\n
-#'   - `anchor_from`: name of anchor algorithm whose output will be used to create anchor_date_table\n
-#'   - `anchor_col`: column name (in anchor_from output) to copy into `anchor_date`\n
+#' Each element can be either:
+#' - a function (no special config), OR
+#' - a list with fields:
+#'   - `fn`: function
+#'   - `args`: list of args
+#'   - `anchor_from`: name of anchor algorithm whose output will be used to create anchor_date_table
+#'   - `anchor_col`: column name (in anchor_from output) to copy into `anchor_date`
 #'
-#' If `anchor_from` is set, this wrapper will:\n
-#' - run `anchor_from`\n
-#' - read its CSV\n
-#' - create `anchor_date_table = df[, c(\"person_id\", \"anchor_date\")]` where\n
-#'   `anchor_date := as.Date(df[[anchor_col]])`\n
-#' - pass that anchor table into the child algorithm as `anchor_date_table`\n
+#' If `anchor_from` is set, this wrapper will:
+#' - run `anchor_from`
+#' - read its CSV
+#' - create `anchor_date_table = df[, c(\"person_id\", \"anchor_date\")]` where
+#'   `anchor_date := as.Date(df[[anchor_col]])`
+#' - pass that anchor table into the child algorithm as `anchor_date_table`
 #'
-#' @param output_folder bucket folder where algorithms write outputs (e.g., \"datasets\")\n
-#' @param algos named list of algorithms/specs\n
-#' @param main_name which element of `algos` is the main dataset to left-join onto\n
-#' @param read_fun function(path) to read a CSV from the bucket. Defaults to `read_bucket`\n
-#' @param key join key (default \"person_id\")\n
-#' @param ... shared args passed to every algorithm (optional)\n
-#' @return data.table\n
+#' @param output_folder bucket folder where algorithms write outputs (e.g., \"datasets\")
+#' @param algos named list of algorithms/specs
+#' @param main_name which element of `algos` is the main dataset to left-join onto
+#' @param read_fun function(path) to read a CSV from the bucket. Defaults to `read_bucket`
+#' @param key join key (default \"person_id\")
+#' @param ... shared args passed to every algorithm (optional)
+#' @return data.table
 #' @export
 run_algorithms_and_combine <- function(
   output_folder,
