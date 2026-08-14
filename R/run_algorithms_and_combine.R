@@ -24,14 +24,14 @@ left_join_outputs <- function(main_df, ..., key = "person_id")
 #' Run selected algorithms with anchor-derivation support, read outputs, and combine
 #'
 #' Supports workflows where:\n
-#' 1) An \"anchor algorithm\" is run and writes a CSV.\n
-#' 2) You read that CSV.\n
-#' 3) You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\").\n
-#' 4) You derive an anchor table: (person_id, anchor_date).\n
-#' 5) You run child algorithms using anchor_date_table = that derived anchor table.\n
+#' 1) An \"anchor algorithm\" is run and writes a CSV
+#' 2) You read that CSV
+#' 3) You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\")
+#' 4) You derive an anchor table: (person_id, anchor_date)
+#' 5) You run child algorithms using anchor_date_table = that derived anchor table
 #'
 #' ## Defining algos\n
-#' `algos` is a named list; names must equal output base filenames (no .csv).\n
+#' `algos` is a named list; names must equal output base filenames (no .csv)
 #'
 #' Each element can be either:\n
 #' - a function (no special config), OR\n
