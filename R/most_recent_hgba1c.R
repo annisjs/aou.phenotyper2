@@ -38,6 +38,14 @@ most_recent_hgba1c <- function(output_folder)
     }
 
     result_hgba1c <- result_hgba1c[!is.na(person_id) & !is.na(measurement_date)]
+    result_hgba1c[, value_as_number := suppressWarnings(as.numeric(value_as_number))]
+
+    # Keep only plausible HbA1c percent values to remove obvious junk/outlier records.
+    result_hgba1c <- result_hgba1c[
+        is.finite(value_as_number) &
+        value_as_number >= 1 &
+        value_as_number <= 20
+    ]
 
     if (nrow(result_hgba1c) == 0)
     {
