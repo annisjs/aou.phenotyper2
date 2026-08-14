@@ -16,6 +16,13 @@
 #' @export
 bayer_landmark <- function(output_folder)
 {
+    # Force evaluation early to avoid notebook/lazy-eval scoping issues during writes.
+    output_folder <- as.character(output_folder)
+    if (length(output_folder) != 1 || is.na(output_folder) || !nzchar(output_folder))
+    {
+        stop("bayer_landmark requires a non-empty output_folder string.")
+    }
+
     bmi_dt <- data.table::as.data.table(aou.reader::bmi_query())
 
     if (nrow(bmi_dt) == 0)
