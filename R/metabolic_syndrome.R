@@ -42,6 +42,7 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
         }
 
         out <- data.table::as.data.table(dt)
+        out[, person_id := as.character(person_id)]
         out[, event_date := as.Date(get(date_col[1]))]
         out <- out[!is.na(person_id) & !is.na(event_date)]
 
@@ -98,6 +99,7 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
 
         out <- data.table::as.data.table(dt)
         data.table::setnames(out, old = names(out)[1:3], new = c("person_id", "measurement_date", "value_as_number"))
+        out[, person_id := as.character(person_id)]
         out
     }
 
@@ -131,6 +133,8 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
     dm_icd_dates <- dm_icd_dates[, .(dm_icd_date = min(event_date)), by = .(person_id)]
     dm_problem_dates <- get_min_date(dm_problem)
     data.table::setnames(dm_problem_dates, "event_date", "dm_problem_date")
+    dm_icd_dates[, person_id := as.character(person_id)]
+    dm_problem_dates[, person_id := as.character(person_id)]
 
     dm_dates <- merge(dm_icd_dates, dm_problem_dates, by = "person_id", all = FALSE)
     dm_dates[, dm_date := pmin(dm_icd_date, dm_problem_date, na.rm = TRUE)]
@@ -154,6 +158,7 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
     trigs_hit <- trigs_dt[value_as_number > 200 & !is.na(measurement_date), .(dyslipidemia_date = min(measurement_date)), by = .(person_id)]
 
     dem <- data.table::as.data.table(aou.reader::demographics_query())
+    if ("person_id" %in% names(dem)) dem[, person_id := as.character(person_id)]
     sex_col <- intersect(c("sex", "sex_at_birth", "biological_sex"), names(dem))
     if (length(sex_col) > 0)
     {
@@ -205,6 +210,7 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
     if (!is.null(anchor_date_table))
     {
         anchor_dt <- unique(data.table::as.data.table(anchor_date_table)[, .(person_id)])
+        anchor_dt[, person_id := as.character(person_id)]
         out <- merge(anchor_dt, out, by = "person_id", all.x = TRUE)
         out[is.na(metabolic_syndrome_status), metabolic_syndrome_status := FALSE]
     }
