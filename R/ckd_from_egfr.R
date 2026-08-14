@@ -130,39 +130,34 @@ ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL
                    (0.9938 ^ age) *
                    sex_coef]
 
-    exports <- getNamespaceExports("aou.reader")
-    outpatient_visits <- NULL
-    if ("outpatient_visit_query" %in% exports)
-    {
-        fn <- get("outpatient_visit_query", asNamespace("aou.reader"))
-        outpatient_visits <- tryCatch(fn(anchor_date_table, before, after), error = function(e) NULL)
-    }
-    outpatient_dates <- normalize_outpatient_dates(outpatient_visits)
+    # Temporarily disable outpatient requirement to avoid over-filtering to zero rows.
+    # This allows all creatinine-derived eGFR measurements to participate.
+    creat_demos[, is_outpatient := TRUE]
 
-    has_lab_visit_type <- "lab_visit_type" %in% names(creat_demos)
-
-    if (nrow(outpatient_dates) > 0)
-    {
-        # Match outpatient visits by person/date, then OR with lab_visit_type when available
-        # to mirror the original PySpark logic.
-        creat_demos[, is_outpatient := FALSE]
-        match_idx <- outpatient_dates[creat_demos, on = .(person_id, visit_date = lab_date), which = TRUE]
-        creat_demos[!is.na(match_idx), is_outpatient := TRUE]
-
-        if (has_lab_visit_type)
-        {
-            creat_demos[lab_visit_type == "Outpatient Visit", is_outpatient := TRUE]
-        }
-    } else if (has_lab_visit_type) {
-        creat_demos[, is_outpatient := lab_visit_type == "Outpatient Visit"]
-    } else {
-        # Outpatient-only mode: when outpatient metadata are unavailable,
-        # do not include non-outpatient creatinine rows.
-        creat_demos[, is_outpatient := FALSE]
-
-        # Previous fallback (kept for easy revert):
-        # creat_demos[, is_outpatient := TRUE]
-    }
+    # Previous outpatient-filtering logic (kept for easy revert):
+    # exports <- getNamespaceExports("aou.reader")
+    # outpatient_visits <- NULL
+    # if ("outpatient_visit_query" %in% exports)
+    # {
+    #     fn <- get("outpatient_visit_query", asNamespace("aou.reader"))
+    #     outpatient_visits <- tryCatch(fn(anchor_date_table, before, after), error = function(e) NULL)
+    # }
+    # outpatient_dates <- normalize_outpatient_dates(outpatient_visits)
+    # has_lab_visit_type <- "lab_visit_type" %in% names(creat_demos)
+    # if (nrow(outpatient_dates) > 0)
+    # {
+    #     creat_demos[, is_outpatient := FALSE]
+    #     match_idx <- outpatient_dates[creat_demos, on = .(person_id, visit_date = lab_date), which = TRUE]
+    #     creat_demos[!is.na(match_idx), is_outpatient := TRUE]
+    #     if (has_lab_visit_type)
+    #     {
+    #         creat_demos[lab_visit_type == "Outpatient Visit", is_outpatient := TRUE]
+    #     }
+    # } else if (has_lab_visit_type) {
+    #     creat_demos[, is_outpatient := lab_visit_type == "Outpatient Visit"]
+    # } else {
+    #     creat_demos[, is_outpatient := FALSE]
+    # }
 
     labs <- unique(creat_demos[is_outpatient == TRUE,
                                .(person_id, lab_date, lab_value = egfr)])
