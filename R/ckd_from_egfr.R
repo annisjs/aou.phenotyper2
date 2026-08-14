@@ -191,13 +191,14 @@ ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL
 
             if (nrow(labs_gte_sixty) > 0)
             {
-                invalid <- labs_gte_sixty[pairs,
-                                          on = .(person_id,
-                                                 lab_date >= lab_date_first,
-                                                 lab_date <= lab_date_second),
-                                          nomatch = 0L,
-                                          allow.cartesian = TRUE]
-                valid_pairs <- pairs[!pair_id %in% unique(invalid$pair_id)]
+                # Count qualifying >=60 labs per pair without materializing all matches.
+                intervening_counts <- labs_gte_sixty[pairs,
+                                                     on = .(person_id,
+                                                            lab_date >= lab_date_first,
+                                                            lab_date <= lab_date_second),
+                                                     .(n_recovery = .N),
+                                                     by = .EACHI]
+                valid_pairs <- pairs[intervening_counts$n_recovery == 0L]
             } else {
                 valid_pairs <- pairs
             }
