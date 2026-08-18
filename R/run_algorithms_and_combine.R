@@ -40,6 +40,12 @@ left_join_outputs <- function(main_df, ..., key = "person_id")
 #'   - `args`: list of args
 #'   - `anchor_from`: name of anchor algorithm whose output will be used to create anchor_date_table
 #'   - `anchor_col`: column name (in anchor_from output) to copy into `anchor_date`
+#'   - `output_name`: rarely needed manual override for the base filename (no .csv) that `fn`
+#'     actually writes via `.write_to_bucket()`. Normally this is auto-detected by finding the
+#'     name `fn` is bound to in its own package namespace (e.g. `max_ldl`), so you can run the
+#'     SAME underlying algorithm more than once (e.g. a "before" date window and an "after" date
+#'     window) just by giving each entry a distinct list name -- the wrapper figures out what
+#'     file `fn` wrote and re-saves it under the entry's unique list name so runs never collide.
 #'
 #' If `anchor_from` is set, this wrapper will:
 #' - run `anchor_from`
@@ -76,6 +82,19 @@ run_algorithms_and_combine <- function(
   ran <- setNames(rep(FALSE, length(algos)), names(algos))
   outputs_cache <- list()       # full outputs read from bucket
   anchor_cache <- list()        # derived anchor_date_table per anchor spec
+
+  # find the name `fn` is bound to in its own package/environment, i.e. the
+  # base filename it writes internally via `.write_to_bucket(..., "that_name")`
+  resolve_fn_name <- function(fn, fallback) {
+    env <- environment(fn)
+    if (is.null(env)) return(fallback)
+    candidates <- tryCatch(ls(envir = env, all.names = TRUE), error = function(e) character())
+    for (cand in candidates) {
+      obj <- tryCatch(get(cand, envir = env, inherits = FALSE), error = function(e) NULL)
+      if (is.function(obj) && identical(obj, fn)) return(cand)
+    }
+    fallback
+  }
 
   read_output <- function(nm) {
     if (!is.null(outputs_cache[[nm]])) return(outputs_cache[[nm]])
@@ -116,11 +135,12 @@ run_algorithms_and_combine <- function(
 
     # normalize
     if (is.function(spec)) {
-      spec <- list(fn = spec, args = list(), anchor_from = NULL, anchor_col = NULL)
+      spec <- list(fn = spec, args = list(), anchor_from = NULL, anchor_col = NULL, output_name = NULL)
     } else if (is.list(spec) && is.function(spec$fn)) {
       spec$args <- spec$args %||% list()
       spec$anchor_from <- spec$anchor_from %||% NULL
       spec$anchor_col <- spec$anchor_col %||% NULL
+      spec$output_name <- spec$output_name %||% NULL
     } else {
       stop(sprintf("algos[[%s]] must be a function or list(fn=<function>, args=<list>, anchor_from=<name>, anchor_col=<col>)", nm))
     }
@@ -142,6 +162,17 @@ run_algorithms_and_combine <- function(
 
     algo_args <- c(shared_args, spec$args)
     do.call(spec$fn, c(list(output_folder = output_folder), algo_args))
+
+    # figure out what filename fn actually wrote (its own name, ignoring suffix --
+    # suffix only renames columns, not the file), unless overridden via spec$output_name
+    written_name <- spec$output_name %||% resolve_fn_name(spec$fn, nm)
+
+    # re-save under this entry's unique key (nm) so repeated use of the same algo
+    # (e.g. before/after date windows) doesn't overwrite a shared output file
+    if (!identical(written_name, nm)) {
+      written <- read_fun(file.path(output_folder, paste0(written_name, ".csv")))
+      .write_to_bucket(written, output_folder, nm)
+    }
 
     ran[[nm]] <<- TRUE
     invisible(TRUE)
@@ -181,6 +212,19 @@ run_algorithms_and_combine <- function(
 #     anchor_from = "first_medical_encounter",
 #     anchor_col  = "first_medical_encounter_entry_date_baseline",  # column to copy into anchor_date
 #     args = list(before = 0, after = 10000000, suffix = "_after_anchor")
+#   ),
+#
+#   # Running the SAME algo twice (before/after a date) -- just give each entry a distinct
+#   # list name. The wrapper auto-detects that both entries call max_ldl (which always writes
+#   # "max_ldl.csv"), and re-saves each run's output under its own unique list name immediately
+#   # after it runs, so the two runs never collide.
+#   max_ldl_before = list(
+#     fn = max_ldl,
+#     args = list(before = 10000000, after = 0, suffix = "_before")
+#   ),
+#   max_ldl_after = list(
+#     fn = max_ldl,
+#     args = list(before = 0, after = 10000000, suffix = "_after")
 #   )
 # )
 #
