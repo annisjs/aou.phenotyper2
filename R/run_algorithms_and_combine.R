@@ -83,17 +83,22 @@ run_algorithms_and_combine <- function(
   outputs_cache <- list()       # full outputs read from bucket
   anchor_cache <- list()        # derived anchor_date_table per anchor spec
 
-  # find the name `fn` is bound to in its own package/environment, i.e. the
-  # base filename it writes internally via `.write_to_bucket(..., "that_name")`
+  # extract the literal filename fn passes to `.write_to_bucket(..., "that_name")`
+  # by reading its source code -- more reliable than trying to match fn's identity
+  # against bindings in its environment (which can fail depending on how the
+  # package/functions were loaded)
   resolve_fn_name <- function(fn, fallback) {
-    env <- environment(fn)
-    if (is.null(env)) return(fallback)
-    candidates <- tryCatch(ls(envir = env, all.names = TRUE), error = function(e) character())
-    for (cand in candidates) {
-      obj <- tryCatch(get(cand, envir = env, inherits = FALSE), error = function(e) NULL)
-      if (is.function(obj) && identical(obj, fn)) return(cand)
+    body_text <- paste(deparse(body(fn)), collapse = "\n")
+    rx <- '\\.write_to_bucket\\([^"]*?"([a-zA-Z0-9_.]+)"'
+    m <- regexpr(rx, body_text, perl = TRUE)
+    if (m == -1) {
+      warning(sprintf(
+        "Could not auto-detect the output filename written by this algo; assuming it matches list name '%s'. Set spec$output_name explicitly if that's wrong.",
+        fallback
+      ))
+      return(fallback)
     }
-    fallback
+    sub(rx, "\\1", regmatches(body_text, m), perl = TRUE)
   }
 
   read_output <- function(nm) {
