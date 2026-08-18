@@ -1,6 +1,10 @@
 #' Most Recent HgbA1c
 #'
 #' @param output_folder the folder to write the output
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @details Searches for
 #'
 #' "Hemoglobin A1c/Hemoglobin.total in Blood by Electrophoresis"
@@ -16,7 +20,7 @@
 #' @return output_folder/most_recent_hgba1c.csv
 #' @import data.table aou.reader
 #' @export
-most_recent_hgba1c <- function(output_folder)
+most_recent_hgba1c <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     lab_terms <- c("Hemoglobin A1c/Hemoglobin.total in Blood by Electrophoresis",
                    "Hemoglobin A1c/Hemoglobin.total in Blood by calculation",
@@ -24,7 +28,7 @@ most_recent_hgba1c <- function(output_folder)
                    "Hemoglobin A1c/Hemoglobin.total in Blood",
                    "Hemoglobin A1c/Hemoglobin.total in Blood by HPLC")
 
-    result_hgba1c <- data.table::as.data.table(aou.reader::lab_query(lab_terms))
+    result_hgba1c <- data.table::as.data.table(aou.reader::lab_query(lab_terms, anchor_date_table, before, after))
 
     if (nrow(result_hgba1c) == 0)
     {
@@ -67,6 +71,11 @@ most_recent_hgba1c <- function(output_folder)
         most_recent_hgba1c_entry_date = measurement_date,
         most_recent_hgba1c_value = value_as_number
     )]
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
 
     .write_to_bucket(out, output_folder, "most_recent_hgba1c")
 }

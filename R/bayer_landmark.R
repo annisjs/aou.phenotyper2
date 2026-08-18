@@ -1,6 +1,10 @@
 #' BMI and eGFR Two-Year Follow-up
 #'
 #' @param output_folder the folder to write the output
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/bayer_landmark.csv
 #' @details
 #' For each participant, defines:
@@ -14,7 +18,7 @@
 #' - at least 1 eGFR in [t0, t2]
 #' @import data.table aou.reader
 #' @export
-bayer_landmark <- function(output_folder)
+bayer_landmark <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     # Force evaluation early to avoid notebook/lazy-eval scoping issues during writes.
     output_folder <- as.character(output_folder)
@@ -23,7 +27,7 @@ bayer_landmark <- function(output_folder)
         stop("bayer_landmark requires a non-empty output_folder string.")
     }
 
-    bmi_dt <- data.table::as.data.table(aou.reader::bmi_query())
+    bmi_dt <- data.table::as.data.table(aou.reader::bmi_query(anchor_date_table, before, after))
 
     if (nrow(bmi_dt) == 0)
     {
@@ -80,7 +84,7 @@ bayer_landmark <- function(output_folder)
         "Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
     )
 
-    egfr_dt <- data.table::as.data.table(aou.reader::lab_query(lab_terms))
+    egfr_dt <- data.table::as.data.table(aou.reader::lab_query(lab_terms, anchor_date_table, before, after))
     egfr_dt <- egfr_dt[!is.na(person_id) & !is.na(measurement_date)]
     egfr_dt[, measurement_date := as.Date(measurement_date)]
 
@@ -120,6 +124,11 @@ bayer_landmark <- function(output_folder)
             "bayer_landmark_egfr_n_t0_t2"
         )
     )
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
 
     .write_to_bucket(out, output_folder, "bayer_landmark")
 }

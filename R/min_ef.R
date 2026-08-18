@@ -5,6 +5,7 @@
 #'   If provided, the query window is applied around anchor_date using before/after.
 #' @param before an integer >= 0
 #' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/min_ef.csv
 #' @details
 #' This algorithm uses \code{aou.reader::ef_query()} as a best-effort source for
@@ -12,7 +13,7 @@
 #' availability/structure is fully verified in your environment.
 #' @import data.table aou.reader
 #' @export
-min_ef <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+min_ef <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     empty_out <- data.table::data.table(
         person_id = character(),
@@ -76,6 +77,11 @@ min_ef <- function(output_folder, anchor_date_table = NULL, before = NULL, after
     out <- out[ef_value == min_ef_value,
                .(min_ef_entry_date = measurement_date[1], min_ef_value = min_ef_value[1]),
                by = .(person_id)]
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
 
     .write_to_bucket(out, output_folder, "min_ef")
 }

@@ -4,6 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/ckd_from_egfr.csv
 #' @details
 #' Replicates the CKD-from-eGFR logic from a PySpark phenotype using the 2021 CKD-EPI
@@ -17,7 +18,7 @@
 #' aou.reader outpatient APIs/columns.
 #' @import data.table aou.reader
 #' @export
-ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     creat_terms <- c(
         "Creatinine",
@@ -222,6 +223,11 @@ ckd_from_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL
         anchor_dt <- unique(data.table::as.data.table(anchor_date_table)[, .(person_id)])
         out <- merge(anchor_dt, out, by = "person_id", all.x = TRUE)
         out[is.na(ckd_from_egfr_status), ckd_from_egfr_status := FALSE]
+    }
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
     }
 
     .write_to_bucket(out, output_folder, "ckd_from_egfr")

@@ -4,6 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/metabolic_syndrome.csv
 #' @details
 #' Metabolic syndrome status is TRUE when at least 2 of the following are TRUE:
@@ -22,7 +23,7 @@
 #' Problem-list matching is best effort and depends on available aou.reader APIs.
 #' @import data.table aou.reader
 #' @export
-metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     get_min_date <- function(dt)
     {
@@ -213,6 +214,11 @@ metabolic_syndrome <- function(output_folder, anchor_date_table = NULL, before =
         anchor_dt[, person_id := as.character(person_id)]
         out <- merge(anchor_dt, out, by = "person_id", all.x = TRUE)
         out[is.na(metabolic_syndrome_status), metabolic_syndrome_status := FALSE]
+    }
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
     }
 
     .write_to_bucket(out, output_folder, "metabolic_syndrome")

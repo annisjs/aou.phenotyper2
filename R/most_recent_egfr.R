@@ -1,6 +1,10 @@
 #' Most Recent eGFR
 #'
 #' @param output_folder the folder to write the output
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @details Searches for
 #'
 #' "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
@@ -18,7 +22,7 @@
 #' @return output_folder/most_recent_egfr.csv
 #' @import data.table aou.reader
 #' @export
-most_recent_egfr <- function(output_folder)
+most_recent_egfr <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     lab_terms <- c("Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
                    "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
@@ -27,7 +31,7 @@ most_recent_egfr <- function(output_folder)
                    "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)",
                    "Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)")
 
-    result_egfr <- data.table::as.data.table(aou.reader::lab_query(lab_terms))
+    result_egfr <- data.table::as.data.table(aou.reader::lab_query(lab_terms, anchor_date_table, before, after))
 
     if (nrow(result_egfr) == 0)
     {
@@ -69,6 +73,11 @@ most_recent_egfr <- function(output_folder)
         most_recent_egfr_entry_date = measurement_date,
         most_recent_egfr_value = value_as_number
     )]
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
 
     .write_to_bucket(out, output_folder, "most_recent_egfr")
 }

@@ -4,6 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/revascularization.csv
 #' @details At least 1 ICD9, ICD10, or CPT code.
 #'
@@ -14,7 +15,7 @@
 #' CPT: 33510, 33511, 33512, 33513, 33514, 33515, 33516, 33517, 33518, 33519, 33520, 33521, 33522, 33523, 33534, 33535, 33536, 92920, 92921, 92922, 92923, 92924, 92925, 92926, 92927, 92928, 92929, 92930, 92931, 92932, 92933, 92934, 92935, 92936, 92937, 92938, 92939, 92940, 92941, 92942, 92943, 92944, 92945, 92946, 92947, 92948, 92949, 92950, 92951, 92952, 92953, 92954, 92955, 92956, 92957, 92958, 92959, 92960, 92961, 92962, 92963, 92964, 92965, 92966, 92967, 92968, 92969, 92970, 92971, 92972, 92973, 92974, 92975, 92976, 92977, 92980, 92981, 92982, 92984, 92995, 92996
 #' @import data.table aou.reader
 #' @export
-revascularization <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+revascularization <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     icd9_codes <- c("410", "410.%", "412", "412.%")
     icd10_codes <- c(
@@ -72,6 +73,11 @@ revascularization <- function(output_folder, anchor_date_table = NULL, before = 
         anchor_dt <- unique(data.table::as.data.table(anchor_date_table)[, .(person_id)])
         out <- merge(anchor_dt, out, by = "person_id", all.x = TRUE)
         out[is.na(revascularization_status), revascularization_status := FALSE]
+    }
+
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
     }
 
     .write_to_bucket(out, output_folder, "revascularization")
