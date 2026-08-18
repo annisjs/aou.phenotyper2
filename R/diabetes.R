@@ -4,11 +4,12 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @details Based on the definition found in AOU phenotype library. Uses ICD9/10, meds, labs.
 #' @return output_folder/diabetes.csv
 #' @import data.table stringr aou.reader
 #' @export
-diabetes <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+diabetes <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL,suffix=NULL)
 {
   dataset <- Sys.getenv("WORKSPACE_CDR")
   condition_codes_t1d_icd9 <- c('250.01', '250.11', '250.21', '250.31', '250.41', '250.51', '250.61', '250.71',
@@ -291,5 +292,9 @@ diabetes <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL
     all_diabetes <- all_diabetes[diabetes_entry_date <= max_window_date]
   }
   all_diabetes <- all_diabetes[,c("person_id","diabetes_entry_date","diabetes_status")]
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(all_diabetes), "person_id")
+        data.table::setnames(all_diabetes, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
   .write_to_bucket(all_diabetes,output_folder,"diabetes")
 }

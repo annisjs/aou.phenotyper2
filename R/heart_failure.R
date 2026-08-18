@@ -4,6 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/heart_failure.csv
 #' @details At least 1 inpatient or 2 outpatient ICD codes:
 #'
@@ -11,7 +12,7 @@
 #'
 #' ICD10: "I42","I42.%","I50","I50.%"
 #' @export
-heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL,suffix=NULL)
 {
     # Pull inpatient and outpatient codes
     codes <- c("425","425.%","428","428.%","I42","I42.%","I50","I50.%")
@@ -42,5 +43,9 @@ heart_failure <- function(output_folder,anchor_date_table=NULL,before=NULL,after
     # Save data to bucket
     hf_counts <- hf_counts[,c("person_id","heart_failure_entry_date","heart_failure_status")]
     hf_counts <- hf_counts[heart_failure_status == TRUE]
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(hf_counts), "person_id")
+        data.table::setnames(hf_counts, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
     .write_to_bucket(hf_counts,output_folder,"heart_failure")
 }

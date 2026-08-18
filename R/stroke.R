@@ -4,6 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' @param suffix optional string appended to the end of every output column name except person_id.
 #' @return output_folder/stroke.csv
 #' @details At lest 1 ICD code:
 #'
@@ -11,7 +12,7 @@
 #'
 #' ICD10: "I63.%","I64.%","G46.%"
 #' @export
-stroke <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
+stroke <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL,suffix=NULL)
 {
     icd9_codes <- c("433.01","433.11","433.21","433.31","433.81","433.91","434.01","434.11","434.91","436.%")
     icd10_codes <- c("I63.%","I64.%","G46.%")
@@ -21,5 +22,9 @@ stroke <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
     result_all <- setDT(result_all)[,.(stroke_entry_date = min(condition_start_date),
                                         stroke_status = length(condition_start_date) > 0),
                                     .(person_id)]
+    if (!is.null(suffix) && nzchar(suffix)) {
+        cols_to_rename <- setdiff(names(result_all), "person_id")
+        data.table::setnames(result_all, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
     .write_to_bucket(result_all,output_folder,"stroke")
 }
