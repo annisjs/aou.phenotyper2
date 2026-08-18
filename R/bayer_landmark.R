@@ -21,10 +21,13 @@
 bayer_landmark <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
 {
     # Force evaluation early to avoid notebook/lazy-eval scoping issues during writes.
-    output_folder <- as.character(output_folder)
-    if (length(output_folder) != 1 || is.na(output_folder) || !nzchar(output_folder))
-    {
-        stop("bayer_landmark requires a non-empty output_folder string.")
+    # (skipped when output_folder isn't supplied, so callers can omit it to get a data.frame back)
+    if (!missing(output_folder)) {
+        output_folder <- as.character(output_folder)
+        if (length(output_folder) != 1 || is.na(output_folder) || !nzchar(output_folder))
+        {
+            stop("bayer_landmark requires a non-empty output_folder string.")
+        }
     }
 
     bmi_dt <- data.table::as.data.table(aou.reader::bmi_query(anchor_date_table, before, after))

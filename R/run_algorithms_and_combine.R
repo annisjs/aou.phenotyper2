@@ -197,6 +197,101 @@ run_algorithms_and_combine <- function(
   do.call(left_join_outputs, c(list(main_df), join_others, list(key = key)))
 }
 
+#' Run selected algorithms in-memory (no bucket writes) and combine
+#'
+#' Same `algos` spec format as \code{run_algorithms_and_combine()}, but each algorithm is
+#' called WITHOUT `output_folder`. Every algorithm ultimately writes via `.write_to_bucket()`,
+#' which returns its result data.frame directly instead of writing a CSV when `output_folder`
+#' is not supplied. Results are kept in memory, keyed by the `algos` list name, so running the
+#' same underlying algorithm more than once (e.g. before/after date windows) just works -- there
+#' is no shared output file to collide on.
+#'
+#' @param algos named list of algorithms/specs (see `run_algorithms_and_combine()` for the format)
+#' @param main_name which element of `algos` is the main dataset to left-join onto
+#' @param key join key (default \"person_id\")
+#' @param ... shared args passed to every algorithm (optional)
+#' @return data.table
+#' @export
+run_algorithms_and_combine_in_memory <- function(
+  algos,
+  main_name,
+  key = "person_id",
+  ...
+){
+  if (is.null(names(algos)) || any(names(algos) == "")) {
+    stop("`algos` must be a *named* list.")
+  }
+  if (!(main_name %in% names(algos))) stop("`main_name` must be one of names(algos).")
+
+  shared_args <- list(...)
+  ran <- setNames(rep(FALSE, length(algos)), names(algos))
+  outputs_cache <- list()
+  anchor_cache <- list()
+
+  make_anchor_table <- function(anchor_algo_name, anchor_col) {
+    cache_key <- paste0(anchor_algo_name, "::", anchor_col)
+    if (!is.null(anchor_cache[[cache_key]])) return(anchor_cache[[cache_key]])
+
+    run_one(anchor_algo_name)
+    df <- data.table::as.data.table(outputs_cache[[anchor_algo_name]])
+
+    if (!(key %in% names(df))) stop(sprintf("Anchor output '%s' missing key column '%s'", anchor_algo_name, key))
+    if (!(anchor_col %in% names(df))) {
+      stop(sprintf(
+        "Anchor output '%s' does not contain anchor_col '%s'. Available: %s",
+        anchor_algo_name, anchor_col, paste(names(df), collapse = ", ")
+      ))
+    }
+
+    anchor_dt <- df[, .(person_id = get(key), anchor_date = as.Date(get(anchor_col)))]
+    anchor_dt <- anchor_dt[!is.na(anchor_date)]
+    if (anyDuplicated(anchor_dt[[key]]) > 0) anchor_dt <- anchor_dt[!duplicated(anchor_dt[[key]]), ]
+
+    anchor_cache[[cache_key]] <<- anchor_dt
+    anchor_dt
+  }
+
+  run_one <- function(nm) {
+    if (isTRUE(ran[[nm]])) return(invisible(TRUE))
+    if (!(nm %in% names(algos))) stop(sprintf("Unknown algo referenced: %s", nm))
+
+    spec <- algos[[nm]]
+
+    if (is.function(spec)) {
+      spec <- list(fn = spec, args = list(), anchor_from = NULL, anchor_col = NULL)
+    } else if (is.list(spec) && is.function(spec$fn)) {
+      spec$args <- spec$args %||% list()
+      spec$anchor_from <- spec$anchor_from %||% NULL
+      spec$anchor_col <- spec$anchor_col %||% NULL
+    } else {
+      stop(sprintf("algos[[%s]] must be a function or list(fn=<function>, args=<list>, anchor_from=<name>, anchor_col=<col>)", nm))
+    }
+
+    if (!is.null(spec$anchor_from)) {
+      if (is.null(spec$anchor_col) || !nzchar(spec$anchor_col)) {
+        stop(sprintf("Algo '%s' specifies anchor_from='%s' but no anchor_col was provided.", nm, spec$anchor_from))
+      }
+      if (is.null(spec$args$anchor_date_table)) {
+        spec$args$anchor_date_table <- make_anchor_table(spec$anchor_from, spec$anchor_col)
+      }
+    }
+
+    algo_args <- c(shared_args, spec$args)
+    # deliberately omit output_folder so `.write_to_bucket()` returns the data.frame
+    # directly instead of writing a CSV -- avoids all file-naming/collision issues
+    outputs_cache[[nm]] <<- do.call(spec$fn, algo_args)
+
+    ran[[nm]] <<- TRUE
+    invisible(TRUE)
+  }
+
+  for (nm in names(algos)) run_one(nm)
+
+  main_df <- outputs_cache[[main_name]]
+  join_others <- outputs_cache[names(outputs_cache) != main_name]
+  do.call(left_join_outputs, c(list(main_df), join_others, list(key = key)))
+}
+
 # -----------------------
 # Example usage:
 # -----------------------
@@ -236,5 +331,17 @@ run_algorithms_and_combine <- function(
 # combined <- run_algorithms_and_combine(
 #   output_folder = output_folder,
 #   algos = algos_to_run,
+#   main_name = "demographics"
+# )
+#
+# -----------------------
+# Example usage (in-memory, no bucket writes/filenames at all):
+# -----------------------
+# combined <- run_algorithms_and_combine_in_memory(
+#   algos = list(
+#     demographics = demographics,
+#     max_ldl_before = list(fn = max_ldl, args = list(before = 10000000, after = 0, suffix = "_before")),
+#     max_ldl_after  = list(fn = max_ldl, args = list(before = 0, after = 10000000, suffix = "_after"))
+#   ),
 #   main_name = "demographics"
 # )
