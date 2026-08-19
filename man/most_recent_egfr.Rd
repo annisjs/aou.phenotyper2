@@ -4,10 +4,24 @@
 \alias{most_recent_egfr}
 \title{Most Recent eGFR}
 \usage{
-most_recent_egfr(output_folder)
+most_recent_egfr(
+  output_folder,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  suffix = NULL
+)
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
+
+\item{anchor_date_table}{optional data.frame containing columns: person_id, anchor_date.}
+
+\item{before}{an integer >= 0}
+
+\item{after}{an integer >= 0}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.}
 }
 \value{
 output_folder/most_recent_egfr.csv
@@ -18,15 +32,15 @@ Most Recent eGFR
 \details{
 Searches for
 
-"Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
 
-"Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted among blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
 
-"Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
+"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (MDRD)"
 
-"Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood"
+"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood"
 
-"Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
+"Glomerular filtration rate/1.73 sq M.predicted \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
 
-"Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
+"Glomerular filtration rate/1.73 sq M.predicted among non-blacks \link{Volume Rate/Area} in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
 }

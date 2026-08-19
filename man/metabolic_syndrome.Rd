@@ -8,7 +8,8 @@ metabolic_syndrome(
   output_folder,
   anchor_date_table = NULL,
   before = NULL,
-  after = NULL
+  after = NULL,
+  suffix = NULL
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ metabolic_syndrome(
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
 
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.}
 }
 \value{
 output_folder/metabolic_syndrome.csv
@@ -43,7 +46,7 @@ DM:
 Dyslipidemia:
 \itemize{
 \item Chol > 220 OR Trig > 200 OR HDL < 40 OR (HDL < 45 AND female)
-\item OR at least 1 lipid-lowering medication.
+OR at least 1 lipid-lowering medication.
 }
 
 Problem-list matching is best effort and depends on available aou.reader APIs.

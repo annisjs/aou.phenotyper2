@@ -4,7 +4,13 @@
 \alias{pad}
 \title{Peripheral artery disease}
 \usage{
-pad(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+pad(
+  output_folder,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  suffix = NULL
+)
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
@@ -14,6 +20,8 @@ pad(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
 
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.}
 }
 \value{
 output_folder/pad.csv

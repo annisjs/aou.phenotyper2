@@ -4,7 +4,13 @@
 \alias{min_ef}
 \title{Minimum Ejection Fraction (best effort)}
 \usage{
-min_ef(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
+min_ef(
+  output_folder,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  suffix = NULL
+)
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
@@ -15,6 +21,8 @@ If provided, the query window is applied around anchor_date using before/after.}
 \item{before}{an integer >= 0}
 
 \item{after}{an integer >= 0}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.}
 }
 \value{
 output_folder/min_ef.csv

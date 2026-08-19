@@ -4,10 +4,24 @@
 \alias{most_recent_hgba1c}
 \title{Most Recent HgbA1c}
 \usage{
-most_recent_hgba1c(output_folder)
+most_recent_hgba1c(
+  output_folder,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  suffix = NULL
+)
 }
 \arguments{
 \item{output_folder}{the folder to write the output}
+
+\item{anchor_date_table}{optional data.frame containing columns: person_id, anchor_date.}
+
+\item{before}{an integer >= 0}
+
+\item{after}{an integer >= 0}
+
+\item{suffix}{optional string appended to the end of every output column name except person_id.}
 }
 \value{
 output_folder/most_recent_hgba1c.csv

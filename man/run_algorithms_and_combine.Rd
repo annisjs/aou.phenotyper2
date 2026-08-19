@@ -14,55 +14,61 @@ run_algorithms_and_combine(
 )
 }
 \arguments{
-\item{output_folder}{bucket folder where algorithms write outputs (e.g., \"datasets\")\n}
+\item{output_folder}{bucket folder where algorithms write outputs (e.g., \"datasets\")}
 
-\item{algos}{named list of algorithms/specs\n}
+\item{algos}{named list of algorithms/specs}
 
-\item{main_name}{which element of \code{algos} is the main dataset to left-join onto\n}
+\item{main_name}{which element of \code{algos} is the main dataset to left-join onto}
 
-\item{read_fun}{function(path) to read a CSV from the bucket. Defaults to \code{read_bucket}\n}
+\item{read_fun}{function(path) to read a CSV from the bucket. Defaults to \code{read_bucket}}
 
-\item{key}{join key (default \"person_id\")\n}
+\item{key}{join key (default \"person_id\")}
 
-\item{...}{shared args passed to every algorithm (optional)\n}
+\item{...}{shared args passed to every algorithm (optional)}
 }
 \value{
-data.table\n
+data.table
 }
 \description{
-Supports workflows where:\n
+Supports workflows where:
 \enumerate{
-\item An \"anchor algorithm\" is run and writes a CSV.\n
-\item You read that CSV.\n
-\item You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\").\n
-\item You derive an anchor table: (person_id, anchor_date).\n
-\item You run child algorithms using anchor_date_table = that derived anchor table.\n
+\item An \"anchor algorithm\" is run and writes a CSV
+\item You read that CSV
+\item You choose ONE column from it (e.g., \"date_at_age_18\" or \"first_medical_encounter_entry_date\")
+\item You derive an anchor table: (person_id, anchor_date)
+\item You run child algorithms using anchor_date_table = that derived anchor table
 }
 }
 \details{
-\subsection{Defining algos\n}{
+\subsection{Defining algos}{
 
-\code{algos} is a named list; names must equal output base filenames (no .csv).\n
+\code{algos} is a named list; names must equal output base filenames (no .csv)
 
-Each element can be either:\n
+Each element can be either:
 \itemize{
-\item a function (no special config), OR\n
-\item a list with fields:\n
+\item a function (no special config), OR
+\item a list with fields:
 \itemize{
-\item \code{fn}: function\n
-\item \code{args}: list of args\n
-\item \code{anchor_from}: name of anchor algorithm whose output will be used to create anchor_date_table\n
-\item \code{anchor_col}: column name (in anchor_from output) to copy into \code{anchor_date}\n
+\item \code{fn}: function
+\item \code{args}: list of args
+\item \code{anchor_from}: name of anchor algorithm whose output will be used to create anchor_date_table
+\item \code{anchor_col}: column name (in anchor_from output) to copy into \code{anchor_date}
+\item \code{output_name}: rarely needed manual override for the base filename (no .csv) that \code{fn}
+actually writes via \code{.write_to_bucket()}. Normally this is auto-detected by finding the
+name \code{fn} is bound to in its own package namespace (e.g. \code{max_ldl}), so you can run the
+SAME underlying algorithm more than once (e.g. a "before" date window and an "after" date
+window) just by giving each entry a distinct list name -- the wrapper figures out what
+file \code{fn} wrote and re-saves it under the entry's unique list name so runs never collide.
 }
 }
 
-If \code{anchor_from} is set, this wrapper will:\n
+If \code{anchor_from} is set, this wrapper will:
 \itemize{
-\item run \code{anchor_from}\n
-\item read its CSV\n
-\item create \verb{anchor_date_table = df[, c(\\"person_id\\", \\"anchor_date\\")]} where\n
-\code{anchor_date := as.Date(df[[anchor_col]])}\n
-\item pass that anchor table into the child algorithm as \code{anchor_date_table}\n
+\item run \code{anchor_from}
+\item read its CSV
+\item create \verb{anchor_date_table = df[, c(\\"person_id\\", \\"anchor_date\\")]} where
+\code{anchor_date := as.Date(df[[anchor_col]])}
+\item pass that anchor table into the child algorithm as \code{anchor_date_table}
 }
 }
 }
