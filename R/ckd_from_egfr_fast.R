@@ -207,11 +207,15 @@ ckd_from_egfr_fast <- function(output_folder, anchor_date_table = NULL, before =
             INNER JOIN `concept` c ON (m.measurement_concept_id = c.concept_id)
             WHERE ({lab_terms})
         ")
-        .creatinine_cache_env[[cache_key]] <<- data.table::as.data.table(
-            aou.reader::download_big_data(
-                query,
-                "ckd_from_egfr_fast_creatinine_query_result.csv"
-            )
+        assign(
+            cache_key,
+            data.table::as.data.table(
+                aou.reader::download_big_data(
+                    query,
+                    "ckd_from_egfr_fast_creatinine_query_result.csv"
+                )
+            ),
+            envir = .creatinine_cache_env
         )
     }
     data.table::copy(.creatinine_cache_env[[cache_key]])
