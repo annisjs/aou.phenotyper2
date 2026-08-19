@@ -133,8 +133,8 @@ run_algorithms_and_combine <- function(
   }
 
   run_one <- function(nm) {
-    if (isTRUE(ran[[nm]])) return(invisible(TRUE))
     if (!(nm %in% names(algos))) stop(sprintf("Unknown algo referenced: %s", nm))
+    if (isTRUE(ran[nm])) return(invisible(TRUE))
 
     spec <- algos[[nm]]
 
@@ -252,8 +252,8 @@ run_algorithms_and_combine_in_memory <- function(
   }
 
   run_one <- function(nm) {
-    if (isTRUE(ran[[nm]])) return(invisible(TRUE))
     if (!(nm %in% names(algos))) stop(sprintf("Unknown algo referenced: %s", nm))
+    if (isTRUE(ran[nm])) return(invisible(TRUE))
 
     spec <- algos[[nm]]
 
