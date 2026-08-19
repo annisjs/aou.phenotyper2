@@ -232,7 +232,7 @@ ckd_from_egfr_fast <- function(output_folder, anchor_date_table = NULL, before =
     )
     out[, min_window_date := as.Date(anchor_date) + before]
     out[, max_window_date := as.Date(anchor_date) + after]
-    out <- out[measurement_date >= min_window_date & measurement_date <= max_window_date]
+    out <- out[lab_date >= min_window_date & lab_date <= max_window_date]
     out[, c("min_window_date", "max_window_date", "anchor_date") := NULL]
     out
 }
