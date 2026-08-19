@@ -1,0 +1,176 @@
+#' BMI and eGFR Two-Year Follow-up (fast, experimental)
+#'
+#' @param output_folder the folder to write the output
+#' @param anchor_date_table optional data.frame containing columns: person_id, anchor_date.
+#' @param before an integer >= 0
+#' @param after an integer >= 0
+#' @param suffix optional string appended to the end of every output column name except person_id.
+#' @return output_folder/bayer_landmark_fast.csv
+#' @details Same result logic as \code{bayer_landmark()}. Raw BMI and eGFR queries are
+#' cached for the current R session because aou.reader downloads all matching rows first
+#' and applies before/after windows locally afterward.
+#' @import data.table aou.reader
+#' @export
+bayer_landmark_fast <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
+{
+    if (!missing(output_folder))
+    {
+        output_folder <- as.character(output_folder)
+        if (length(output_folder) != 1 || is.na(output_folder) || !nzchar(output_folder))
+        {
+            stop("bayer_landmark_fast requires a non-empty output_folder string.")
+        }
+    }
+
+    bmi_dt <- .bayer_fast_window(
+        .bayer_fast_query("bmi"),
+        "measurement_date",
+        anchor_date_table,
+        before,
+        after
+    )
+    bmi_dt <- data.table::as.data.table(bmi_dt)
+
+    if (nrow(bmi_dt) == 0)
+    {
+        empty <- data.table::data.table(
+            person_id = character(),
+            bayer_landmark_t0_date = as.Date(character()),
+            bayer_landmark_t1_date = as.Date(character()),
+            bayer_landmark_t2_date = as.Date(character()),
+            bayer_landmark_bmi_n_t0_t1 = integer(),
+            bayer_landmark_bmi_n_t1_t2 = integer(),
+            bayer_landmark_egfr_n_t0_t2 = integer(),
+            bayer_landmark = logical()
+        )
+        .write_to_bucket(empty, output_folder, "bayer_landmark_fast")
+        return(invisible(NULL))
+    }
+
+    bmi_dt <- bmi_dt[!is.na(person_id) & !is.na(measurement_date)]
+    bmi_dt[, measurement_date := as.Date(measurement_date)]
+    data.table::setorder(bmi_dt, person_id, measurement_date)
+
+    anchors <- bmi_dt[, .(t0 = measurement_date[1]), by = .(person_id)]
+    anchors[, t1 := {
+        x <- as.POSIXlt(t0)
+        x$year <- x$year + 1
+        as.Date(x)
+    }]
+    anchors[, t2 := {
+        x <- as.POSIXlt(t1)
+        x$year <- x$year + 1
+        as.Date(x)
+    }]
+
+    bmi_window_dt <- merge(
+        bmi_dt[, .(person_id, bmi_date = measurement_date)],
+        anchors,
+        by = "person_id",
+        allow.cartesian = TRUE
+    )
+
+    bmi_counts <- bmi_window_dt[, .(
+        bmi_n_t0_t1 = sum(bmi_date > t0 & bmi_date <= t1, na.rm = TRUE),
+        bmi_n_t1_t2 = sum(bmi_date > t1 & bmi_date <= t2, na.rm = TRUE)
+    ), by = .(person_id, t0, t1, t2)]
+
+    lab_terms <- c(
+        "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+        "Glomerular filtration rate/1.73 sq M.predicted among blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+        "Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (MDRD)",
+        "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood",
+        "Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)",
+        "Glomerular filtration rate/1.73 sq M.predicted among non-blacks [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)"
+    )
+
+    egfr_dt <- .bayer_fast_window(
+        .bayer_fast_query("egfr", lab_terms),
+        "measurement_date",
+        anchor_date_table,
+        before,
+        after
+    )
+    egfr_dt <- data.table::as.data.table(egfr_dt)
+    egfr_dt <- egfr_dt[!is.na(person_id) & !is.na(measurement_date)]
+    egfr_dt[, measurement_date := as.Date(measurement_date)]
+
+    egfr_window_dt <- merge(
+        anchors[, .(person_id, t0, t2)],
+        egfr_dt[, .(person_id, egfr_date = measurement_date)],
+        by = "person_id",
+        all.x = TRUE,
+        allow.cartesian = TRUE
+    )
+
+    egfr_counts <- egfr_window_dt[, .(
+        egfr_n_t0_t2 = sum(egfr_date >= t0 & egfr_date <= t2, na.rm = TRUE)
+    ), by = .(person_id, t0, t2)]
+
+    out <- merge(bmi_counts, egfr_counts, by = c("person_id", "t0", "t2"), all.x = TRUE)
+    out[, bayer_landmark := data.table::fifelse(
+        bmi_n_t0_t1 >= 1 & bmi_n_t1_t2 >= 1 & egfr_n_t0_t2 >= 1,
+        TRUE,
+        FALSE
+    )]
+
+    data.table::setnames(out,
+        old = c("t0", "t1", "t2", "bmi_n_t0_t1", "bmi_n_t1_t2", "egfr_n_t0_t2"),
+        new = c(
+            "bayer_landmark_t0_date",
+            "bayer_landmark_t1_date",
+            "bayer_landmark_t2_date",
+            "bayer_landmark_bmi_n_t0_t1",
+            "bayer_landmark_bmi_n_t1_t2",
+            "bayer_landmark_egfr_n_t0_t2"
+        )
+    )
+
+    if (!is.null(suffix) && nzchar(suffix))
+    {
+        cols_to_rename <- setdiff(names(out), "person_id")
+        data.table::setnames(out, cols_to_rename, paste0(cols_to_rename, suffix))
+    }
+
+    .write_to_bucket(out, output_folder, "bayer_landmark_fast")
+}
+
+.bayer_fast_cache <- new.env(parent = emptyenv())
+
+.bayer_fast_query <- function(kind, lab_terms = NULL)
+{
+    cache_key <- kind
+    if (kind == "egfr") cache_key <- paste(kind, sort(lab_terms), collapse = "\u001f")
+    if (is.null(.bayer_fast_cache[[cache_key]]))
+    {
+        if (kind == "bmi")
+        {
+            result <- aou.reader::bmi_query()
+        } else if (kind == "egfr") {
+            result <- aou.reader::lab_query(lab_terms)
+        } else {
+            stop("Unknown bayer fast query kind: ", kind)
+        }
+        assign(cache_key, data.table::as.data.table(result), envir = .bayer_fast_cache)
+    }
+    data.table::copy(.bayer_fast_cache[[cache_key]])
+}
+
+.bayer_fast_window <- function(dat, date_column, anchor_date_table, before, after)
+{
+    if (is.null(anchor_date_table)) return(dat)
+
+    if (is.null(before)) before <- -100000
+    if (is.null(after)) after <- 100000
+    out <- data.table::as.data.table(
+        merge(dat, anchor_date_table, by = "person_id", allow.cartesian = TRUE)
+    )
+    out[, min_window_date := as.Date(anchor_date) + before]
+    out[, max_window_date := as.Date(anchor_date) + after]
+    out <- out[
+        get(date_column) >= min_window_date &
+            get(date_column) <= max_window_date
+    ]
+    out[, c("min_window_date", "max_window_date", "anchor_date") := NULL]
+    out
+}
