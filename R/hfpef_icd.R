@@ -4,7 +4,7 @@
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
 #' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
-#' @return output_folder/hfpef.csv
+#' @return output_folder/hfpef_icd.csv
 #' @details At least 1 ICD code
 #'
 #' Inclusion: 1 inpatient or 2 outpatient
@@ -63,13 +63,13 @@ hfpef_icd <- function(output_folder, anchor_date_table = NULL, before = NULL, af
     icd_dat <- rbind(icd_inpatient_dat, icd_outpatient_dat) 
     icd_dat <- icd_dat[!duplicated(icd_dat)]
     icd_dat <- icd_dat[order(hfpef_date)]
-    icd_dat <- icd_dat[, .(hfpef_icd_date = hfpef_date[1]), .(person_id, type)]
+    icd_dat <- icd_dat[, .(hfpef_icd_entry_date = hfpef_date[1]), .(person_id, type)]
 
     icd_dat[, has_exclusion := any(type == "exclude"), .(person_id)]
     icd_dat <- icd_dat[has_exclusion == FALSE]
    
     icd_dat[, hfpef_icd_status := TRUE]
-    icd_dat <- icd_dat[, c("person_id", "hfpef_icd_date", "hfpef_icd_status")]
+    icd_dat <- icd_dat[, c("person_id", "hfpef_icd_entry_date", "hfpef_icd_status")]
     .write_to_bucket(icd_dat, output_folder, "hfpef_icd")
 }
 

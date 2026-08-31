@@ -16,7 +16,7 @@ hfpef_icd(output_folder, anchor_date_table = NULL, before = NULL, after = NULL)
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
-output_folder/hfpef.csv
+output_folder/hfpef_icd.csv
 }
 \description{
 HFpEF using ICD codes
