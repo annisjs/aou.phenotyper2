@@ -32,7 +32,7 @@ Summary Triglycerides
 \details{
 Searches for
 
-"Triglyceride \link{Mass/volume} in Serum or Plasma",
+"Triglyceride [Mass/volume] in Serum or Plasma",
 
-"Triglyceride \link{Mass/volume} in Blood"
+"Triglyceride [Mass/volume] in Blood"
 }

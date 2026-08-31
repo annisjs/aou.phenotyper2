@@ -39,6 +39,6 @@ Sets \code{bayer_landmark} to TRUE when participants have:
 \itemize{
 \item at least 1 BMI in (t0, t1]
 \item at least 1 BMI in (t1, t2]
-\item at least 1 eGFR in \link{t0, t2}
+\item at least 1 eGFR in [t0, t2]
 }
 }

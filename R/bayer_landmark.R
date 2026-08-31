@@ -15,7 +15,7 @@
 #' Sets `bayer_landmark` to TRUE when participants have:
 #' - at least 1 BMI in (t0, t1]
 #' - at least 1 BMI in (t1, t2]
-#' - at least 1 eGFR in [t0, t2]
+#' - at least 1 eGFR in \[t0, t2]
 #' @import data.table aou.reader
 #' @export
 bayer_landmark <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)

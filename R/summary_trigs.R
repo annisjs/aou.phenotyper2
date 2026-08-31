@@ -8,9 +8,9 @@
 #' @return output_folder/summary_trigs.csv
 #' @details Searches for
 #'
-#' "Triglyceride [Mass/volume] in Serum or Plasma",
+#' "Triglyceride \[Mass/volume] in Serum or Plasma",
 #'
-#' "Triglyceride [Mass/volume] in Blood"
+#' "Triglyceride \[Mass/volume] in Blood"
 #' @import data.table aou.reader
 #' @export
 summary_trigs <- function(output_folder, anchor_date_table = NULL, before = NULL, after = NULL, suffix = NULL)
