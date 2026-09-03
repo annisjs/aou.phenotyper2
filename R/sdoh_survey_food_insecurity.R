@@ -14,7 +14,10 @@
 #' @export
 sdoh_survey_food_insecurity <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(c(40192517, 40192426))
+  result <- aou.reader::survey_query(c(40192517, 40192426),
+                                    anchor_date_table,
+                                    before,
+                                    after)
   result[, item_score := fcase(survey_response == "Often true", 1,
                 survey_response == "Sometimes true", 1,
                 survey_response == "Never true", 0,

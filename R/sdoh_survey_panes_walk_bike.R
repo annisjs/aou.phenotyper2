@@ -13,13 +13,19 @@
 #' @export
 sdoh_survey_panes_walk_bike <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(c(40192410, 40192431, 40192436, 40192437, 40192440))
+  result <- aou.reader::survey_query(c(40192410, 40192431, 40192436, 40192437, 40192440),
+                                    anchor_date_table, before, after)
   result[, panes_item_score := fcase(survey_response == "Strongly agree", 4,
                                       survey_response == "Somewhat agree", 3,
                                       survey_response == "Somewhat disagree", 2,
                                       survey_response == "Strongly disagree", 1,
                                       default = NA)]
-  result_agg <- result[, .(sdoh_survey_panes_walk_bike_score = mean(panes_item_score, na.rm = T)), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_panes_walk_bike_score = mean(panes_item_score, na.rm = T),
+                           sdoh_survey_panes_walk_bike_date = survey_date[1],
+                           n_responses = length(which(!is.na(panes_item_score)))),
+                        .(person_id)]
+  result_agg <- result_agg[n_responses == 5]
+  result_agg[, n_responses := NULL]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_panes_walk_bike")
 }
 

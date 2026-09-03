@@ -12,16 +12,33 @@
 #' 40192425: How often are you treated with less respect than other people?
 #' 40192497: How often are you treated with less courtesy than other people?
 #' 40192505: How often does a doctor or nurse act as if he or she thinks you are not smart?
+#' 40192503 = How often do you receive poorer service than others when you go to a doctor's office 
+#'            or other health care provider?
 #' @export
 sdoh_survey_discrimination_medical <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-	result <- aou.reader::survey_query(c(40192497, 40192425, 40192425, 40192505, 40192423, 40192383, 40192394))
-	result[, item_score := fcase(survey_response == "Always", 5,
-                                 survey_response == "Most of the time", 4,
-                                 survey_response == "Sometimes", 3,
-                                 survey_response == "Rarely", 2,
-                                 survey_response == "Never", 1,
-                                 default = NA)]
-	result_agg <- result[, .(sdoh_survey_discrimination_medical_score = mean(item_score, na.rm = T)), .(person_id)]
+	result <- aou.reader::survey_query(
+                           c(40192497,
+                             40192425,
+                             40192505,
+                             40192423,
+                             40192383,
+                             40192394,
+                             40192503),
+                            anchor_date_table,
+                            before,
+                            after)
+	result[, item_score := data.table::fcase(survey_response == "Always", 5,
+                                             survey_response == "Most of the time", 4,
+                                             survey_response == "Sometimes", 3,
+                                             survey_response == "Rarely", 2,
+                                             survey_response == "Never", 1,
+                                             default = NA)]
+	result_agg <- result[, .(sdoh_survey_discrimination_medical_score = mean(item_score, na.rm = T),
+                             sdoh_survey_discrimination_medical_date = survey_date[1],
+                             n_responses = length(which(!is.na(item_score)))), 
+                           .(person_id)]
+    result_agg <- result_agg[n_responses == 7]
+    result_agg[, n_responses := NULL]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_discrimination_medical")
 }

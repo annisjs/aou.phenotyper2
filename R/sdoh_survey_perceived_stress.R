@@ -19,21 +19,34 @@
 #' @export
 sdoh_survey_perceived_stress <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(c(40192507, 40192397, 40192398, 40192501, 40192390, 40192494))
+  result <- aou.reader::survey_query(c(40192381,
+                                       40192396,
+                                       40192452,
+                                       40192462,
+                                       40192491,
+                                       40192506),
+                                    anchor_date_table,
+                                    before,
+                                    after)
   result_rev <- aou.reader::survey_query(c(40192419, 40192445, 40192449, 40192525))
-  result[, item_score := fcase(survey_response == "Very Often", 5,
-                               survey_response == "Fairly Often", 4,
-                               survey_response == "Sometimes", 3,
-                               survey_response == "Almost Never", 2,
-                               survey_response == "Never", 1,
+  result[, item_score := fcase(survey_response == "Very Often", 4,
+                               survey_response == "Fairly Often", 3,
+                               survey_response == "Sometimes", 2,
+                               survey_response == "Almost Never", 1,
+                               survey_response == "Never", 0,
                                default = NA)]
-  result_rev[, item_score := fcase(survey_response == "Very Often", 1,
-                               survey_response == "Fairly Often", 2,
-                               survey_response == "Sometimes", 3,
-                               survey_response == "Almost Never", 4,
-                               survey_response == "Never", 5,
+  result_rev[, item_score := fcase(survey_response == "Very Often", 0,
+                               survey_response == "Fairly Often", 1,
+                               survey_response == "Sometimes", 2,
+                               survey_response == "Almost Never", 3,
+                               survey_response == "Never", 4,
                                default = NA)]
   result <- rbind(result, result_rev)
-  result_agg <- result[, .(sdoh_survey_perceived_stress_score = mean(item_score, na.rm = T)), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_perceived_stress_score = sum(item_score, na.rm = T),
+                           sdoh_survey_perceived_stress_date = survey_date[1],
+                           n_responses = length(which(!is.na(item_score)))),
+                           .(person_id)]
+  result_agg <- result_agg[n_responses == 10]
+  result_agg[, n_responses := NULL]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_perceived_stress")
 }

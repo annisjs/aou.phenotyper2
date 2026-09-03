@@ -22,15 +22,30 @@
 #' @export
 sdoh_survey_discrimination <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-	result <- aou.reader::survey_query(c(40192466, 40192489, 40192416, 40192490, 
-                                         0192380, 40192395, 40192496, 40192519, 40192451))
-	result[, item_score := fcase(survey_response == "Almost everyday", 5,
-                                 survey_response == "At least once a week", 4,
-                                 survey_response == "A few times a month", 3,
-                                 survey_response == "A few times a year", 2,
-                                 survey_response == "Less than once a year", 1,
-                                 survey_response == "Never", 0,
+	result <- aou.reader::survey_query(c(40192380,
+                                         40192395,
+                                         40192416,
+                                         40192451,
+                                         40192466,
+                                         40192489,
+                                         40192490,
+                                         40192496,
+                                         40192519),
+                                         anchor_date_table,
+                                         before,
+                                         after)
+	result[, item_score := fcase(survey_response == "Almost everyday", 6,
+                                 survey_response == "At least once a week", 5,
+                                 survey_response == "A few times a month", 4,
+                                 survey_response == "A few times a year", 3,
+                                 survey_response == "Less than once a year", 2,
+                                 survey_response == "Never", 1,
                                  default = NA)]
-	result_agg <- result[, .(sdoh_survey_discrimination_score = mean(item_score, na.rm = T)), .(person_id)]
+	result_agg <- result[, .(sdoh_survey_discrimination_score = mean(item_score, na.rm = T),
+                             sdoh_survey_discrimination_date = survey_date[1],
+                             n_responses = length(which(!is.na(item_score)))),
+                            .(person_id)]
+    result_agg <- result_agg[n_responses == 9]
+    result_agg[, n_responses := NULL]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_discrimination")
 }

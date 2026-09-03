@@ -11,7 +11,7 @@
 #' @export
 sdoh_survey_housing_instability <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(40192441)
+  result <- aou.reader::survey_query(40192441, anchor_date_table, before, after)
   result[, item_score := fcase(survey_response <= 1, 0,
                                survey_response > 1, 1,
                                default = NA)]
@@ -19,7 +19,8 @@ sdoh_survey_housing_instability <- function(output_folder,anchor_date_table=NULL
                                                                     ifelse(item_score == 1, 
                                                                         "Housing instability", 
                                                                         "Hosing stable"),
-                                                                    as.character(NA))),
+                                                                    as.character(NA)),
+                            sdoh_survey_housing_instability_date = survey_date[1]),
                       .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_housing_instability")
 }

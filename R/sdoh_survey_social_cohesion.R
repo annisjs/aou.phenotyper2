@@ -14,13 +14,18 @@
 #' @export
 sdoh_survey_social_cohesion <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(c(40192411, 40192417, 40192463, 40192499))
-  result[, item_score := fcase(survey_response == "Strongly agree", 1,
-                                     survey_response == "Agree", 2,
+    result <- aou.reader::survey_query(c(40192411, 40192417, 40192463, 40192499),
+                                       anchor_date_table, before, after)
+    result[, item_score := fcase(survey_response == "Strongly agree", 5,
+                                     survey_response == "Agree", 4,
                                      survey_response == "Neutral (neither agree nor disagree)", 3,
-                                     survey_response == "Disagree", 4,
-                                     survey_response == "Strongly disagree", 5,
+                                     survey_response == "Disagree", 2,
+                                     survey_response == "Strongly disagree", 1,
                                      default = NA)]
-  result_agg <- result[, .(sdoh_survey_social_cohesion_score = mean(item_score, na.rm = T)), .(person_id)]
-  .write_to_bucket(result_agg, output_folder, "sdoh_survey_social_cohesion")
+    result_agg <- result[, .(sdoh_survey_social_cohesion_score = mean(item_score, na.rm = T),
+                             n_responses = length(which(!is.na(item_score)))),
+                        .(person_id)]
+    result_agg <- result_agg[n_responses == 4]
+    result_agg[, n_responses := NULL]
+    .write_to_bucket(result_agg, output_folder, "sdoh_survey_social_cohesion")
 }

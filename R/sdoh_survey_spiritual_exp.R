@@ -16,14 +16,22 @@
 #' @export
 sdoh_survey_spiritual_exp <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-	result <- aou.reader::survey_query(c(40192498, 40192475, 40192401, 40192443, 40192471, 40192415))
+	result <- aou.reader::survey_query(c(40192498, 40192475, 40192401, 40192443, 40192471, 40192415),
+                                        anchor_date_table, before, after)
 	result[, item_score := fcase(survey_response == "Many times a day", 6,
                                  survey_response == "Every day", 5,
                                  survey_response == "Most days", 4,
                                  survey_response == "Some days", 3,
                                  survey_response == "Once in a while", 2,
-                                 survey_response == "Never or almost never", 1,
+                                 survey_response %in% c("Never or almost never",
+                                                        "I do not believe in God (or a higher power)",
+                                                        "I am not religious"), 1,
                                  default = NA)]
-	result_agg <- result[, .(sdoh_survey_spiritual_exp_score = mean(item_score, na.rm = T)), .(person_id)]
+	result_agg <- result[, .(sdoh_survey_spiritual_exp_score = sum(item_score, na.rm = T),
+                             sdoh_survey_spiritual_exp_date = survey_date[1],
+                             n_responses = length(which(!is.na(item_score)))),
+                           .(person_id)]
+    result_agg <- result_agg[n_responses == 6]
+    result_agg[, n_responses := NULL]
 	.write_to_bucket(result_agg, output_folder, "sdoh_survey_spiritual_exp")
 }

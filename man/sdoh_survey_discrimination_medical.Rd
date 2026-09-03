@@ -35,4 +35,6 @@ SDOH Survey: Discrimination in medical settings
 40192425: How often are you treated with less respect than other people?
 40192497: How often are you treated with less courtesy than other people?
 40192505: How often does a doctor or nurse act as if he or she thinks you are not smart?
+40192503 = How often do you receive poorer service than others when you go to a doctor's office
+or other health care provider?
 }

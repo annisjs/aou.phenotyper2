@@ -10,12 +10,15 @@
 #' @export
 sdoh_survey_panes_crime_safety <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  result <- aou.reader::survey_query(c(40192492, 40192414))
+  result <- aou.reader::survey_query(c(40192492, 40192414), anchor_date_table, before, after)
   result[, panes_item_score := fcase(survey_response == "Strongly agree", 1,
                                      survey_response == "Somewhat agree", 2,
                                      survey_response == "Somewhat disagree", 3,
                                      survey_response == "Strongly disagree", 4,
                                      default = NA)]
-  result_agg <- result[, .(sdoh_survey_panes_crime_safety_score = mean(panes_item_score, na.rm = T)), .(person_id)]
+  result_agg <- result[, .(sdoh_survey_panes_crime_safety_score = mean(panes_item_score, na.rm = T),
+                           n_responses = length(!is.na(panes_items_score))), .(person_id)]
+  result_agg <- result_agg[n_responses == 2]
+  result_agg[, n_responses := NULL]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_panes_crime_safety")
 }
