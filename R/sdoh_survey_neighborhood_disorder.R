@@ -41,66 +41,89 @@ sdoh_survey_neighborhood_disorder <- function(
     before = NULL,
     after = NULL
 ) {
-  question_ids <- c(
-    40192420,
-    40192522,
-    40192412,
-    40192469,
-    40192456,
-    40192386,
-    40192500,
-    40192493,
-    40192457,
-    40192476,
-    40192404,
-    40192400,
-    40192384
-  )
-
-  reverse_ids <- c(
-    40192456,
-    40192386,
-    40192400,
-    40192384
-  )
-
-  result <- aou.reader::survey_query(question_ids)
-
-  result[
-    ,
-    item_score := data.table::fcase(
-      survey_response == "Strongly agree", 4,
-      survey_response == "Agree", 3,
-      survey_response == "Disagree", 2,
-      survey_response == "Strongly disagree", 1,
-      default = NA_real_
+    result <- aou.reader::survey_query(
+        c(
+            40192420,
+            40192522,
+            40192412,
+            40192469,
+            40192500,
+            40192493,
+            40192457,
+            40192476,
+            40192404
+        ),
+        anchor_date_table,
+        before,
+        after
     )
-  ]
 
-  result[
-    question_concept_id %in% reverse_ids & !is.na(item_score),
-    item_score := 5 - item_score
-  ]
+    result_reverse <- aou.reader::survey_query(
+        c(
+            40192456,
+            40192386,
+            40192400,
+            40192384
+        ),
+        anchor_date_table,
+        before,
+        after
+    )
+
+    result[
+        ,
+        item_score := fcase(
+            survey_response == "Strongly agree", 4,
+            survey_response == "Agree", 3,
+            survey_response == "Disagree", 2,
+            survey_response == "Strongly disagree", 1,
+            default = NA_real_
+        )
+    ]
+
+    result_reverse[
+        ,
+        item_score := fcase(
+            survey_response == "Strongly agree", 1,
+            survey_response == "Agree", 2,
+            survey_response == "Disagree", 3,
+            survey_response == "Strongly disagree", 4,
+            default = NA_real_
+        )
+    ]
+
+    result <- rbind(
+        result,
+        result_reverse
+    )
 
     result_agg <- result[
-      !is.na(item_score),
-      .(
-        sdoh_survey_neighborhood_disorder_score =
-          round(mean(item_score), 2),
+        ,
+        .(
+            sdoh_survey_neighborhood_disorder_score =
+                round(mean(item_score, na.rm = TRUE), 2),
 
-        sdoh_survey_neighborhood_disorder_n_answered =
-          uniqueN(question_concept_id)
-      ),
-      by = person_id
+            sdoh_survey_neighborhood_disorder_date =
+                survey_date[1],
+
+            n_responses =
+                length(which(!is.na(item_score)))
+        ),
+        .(person_id)
+    ]
+
+    result_agg <- result_agg[
+        n_responses == 13
     ]
 
     result_agg[
-      sdoh_survey_neighborhood_disorder_n_answered != 13L,
-      sdoh_survey_neighborhood_disorder_score := NA_real_
+        ,
+        n_responses := NULL
     ]
-  .write_to_bucket(
-    result_agg,
-    output_folder,
-    "sdoh_survey_neighborhood_disorder"
-  )
+
+    .write_to_bucket(
+        result_agg,
+        output_folder,
+        "sdoh_survey_neighborhood_disorder"
+    )
 }
