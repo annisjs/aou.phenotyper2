@@ -19,6 +19,7 @@ closest_bilirubin <- function(output_folder,anchor_date_table=NULL,before=NULL,a
                        "Bilirubin | Serum or Plasma | Chemistry - non-challenge",
                        "Bilirubin.total [Mass/volume] in Serum or Plasma"),
                         anchor_date_table,before,after)
+    result_all <- as.data.table(merge(result_all,anchor_date_table,by="person_id"))
     result_all[,diff := abs(as.numeric(as.Date(measurement_date) - as.Date(anchor_date)))]
     result_all <- result_all[order(diff)]
     result_all <- result_all[,.(closest_bilirubin_entry_date = measurement_date[1],

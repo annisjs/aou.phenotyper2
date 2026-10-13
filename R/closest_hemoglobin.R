@@ -16,6 +16,7 @@ closest_hemoglobin <- function(output_folder,anchor_date_table=NULL,before=NULL,
     stop("closest_hemoglobin is not a primary variable and requires an anchor date table.")
     }
     result_all <- aou.reader::lab_query(c("Hemoglobin [Mass/volume] in Blood"),anchor_date_table,before,after)
+    result_all <- as.data.table(merge(result_all,anchor_date_table,by="person_id"))
     result_all[,diff := abs(as.numeric(as.Date(measurement_date) - as.Date(anchor_date)))]
     result_all <- result_all[order(diff)]
     result_all <- result_all[,.(closest_hemoglobin_entry_date = measurement_date[1],
