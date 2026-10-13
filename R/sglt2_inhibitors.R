@@ -7,7 +7,7 @@
 #' @return output_folder/sglt2_inhibitors.csv
 #' @details Meds: "empagliflozin","jardiance","canagliflozin","invokana","dapagliflozin","farxiga","ertugliflozin","steglatro"
 #' @export
-sglt2_inhibitors <- function(output_path,anchor_date_table=NULL,before=NULL,after=NULL)
+sglt2_inhibitors <- function(output_folder,anchor_date_table=NULL,before=NULL,after=NULL)
 {
     meds <- c("empagliflozin","jardiance","canagliflozin","invokana","dapagliflozin","farxiga","ertugliflozin","steglatro")
     result <- aou.reader::med_query(meds,anchor_date_table,before,after)
