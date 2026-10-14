@@ -26,7 +26,8 @@ sdoh_survey_food_insecurity <- function(output_folder,anchor_date_table=NULL,bef
                                                                 ifelse(sum(item_score, na.rm = T) >= 1, 
                                                                      "Food Insecure", 
                                                                      "Not Food Insecure"),
-                                                                as.character(NA))),
+                                                                as.character(NA)),
+                           sdoh_survey_food_insecurity_date = survey_date[1]),
                       .(person_id)]
   .write_to_bucket(result_agg, output_folder, "sdoh_survey_food_insecurity")
 }

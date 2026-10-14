@@ -23,7 +23,8 @@ sdoh_survey_social_cohesion <- function(output_folder,anchor_date_table=NULL,bef
                                      survey_response == "Strongly disagree", 1,
                                      default = NA)]
     result_agg <- result[, .(sdoh_survey_social_cohesion_score = mean(item_score, na.rm = T),
-                             n_responses = length(which(!is.na(item_score)))),
+                             n_responses = length(which(!is.na(item_score))),
+                             sdoh_survey_social_cohesion_date = survey_date[1]),
                         .(person_id)]
     result_agg <- result_agg[n_responses == 4]
     result_agg[, n_responses := NULL]
