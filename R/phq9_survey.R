@@ -1,4 +1,4 @@
-#' SDOH Survey: Loneliness, ULS-8
+#' PHQ-9 Survey
 #' @param output_folder the folder to write the output
 #' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
 #' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
@@ -38,8 +38,8 @@ phq9_survey <- function(output_folder,anchor_date_table=NULL,before=NULL,after=N
     ]
     phq9_sub <- phq9_sub[n_responses == 9]
     phq9_agg <- phq9_sub[, 
-         (phq9_total = sum(survey_response_recode)),
-        .(person_id, observation_date)
+         .(phq9_total = sum(survey_response_recode)),
+         .(person_id, observation_date)
     ]
     data.table::setnames(phq9_agg, "observation_date", "phq9_date")
     .write_to_bucket(phq9_agg, output_folder, "phq9_survey")

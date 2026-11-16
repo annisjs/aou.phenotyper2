@@ -2,7 +2,7 @@
 % Please edit documentation in R/phq9_survey.R
 \name{phq9_survey}
 \alias{phq9_survey}
-\title{SDOH Survey: Loneliness, ULS-8}
+\title{PHQ-9 Survey}
 \usage{
 phq9_survey(
   output_folder,
@@ -24,5 +24,5 @@ phq9_survey(
 output_folder/phq9_survey.csv
 }
 \description{
-SDOH Survey: Loneliness, ULS-8
+PHQ-9 Survey
 }
