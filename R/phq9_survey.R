@@ -17,7 +17,7 @@ phq9_survey <- function(output_folder,anchor_date_table=NULL,before=NULL,after=N
                1704024, 
                1704026
     )
-    phq9 <- aou.reader::survey_obs_query(codes)
+    phq9 <- aou.reader::survey_obs_query(codes, anchor_date_table, before, after)
     phq9[, survey_response_recode := 
         fcase(
             survey_obs_response == "Not at all", 0L,
